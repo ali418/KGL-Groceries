@@ -1,0 +1,270 @@
+/* 
+ * KGL Groceries LTD - Main Stylesheet
+ * Author: KGL Groceries LTD
+ * Date: 2025
+ * Description: Custom styles for the inventory management system.
+ *              Builds upon Bootstrap 5.
+ */
+
+/* =========================================
+   1. Variables & Theme Configuration
+   ========================================= */
+:root {
+    /* Brand Colors - Fresh & Organic Feel */
+    --primary-color: #2E7D32;       /* Deep Green */
+    --primary-hover: #1B5E20;       /* Darker Green */
+    --secondary-color: #81C784;     /* Light Green */
+    --accent-color: #FFC107;        /* Amber for alerts/highlights */
+    --danger-color: #D32F2F;        /* Red for critical actions */
+    
+    /* Neutral Colors */
+    --bg-light: #F8F9FA;            /* Light Grey Background */
+    --text-dark: #2C3E50;           /* Dark Blue/Grey Text */
+    --text-muted: #6C757D;          /* Grey Text */
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    
+    /* Layout */
+    --sidebar-width: 250px;
+    --header-height: 60px;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* =========================================
+   2. Utilities & Components
+   ========================================= */
+
+/* Custom Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-weight: 600;
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* =========================================
+   3. Sidebar Navigation
+   ========================================= */
+.sidebar {
+    height: 100vh;
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    z-index: 1000;
+    padding-top: var(--header-height);
+    transition: all 0.3s ease;
+}
+
+.sidebar-brand {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    padding: 0;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.sidebar-menu a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+    background-color: #e8f5e9; /* Light Green Tint */
+    color: var(--primary-color);
+    border-right: 4px solid var(--primary-color);
+}
+
+.sidebar-menu a:hover i, .sidebar-menu a.active i {
+    color: var(--primary-color);
+}
+
+/* =========================================
+   4. Main Content Area
+   ========================================= */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 20px;
+    padding-top: calc(var(--header-height) + 20px);
+    transition: all 0.3s ease;
+}
+
+/* Top Navbar */
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    height: var(--header-height);
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    transition: all 0.3s ease;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-profile img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+/* =========================================
+   5. Dashboard Specifics
+   ========================================= */
+
+/* KPI Cards */
+.kpi-card {
+    border-left: 4px solid var(--primary-color);
+}
+.kpi-card.warning { border-left-color: var(--accent-color); }
+.kpi-card.danger { border-left-color: var(--danger-color); }
+
+.kpi-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.kpi-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Table Styles */
+.table-custom thead th {
+    background-color: #f1f3f5;
+    border-bottom: 2px solid #dee2e6;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Login Page Specific */
+.login-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        left: -100%;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .top-navbar {
+        left: 0;
+    }
+}

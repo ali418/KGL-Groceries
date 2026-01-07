@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Director Dashboard - KGL Groceries LTD</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-leaf me-2"></i> KGL Groceries
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="director_dashboard.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="#"><i class="fas fa-file-alt"></i> Sales Reports</a></li>
+            <li><a href="#"><i class="fas fa-money-bill-wave"></i> Credit Exposure</a></li>
+            <li><a href="#"><i class="fas fa-warehouse"></i> Inventory Overview</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> User Management</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-dark me-3 d-md-none" id="sidebarToggle">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+            <h5 class="m-0 fw-bold text-muted">Director Overview</h5>
+        </div>
+        <div class="user-profile dropdown">
+            <div class="d-flex align-items-center" data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name=Director+Admin&background=2E7D32&color=fff" alt="Profile">
+                <span class="d-none d-md-block fw-medium">Director Admin</span>
+                <i class="fas fa-chevron-down ms-2 small"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold">Welcome back, Director!</h2>
+                    <p class="text-muted">Here is what's happening in your business today.</p>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="row g-4 mb-4">
+                <!-- Total Sales -->
+                <div class="col-md-3">
+                    <div class="card kpi-card h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="kpi-label mb-1">Total Sales (Today)</p>
+                                <h3 class="kpi-value mb-0">$12,450</h3>
+                                <small class="text-success"><i class="fas fa-arrow-up"></i> 15% vs yesterday</small>
+                            </div>
+                            <div class="bg-light rounded p-2 text-success">
+                                <i class="fas fa-dollar-sign fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Stock -->
+                <div class="col-md-3">
+                    <div class="card kpi-card h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="kpi-label mb-1">Total Stock</p>
+                                <h3 class="kpi-value mb-0">450 Tons</h3>
+                                <small class="text-muted">Across 3 branches</small>
+                            </div>
+                            <div class="bg-light rounded p-2 text-primary">
+                                <i class="fas fa-cubes fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Due -->
+                <div class="col-md-3">
+                    <div class="card kpi-card warning h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="kpi-label mb-1">Credit Outstanding</p>
+                                <h3 class="kpi-value mb-0">$3,200</h3>
+                                <small class="text-danger">5 payments overdue</small>
+                            </div>
+                            <div class="bg-light rounded p-2 text-warning">
+                                <i class="fas fa-clock fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alerts -->
+                <div class="col-md-3">
+                    <div class="card kpi-card danger h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="kpi-label mb-1">Alerts</p>
+                                <h3 class="kpi-value mb-0">2 Items</h3>
+                                <small class="text-danger">Low stock warning</small>
+                            </div>
+                            <div class="bg-light rounded p-2 text-danger">
+                                <i class="fas fa-exclamation-triangle fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Sales Performance (Last 7 Days)</span>
+                            <button class="btn btn-sm btn-outline-secondary">Export PDF</button>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesChart" height="120"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-header">Top Selling Products</div>
+                        <div class="card-body">
+                            <canvas id="productsChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">Recent Transactions</div>
+                        <div class="table-responsive">
+                            <table class="table table-custom table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product</th>
+                                        <th>Buyer</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#TRX-9801</td>
+                                        <td>Fresh Tomatoes (10kg)</td>
+                                        <td>Supermarket A</td>
+                                        <td>Today, 10:30 AM</td>
+                                        <td>$450</td>
+                                        <td><span class="badge bg-success bg-opacity-10 text-success">Paid</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TRX-9802</td>
+                                        <td>Potatoes (50kg)</td>
+                                        <td>John Doe (Trader)</td>
+                                        <td>Today, 11:15 AM</td>
+                                        <td>$1,200</td>
+                                        <td><span class="badge bg-warning bg-opacity-10 text-warning">Credit</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TRX-9803</td>
+                                        <td>Onions (20kg)</td>
+                                        <td>City Restaurant</td>
+                                        <td>Yesterday</td>
+                                        <td>$320</td>
+                                        <td><span class="badge bg-success bg-opacity-10 text-success">Paid</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    
+    <!-- Chart Initialization Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sales Chart
+            const ctxSales = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctxSales, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: [1200, 1900, 3000, 5000, 2000, 3000, 4500],
+                        borderColor: '#2E7D32',
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Products Chart
+            const ctxProducts = document.getElementById('productsChart').getContext('2d');
+            new Chart(ctxProducts, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tomatoes', 'Potatoes', 'Onions', 'Others'],
+                    datasets: [{
+                        data: [35, 25, 20, 20],
+                        backgroundColor: ['#2E7D32', '#81C784', '#FFC107', '#E0E0E0']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
