@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents Management - KGL Groceries LTD</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-leaf me-2"></i> KGL Groceries
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="director_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="sales_reports.html"><i class="fas fa-file-alt"></i> Sales Reports</a></li>
+            <li><a href="credit_exposure.html"><i class="fas fa-money-bill-wave"></i> Credit Exposure</a></li>
+            <li><a href="inventory_overview.html"><i class="fas fa-warehouse"></i> Inventory Overview</a></li>
+            <li><a href="stock_control.html"><i class="fas fa-cubes"></i> Stock Control</a></li>
+            <li><a href="procurement.html"><i class="fas fa-shopping-cart"></i> Procurement</a></li>
+            <li><a href="pricing.html"><i class="fas fa-tag"></i> Pricing</a></li>
+            <li><a href="agents.html" class="active"><i class="fas fa-user-tie"></i> Agents</a></li>
+            <li><a href="user_management.html"><i class="fas fa-users"></i> User Management</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-dark me-3 d-md-none" id="sidebarToggle">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+            <h5 class="m-0 fw-bold text-muted">Agents Management</h5>
+        </div>
+        <div class="user-profile dropdown">
+            <div class="d-flex align-items-center" data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name=Director+Admin&background=2E7D32&color=fff" alt="Profile">
+                <span class="d-none d-md-block fw-medium">Director Admin</span>
+                <i class="fas fa-chevron-down ms-2 small"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            
+            <!-- Agents Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-primary-light mb-3">
+                                <i class="fas fa-user-tie text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Total Agents</h5>
+                            <h3 class="text-primary">24</h3>
+                            <small class="text-muted">Active sales agents</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-success-light mb-3">
+                                <i class="fas fa-chart-line text-success"></i>
+                            </div>
+                            <h5 class="card-title">Top Performer</h5>
+                            <h3 class="text-success">Sarah M.</h3>
+                            <small class="text-muted">UGX 12.5M this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-warning-light mb-3">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Below Target</h5>
+                            <h3 class="text-warning">3</h3>
+                            <small class="text-muted">Need attention</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-info-light mb-3">
+                                <i class="fas fa-coins text-info"></i>
+                            </div>
+                            <h5 class="card-title">Total Commission</h5>
+                            <h3 class="text-info">UGX 3.2M</h3>
+                            <small class="text-muted">This month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agents Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-custom">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Sales Agents</h5>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAgentModal">
+                                    <i class="fas fa-plus me-1"></i> Add Agent
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-download me-1"></i> Export
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-target me-1"></i> Set Targets
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Agent ID</th>
+                                            <th>Name</th>
+                                            <th>Branch</th>
+                                            <th>Phone</th>
+                                            <th>This Month</th>
+                                            <th>Target</th>
+                                            <th>Performance</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>AGT001</strong></td>
+                                            <td>Sarah Mugisha</td>
+                                            <td>Kampala Central</td>
+                                            <td>+256-772-123-456</td>
+                                            <td>UGX 12,500,000</td>
+                                            <td>UGX 10,000,000</td>
+                                            <td><span class="badge bg-success">125%</span></td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AGT002</strong></td>
+                                            <td>John Kato</td>
+                                            <td>Nakawa Branch</td>
+                                            <td>+256-772-234-567</td>
+                                            <td>UGX 8,750,000</td>
+                                            <td>UGX 9,000,000</td>
+                                            <td><span class="badge bg-warning">97%</span></td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AGT003</strong></td>
+                                            <td>Maria Nalwoga</td>
+                                            <td>Makindye Branch</td>
+                                            <td>+256-772-345-678</td>
+                                            <td>UGX 11,200,000</td>
+                                            <td>UGX 8,500,000</td>
+                                            <td><span class="badge bg-success">132%</span></td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AGT004</strong></td>
+                                            <td>David Okello</td>
+                                            <td>Kawempe Branch</td>
+                                            <td>+256-772-456-789</td>
+                                            <td>UGX 6,300,000</td>
+                                            <td>UGX 8,000,000</td>
+                                            <td><span class="badge bg-danger">79%</span></td>
+                                            <td><span class="badge bg-warning">Warning</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>AGT005</strong></td>
+                                            <td>Grace Achieng</td>
+                                            <td>Entebbe Branch</td>
+                                            <td>+256-772-567-890</td>
+                                            <td>UGX 7,800,000</td>
+                                            <td>UGX 7,500,000</td>
+                                            <td><span class="badge bg-success">104%</span></td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mt-4">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Performance Charts -->
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <div class="card card-custom">
+                        <div class="card-header">
+                            <h5 class="mb-0">Monthly Sales Performance</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="agentPerformanceChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-custom">
+                        <div class="card-header">
+                            <h5 class="mb-0">Commission Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="commissionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Agent Modal -->
+    <div class="modal fade" id="addAgentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Agent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" placeholder="Enter first name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" placeholder="Enter last name">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" placeholder="+256-772-123-456">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" placeholder="agent@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select class="form-select">
+                                <option>Select Branch</option>
+                                <option>Kampala Central</option>
+                                <option>Nakawa Branch</option>
+                                <option>Makindye Branch</option>
+                                <option>Kawempe Branch</option>
+                                <option>Entebbe Branch</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Monthly Target (UGX)</label>
+                            <input type="number" class="form-control" placeholder="Enter monthly target">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Commission Rate (%)</label>
+                            <input type="number" class="form-control" placeholder="Enter commission rate" step="0.1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add Agent</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Agent Modal -->
+    <div class="modal fade" id="editAgentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Agent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" value="Sarah">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" value="Mugisha">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" value="+256-772-123-456">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="sarah@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select class="form-select">
+                                <option>Kampala Central</option>
+                                <option>Nakawa Branch</option>
+                                <option>Makindye Branch</option>
+                                <option>Kawempe Branch</option>
+                                <option>Entebbe Branch</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Monthly Target (UGX)</label>
+                            <input type="number" class="form-control" value="10000000">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Commission Rate (%)</label>
+                            <input type="number" class="form-control" value="5.0" step="0.1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option>Active</option>
+                                <option>Warning</option>
+                                <option>Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Update Agent</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agent Performance Chart
+            const ctxAgent = document.getElementById('agentPerformanceChart').getContext('2d');
+            new Chart(ctxAgent, {
+                type: 'bar',
+                data: {
+                    labels: ['Sarah M.', 'John K.', 'Maria N.', 'David O.', 'Grace A.'],
+                    datasets: [{
+                        label: 'Sales Performance',
+                        data: [125, 97, 132, 79, 104],
+                        backgroundColor: ['#4CAF50', '#FFA000', '#4CAF50', '#F44336', '#4CAF50'],
+                        borderColor: ['#2E7D32', '#F57C00', '#2E7D32', '#D32F2F', '#2E7D32'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 150,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Commission Distribution Chart
+            const ctxCommission = document.getElementById('commissionChart').getContext('2d');
+            new Chart(ctxCommission, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Sarah M.', 'Maria N.', 'John K.', 'Grace A.', 'Others'],
+                    datasets: [{
+                        data: [625000, 560000, 437500, 390000, 617500],
+                        backgroundColor: ['#4CAF50', '#2196F3', '#FFA000', '#9C27B0', '#607D8B']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

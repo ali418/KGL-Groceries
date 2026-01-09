@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Management - KGL Groceries LTD</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-leaf me-2"></i> KGL Groceries
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="director_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="sales_reports.html"><i class="fas fa-file-alt"></i> Sales Reports</a></li>
+            <li><a href="credit_exposure.html"><i class="fas fa-money-bill-wave"></i> Credit Exposure</a></li>
+            <li><a href="inventory_overview.html"><i class="fas fa-warehouse"></i> Inventory Overview</a></li>
+            <li><a href="stock_control.html"><i class="fas fa-cubes"></i> Stock Control</a></li>
+            <li><a href="procurement.html"><i class="fas fa-shopping-cart"></i> Procurement</a></li>
+            <li><a href="pricing.html" class="active"><i class="fas fa-tag"></i> Pricing</a></li>
+            <li><a href="user_management.html"><i class="fas fa-users"></i> User Management</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-dark me-3 d-md-none" id="sidebarToggle">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+            <h5 class="m-0 fw-bold text-muted">Pricing Management</h5>
+        </div>
+        <div class="user-profile dropdown">
+            <div class="d-flex align-items-center" data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name=Director+Admin&background=2E7D32&color=fff" alt="Profile">
+                <span class="d-none d-md-block fw-medium">Director Admin</span>
+                <i class="fas fa-chevron-down ms-2 small"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            
+            <!-- Pricing Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-primary-light mb-3">
+                                <i class="fas fa-tags text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Total Products</h5>
+                            <h3 class="text-primary">186</h3>
+                            <small class="text-muted">Active price lists</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-success-light mb-3">
+                                <i class="fas fa-arrow-up text-success"></i>
+                            </div>
+                            <h5 class="card-title">Recent Updates</h5>
+                            <h3 class="text-success">12</h3>
+                            <small class="text-muted">Price changes this week</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-warning-light mb-3">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Pending Review</h5>
+                            <h3 class="text-warning">8</h3>
+                            <small class="text-muted">Awaiting approval</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-custom">
+                        <div class="card-body text-center">
+                            <div class="card-icon bg-info-light mb-3">
+                                <i class="fas fa-chart-line text-info"></i>
+                            </div>
+                            <h5 class="card-title">Avg Margin</h5>
+                            <h3 class="text-info">23.5%</h3>
+                            <small class="text-muted">Gross profit margin</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-custom">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Product Pricing</h5>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPriceModal">
+                                    <i class="fas fa-plus me-1"></i> New Price
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-download me-1"></i> Export
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-sync me-1"></i> Bulk Update
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Product Code</th>
+                                            <th>Product Name</th>
+                                            <th>Category</th>
+                                            <th>Cost Price</th>
+                                            <th>Selling Price</th>
+                                            <th>Margin %</th>
+                                            <th>Last Updated</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>PRD001</strong></td>
+                                            <td>Fresh Tomatoes</td>
+                                            <td>Vegetables</td>
+                                            <td>UGX 2,500</td>
+                                            <td>UGX 3,200</td>
+                                            <td><span class="badge bg-success">28%</span></td>
+                                            <td>2024-01-08</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editPriceModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PRD002</strong></td>
+                                            <td>Onions</td>
+                                            <td>Vegetables</td>
+                                            <td>UGX 1,800</td>
+                                            <td>UGX 2,200</td>
+                                            <td><span class="badge bg-warning">22%</span></td>
+                                            <td>2024-01-07</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editPriceModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PRD003</strong></td>
+                                            <td>Potatoes</td>
+                                            <td>Vegetables</td>
+                                            <td>UGX 1,500</td>
+                                            <td>UGX 1,900</td>
+                                            <td><span class="badge bg-success">27%</span></td>
+                                            <td>2024-01-06</td>
+                                            <td><span class="badge bg-warning">Pending</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editPriceModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PRD004</strong></td>
+                                            <td>Carrots</td>
+                                            <td>Vegetables</td>
+                                            <td>UGX 2,000</td>
+                                            <td>UGX 2,500</td>
+                                            <td><span class="badge bg-success">25%</span></td>
+                                            <td>2024-01-05</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editPriceModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PRD005</strong></td>
+                                            <td>Green Peppers</td>
+                                            <td>Vegetables</td>
+                                            <td>UGX 3,000</td>
+                                            <td>UGX 3,800</td>
+                                            <td><span class="badge bg-success">27%</span></td>
+                                            <td>2024-01-04</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editPriceModal">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mt-4">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Trends Chart -->
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <div class="card card-custom">
+                        <div class="card-header">
+                            <h5 class="mb-0">Price Trends (Last 6 Months)</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="priceTrendChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-custom">
+                        <div class="card-header">
+                            <h5 class="mb-0">Margin Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="marginChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Price Modal -->
+    <div class="modal fade" id="addPriceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Price</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Product</label>
+                            <select class="form-select">
+                                <option>Select Product</option>
+                                <option>Fresh Tomatoes</option>
+                                <option>Onions</option>
+                                <option>Potatoes</option>
+                                <option>Carrots</option>
+                                <option>Green Peppers</option>
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Cost Price (UGX)</label>
+                                <input type="number" class="form-control" placeholder="Enter cost price">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Selling Price (UGX)</label>
+                                <input type="number" class="form-control" placeholder="Enter selling price">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Effective Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" rows="3" placeholder="Additional notes"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add Price</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Price Modal -->
+    <div class="modal fade" id="editPriceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Price</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Product</label>
+                            <input type="text" class="form-control" value="Fresh Tomatoes" readonly>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Cost Price (UGX)</label>
+                                <input type="number" class="form-control" value="2500">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Selling Price (UGX)</label>
+                                <input type="number" class="form-control" value="3200">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Margin (%)</label>
+                            <input type="text" class="form-control" value="28%" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Effective Date</label>
+                            <input type="date" class="form-control" value="2024-01-08">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Reason for Change</label>
+                            <textarea class="form-control" rows="3" placeholder="Reason for price change"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Update Price</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Price Trend Chart
+            const ctxPrice = document.getElementById('priceTrendChart').getContext('2d');
+            new Chart(ctxPrice, {
+                type: 'line',
+                data: {
+                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Tomatoes',
+                        data: [2800, 2900, 2700, 3200, 3100, 3200],
+                        borderColor: '#2E7D32',
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Onions',
+                        data: [2000, 2100, 1900, 2200, 2150, 2200],
+                        borderColor: '#FFA000',
+                        backgroundColor: 'rgba(255, 160, 0, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Potatoes',
+                        data: [1700, 1800, 1600, 1900, 1850, 1900],
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'UGX ' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Margin Distribution Chart
+            const ctxMargin = document.getElementById('marginChart').getContext('2d');
+            new Chart(ctxMargin, {
+                type: 'doughnut',
+                data: {
+                    labels: ['15-20%', '20-25%', '25-30%', '30%+'],
+                    datasets: [{
+                        data: [25, 45, 20, 10],
+                        backgroundColor: ['#F44336', '#FFA000', '#4CAF50', '#2196F3']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
