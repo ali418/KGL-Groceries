@@ -263,8 +263,8 @@ This project is proprietary software developed for KGL Groceries LTD. All rights
 ## 📞 Support
 
 For technical support or inquiries:
-- Email: support@kgl-groceries.com
-- Phone: +256 XXX XXX XXX
+- Email: ayagoub@refactory.academy
+- Phone: +256 741490119
 - Address: Kampala, Uganda
 
 ## 🙏 Acknowledgments
