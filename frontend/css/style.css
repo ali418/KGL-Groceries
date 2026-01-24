@@ -268,3 +268,100 @@ body {
         left: 0;
     }
 }
+
+/* =========================================
+   6. Boxed Layout (Centered Screen)
+   ========================================= */
+@media (min-width: 1400px) {
+    :root {
+        --layout-width: 1320px;
+    }
+
+    body {
+        background-color: #e0e0e0; /* Darker background for contrast */
+        overflow-x: auto;
+    }
+
+    /* Wrapper simulation */
+    .sidebar {
+        left: calc(50% - (var(--layout-width) / 2));
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        height: 100vh;
+        border-right: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .top-navbar {
+        left: calc(50% - (var(--layout-width) / 2) + var(--sidebar-width));
+        right: auto;
+        width: calc(var(--layout-width) - var(--sidebar-width));
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .main-content {
+        margin-left: calc(50% - (var(--layout-width) / 2) + var(--sidebar-width));
+        width: calc(var(--layout-width) - var(--sidebar-width));
+        max-width: calc(var(--layout-width) - var(--sidebar-width));
+        background-color: var(--bg-light);
+        min-height: 100vh;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.05);
+    }
+    
+    .container-fluid {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+}
+
+/* =========================================
+   7. Custom Toast Notifications
+   ========================================= */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.custom-toast {
+    min-width: 250px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    border-left: 5px solid #ccc;
+}
+
+.custom-toast.show {
+    transform: translateX(0);
+}
+
+.custom-toast.success {
+    border-left-color: var(--primary-color);
+}
+
+.custom-toast.error {
+    border-left-color: var(--danger-color);
+}
+
+.custom-toast i {
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+
+.custom-toast.success i {
+    color: var(--primary-color);
+}
+
+.custom-toast.error i {
+    color: var(--danger-color);
+}
+
+.toast-message {
+    font-weight: 500;
+    color: var(--text-dark);
+}
