@@ -44,6 +44,10 @@ const connectDB = async () => {
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+// Procurement Exercise Route (Capstone)
+const procurementRoutes = require('./routes/procurement');
+app.use('/kgl/procurement', procurementRoutes);
+
 app.use(express.static(path.resolve(__dirname, '../frontend')));
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/login.html'));
@@ -56,6 +60,15 @@ app.get('/api/health', (req, res) => {
     message: 'KGL Groceries API is running',
     timestamp: new Date().toISOString()
   });
+});
+
+// JSON Parse Error Handler
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    console.error('Bad JSON:', err.message);
+    return res.status(400).json({ message: 'Bad Request: Invalid JSON syntax' });
+  }
+  next(err);
 });
 
 // Error handling middleware
