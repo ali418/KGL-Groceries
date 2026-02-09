@@ -42,14 +42,21 @@ app.use(morgan('combined'));
 // Database connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries', {
+    // Use environment variable or fallback to the provided Railway MongoDB URI
+    const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+    
+    await mongoose.connect(connStr, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
     });
-    console.log('✅ MongoDB connected successfully');
+    console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    console.error('Running without database connection');
+    // Don't exit process in production, just log error so app stays up (though non-functional for DB)
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
   }
 };
 
