@@ -270,47 +270,9 @@ body {
 }
 
 /* =========================================
-   6. Boxed Layout (Centered Screen)
+   6. Boxed Layout (Removed per user request)
    ========================================= */
-@media (min-width: 1400px) {
-    :root {
-        --layout-width: 1320px;
-    }
-
-    body {
-        background-color: #e0e0e0; /* Darker background for contrast */
-        overflow-x: auto;
-    }
-
-    /* Wrapper simulation */
-    .sidebar {
-        left: calc(50% - (var(--layout-width) / 2));
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        height: 100vh;
-        border-right: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .top-navbar {
-        left: calc(50% - (var(--layout-width) / 2) + var(--sidebar-width));
-        right: auto;
-        width: calc(var(--layout-width) - var(--sidebar-width));
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    .main-content {
-        margin-left: calc(50% - (var(--layout-width) / 2) + var(--sidebar-width));
-        width: calc(var(--layout-width) - var(--sidebar-width));
-        max-width: calc(var(--layout-width) - var(--sidebar-width));
-        background-color: var(--bg-light);
-        min-height: 100vh;
-        box-shadow: 5px 0 15px rgba(0,0,0,0.05);
-    }
-    
-    .container-fluid {
-        padding-left: 25px;
-        padding-right: 25px;
-    }
-}
+/* Boxed layout styles removed to allow full width on all screens */
 
 /* =========================================
    7. Custom Toast Notifications
