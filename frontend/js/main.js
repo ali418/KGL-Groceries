@@ -224,7 +224,79 @@ window.editUser = (id) => showToast('Edit feature coming soon!', 'info');
 window.deleteUser = deleteUser;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Check for Login Form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+
+    // Check for User Management Page
     if (window.location.pathname.includes('user_management.html')) {
         initUserManagement();
     }
 });
+
+// --- Auth Logic ---
+async function handleLogin(e) {
+    e.preventDefault();
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.querySelector('button[type="submit"]');
+    
+    // Reset errors
+    usernameInput.classList.remove('is-invalid');
+    passwordInput.classList.remove('is-invalid');
+
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+
+    if (!username || !password) {
+        showToast('Please enter both username and password', 'error');
+        return;
+    }
+
+    try {
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Login failed');
+        }
+
+        // Store Token & User Info
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        showToast('Login successful! Redirecting...', 'success');
+
+        // Redirect based on role
+        setTimeout(() => {
+            if (data.user.role === 'director') {
+                window.location.href = 'director_dashboard.html';
+            } else if (data.user.role === 'sales_agent') {
+                window.location.href = 'sales_dashboard.html';
+            } else if (data.user.role === 'manager') {
+                window.location.href = 'director_dashboard.html'; // Or manager dashboard if exists
+            } else {
+                window.location.href = 'director_dashboard.html';
+            }
+        }, 1000);
+
+    } catch (error) {
+        console.error('Login Error:', error);
+        showToast(error.message, 'error');
+        usernameInput.classList.add('is-invalid');
+        passwordInput.classList.add('is-invalid');
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
+    }
+}
