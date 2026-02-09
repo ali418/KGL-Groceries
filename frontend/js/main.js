@@ -303,25 +303,27 @@ async function handleLogin(e) {
             body: JSON.stringify({ username, password })
         });
 
-        const data = await response.json();
+        const resBody = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
+            throw new Error(resBody.error || 'Login failed');
         }
 
+        const { token, user } = resBody.data;
+
         // Store Token & User Info
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
 
         showToast('Login successful! Redirecting...', 'success');
 
         // Redirect based on role
         setTimeout(() => {
-            if (data.user.role === 'director') {
+            if (user.role === 'director') {
                 window.location.href = 'director_dashboard.html';
-            } else if (data.user.role === 'sales_agent') {
+            } else if (user.role === 'sales_agent') {
                 window.location.href = 'sales_dashboard.html';
-            } else if (data.user.role === 'manager') {
+            } else if (user.role === 'manager') {
                 window.location.href = 'director_dashboard.html'; // Or manager dashboard if exists
             } else {
                 window.location.href = 'director_dashboard.html';
