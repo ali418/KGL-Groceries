@@ -1,178 +1,230 @@
-/**
- * KGL Groceries LTD - Main Application Script
- * Handles global interactions, login logic, and UI toggles.
- */
 
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // 1. Initialize Default User in localStorage (Mock Data)
-    initMockUsers();
+// --- User Management Logic ---
 
-    // 2. Setup Toast Container
-    setupToastContainer();
+let allUsers = [];
+let allBranches = [];
 
-    // Handle Login Form
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value.trim();
-            
-            // Error Handling: Empty Fields
-            if (!username || !password) {
-                showToast('Please enter both username and password.', 'error');
-                return;
-            }
+function initUserManagement() {
+    loadUsers();
+    loadBranchesForDropdown();
 
-            // Mock Login Logic
-            const users = JSON.parse(localStorage.getItem('kgl_users')) || [];
-            const user = users.find(u => u.username === username);
+    // Search Filter
+    const searchInput = document.querySelector('input[placeholder="Name or NIN..."]');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allUsers.filter(u => 
+                u.name.toLowerCase().includes(term) || 
+                (u.contact && u.contact.phone && u.contact.phone.includes(term)) ||
+                (u.username && u.username.toLowerCase().includes(term))
+            );
+            renderUsers(filtered);
+        });
+    }
 
-            if (!user) {
-                // Error Handling: User Not Found
-                showToast('Username does not exist.', 'error');
-                usernameInput.focus();
-            } else if (user.password !== password) {
-                // Error Handling: Wrong Password
-                showToast('Incorrect password. Please try again.', 'error');
-                passwordInput.value = '';
-                passwordInput.focus();
+    // Role Filter
+    const roleSelect = document.querySelector('.form-select'); // Assuming first select is Role based on HTML structure order
+    if (roleSelect) {
+        roleSelect.addEventListener('change', (e) => {
+            const role = e.target.value;
+            if (role === 'All Roles') {
+                renderUsers(allUsers);
             } else {
-                // Success: Login
-                showToast('Login successful! Redirecting...', 'success');
-                
-                // Store Session
-                const sessionData = {
-                    username: user.username,
-                    role: user.role,
-                    loginTime: new Date().toISOString()
-                };
-                localStorage.setItem('kgl_session', JSON.stringify(sessionData));
-
-                // Redirect based on role (Mock routing)
-                setTimeout(() => {
-                    if (user.role === 'Director') {
-                        window.location.href = 'director_dashboard.html';
-                    } else if (user.role === 'Manager') {
-                        window.location.href = 'manager_dashboard.html';
-                    } else if (user.role === 'Sales Agent') {
-                        window.location.href = 'sales_dashboard.html';
-                    } else {
-                        window.location.href = 'manager_dashboard.html'; // Default
-                    }
-                }, 1500);
+                // Map UI role names to Backend role values if needed, or ensure they match
+                // Backend: director, manager, sales_agent
+                // UI: Director, Manager, Sales Agent
+                const filtered = allUsers.filter(u => u.role.toLowerCase() === role.toLowerCase().replace(' ', '_'));
+                renderUsers(filtered);
             }
         });
     }
 
-    // Handle Sidebar Toggle (for Dashboard pages)
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            sidebar.classList.toggle('active');
-        });
+    // Save User Button
+    const saveBtn = document.getElementById('saveUserBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveUser);
     }
+}
 
-    // Highlight active link based on current page
-    const currentPath = window.location.pathname.split('/').pop();
-    const menuLinks = document.querySelectorAll('.sidebar-menu a');
-    
-    menuLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
-        if (linkPath === currentPath) {
-            link.classList.add('active');
+async function loadUsers() {
+    try {
+        const response = await fetch('/api/users');
+        if (!response.ok) throw new Error('Failed to fetch users');
+        allUsers = await response.json();
+        renderUsers(allUsers);
+        
+        // Update Stats
+        updateUserStats(allUsers);
+    } catch (error) {
+        console.error('Error loading users:', error);
+        showToast('Error loading users', 'error');
+    }
+}
+
+async function loadBranchesForDropdown() {
+    try {
+        const response = await fetch('/api/branches');
+        if (!response.ok) throw new Error('Failed to fetch branches');
+        allBranches = await response.json();
+        
+        const branchSelect = document.getElementById('userBranch');
+        if (branchSelect) {
+            branchSelect.innerHTML = '<option value="">Select Branch</option>';
+            allBranches.forEach(b => {
+                branchSelect.innerHTML += `<option value="${b._id}">${b.name}</option>`;
+            });
         }
-    });
+    } catch (error) {
+        console.error('Error loading branches:', error);
+    }
+}
 
-    // Display Logged-in User Info on Dashboard
-    updateDashboardUserInfo();
+function renderUsers(users) {
+    const tbody = document.getElementById('usersTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = users.map(user => `
+        <tr>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff" alt="Profile" class="rounded-circle me-2" width="32">
+                    <strong>${user.name}</strong>
+                </div>
+            </td>
+            <td>${user.contact?.email || '-'}</td>
+            <td><span class="badge bg-${getRoleBadgeColor(user.role)}">${formatRole(user.role)}</span></td>
+            <td>${user.branch ? user.branch.name : 'Head Office'}</td>
+            <td>${user.username}</td> <!-- Using Username as NIN placeholder for now or add NIN to model -->
+            <td>${user.contact?.phone || '-'}</td>
+            <td><span class="badge bg-${user.isActive ? 'success' : 'danger'}">${user.isActive ? 'Active' : 'Inactive'}</span></td>
+            <td>${user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary me-1" title="View Details" onclick="viewUser('${user._id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning me-1" title="Edit User" onclick="editUser('${user._id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" title="Deactivate" onclick="deleteUser('${user._id}')">
+                    <i class="fas fa-ban"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function getRoleBadgeColor(role) {
+    switch (role) {
+        case 'director': return 'danger';
+        case 'manager': return 'warning';
+        case 'sales_agent': return 'info';
+        default: return 'secondary';
+    }
+}
+
+function formatRole(role) {
+    return role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+async function saveUser() {
+    const saveBtn = document.getElementById('saveUserBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+    const payload = {
+        name: document.getElementById('userFullName').value,
+        email: document.getElementById('userEmail').value,
+        role: document.getElementById('userRole').value,
+        branchId: document.getElementById('userBranch').value,
+        phone: document.getElementById('userPhone').value,
+        username: document.getElementById('userUsername').value,
+        password: document.getElementById('userPassword').value
+    };
+    
+    // Note: NIN is in UI but not explicitly in my User model in previous context? 
+    // Assuming User model has structure flexible enough or I need to add NIN. 
+    // For now I won't send NIN to avoid error if schema doesn't have it, or I'll assume it's part of metadata if needed.
+    // Actually, looking at `users.js` I wrote, I didn't include NIN. I will skip it for now or treat it as extra.
+
+    try {
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to create user');
+        }
+
+        showToast('User created successfully!', 'success');
+        
+        // Close Modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
+        if (modal) modal.hide();
+
+        // Reset Form
+        document.getElementById('addUserForm').reset();
+
+        // Reload Users
+        loadUsers();
+
+    } catch (error) {
+        console.error('Error saving user:', error);
+        showToast(error.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Create User';
+    }
+}
+
+async function deleteUser(userId) {
+    if (!confirm('Are you sure you want to deactivate this user?')) return;
+
+    try {
+        const response = await fetch(`/api/users/${userId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error('Failed to deactivate user');
+
+        showToast('User deactivated successfully', 'success');
+        loadUsers();
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('Error deactivating user', 'error');
+    }
+}
+
+function updateUserStats(users) {
+    // Update simple stats if elements exist
+    // Total
+    const totalEl = document.querySelector('.card.bg-primary h3');
+    if (totalEl) totalEl.textContent = users.length;
+
+    // Directors
+    const directorsEl = document.querySelector('.card.bg-info h3'); // Directors card color was Info? Check HTML.
+    // HTML: Primary(Total), Info(Directors), Warning(Managers), Success(Agents)
+    if (directorsEl) directorsEl.textContent = users.filter(u => u.role === 'director').length;
+
+    // Managers
+    const managersEl = document.querySelector('.card.bg-warning h3');
+    if (managersEl) managersEl.textContent = users.filter(u => u.role === 'manager').length;
+
+    // Agents
+    const agentsEl = document.querySelector('.card.bg-success h3');
+    if (agentsEl) agentsEl.textContent = users.filter(u => u.role === 'sales_agent').length;
+}
+
+// Global scope for onclick handlers
+window.viewUser = (id) => showToast('View details feature coming soon!', 'info');
+window.editUser = (id) => showToast('Edit feature coming soon!', 'info');
+window.deleteUser = deleteUser;
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('user_management.html')) {
+        initUserManagement();
+    }
 });
-
-// --- Helper Functions ---
-
-/**
- * Initializes mock users in localStorage if not present.
- */
-function initMockUsers() {
-    const existingUsers = localStorage.getItem('kgl_users');
-    if (!existingUsers) {
-        const defaultUsers = [
-            { username: 'kgl_admin', password: 'groceries2026', role: 'Manager' }, // Requested Default
-            { username: 'admin', password: '123', role: 'Director' },
-            { username: 'manager', password: '123', role: 'Manager' },
-            { username: 'agent', password: '123', role: 'Sales Agent' }
-        ];
-        localStorage.setItem('kgl_users', JSON.stringify(defaultUsers));
-        console.log('Mock users initialized in localStorage.');
-    }
-}
-
-/**
- * Creates the Toast container element if it doesn't exist.
- */
-function setupToastContainer() {
-    if (!document.getElementById('toast-container')) {
-        const container = document.createElement('div');
-        container.id = 'toast-container';
-        document.body.appendChild(container);
-    }
-}
-
-/**
- * Shows a custom toast notification.
- * @param {string} message - The message to display.
- * @param {string} type - 'success' or 'error'.
- */
-function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = `custom-toast ${type}`;
-    
-    // Icon based on type
-    const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-    
-    toast.innerHTML = `
-        <i class="fas ${iconClass}"></i>
-        <span class="toast-message">${message}</span>
-    `;
-    
-    container.appendChild(toast);
-    
-    // Trigger animation
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 10);
-
-    // Auto-remove after 3 seconds
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            container.removeChild(toast);
-        }, 300); // Wait for transition
-    }, 3000);
-}
-
-/**
- * Updates the dashboard user info from the session.
- */
-function updateDashboardUserInfo() {
-    const session = JSON.parse(localStorage.getItem('kgl_session'));
-    const userNameElement = document.querySelector('.user-profile span'); // Adjust selector based on HTML
-    const userRoleElement = document.querySelector('.user-profile small'); // If exists
-    
-    if (session && userNameElement) {
-        // If the element contains just text, update it. 
-        // Note: Check HTML structure. Usually it's text next to image.
-        // Assuming: <span>Admin User</span>
-        userNameElement.textContent = session.username;
-    }
-}

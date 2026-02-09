@@ -1,79 +1,101 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs').promises;
-const path = require('path');
-
-// Path to the JSON data file
-const DATA_FILE = path.join(__dirname, '../data.json');
-
-// Helper to ensure data file exists
-async function ensureDataFile() {
-    try {
-        await fs.access(DATA_FILE);
-    } catch (error) {
-        // File doesn't exist, create it with empty array
-        await fs.writeFile(DATA_FILE, '[]', 'utf8');
-    }
-}
+const Procurement = require('../models/Procurement');
+const Produce = require('../models/Produce');
+const Branch = require('../models/Branch');
+const User = require('../models/User');
 
 // GET /kgl/procurement
+// Returns list of all procurements
 router.get('/', async (req, res) => {
     try {
-        await ensureDataFile();
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        
-        let records;
-        try {
-            records = JSON.parse(data);
-        } catch (parseError) {
-            // Handle corrupted JSON file
-            records = [];
-        }
-        
-        res.status(200).json(records);
+        const procurements = await Procurement.find()
+            .populate('produce', 'name type')
+            .populate('recordedBy', 'name')
+            .populate('branch', 'name')
+            .sort({ createdAt: -1 });
+        res.status(200).json(procurements);
     } catch (error) {
-        console.error('Error reading procurement data:', error);
+        console.error('Error fetching procurements:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 // POST /kgl/procurement
+// Creates a new procurement record and updates stock
 router.post('/', async (req, res) => {
     try {
+        // "Smart" handler to support both strict ID and simple Capstone JSON
+        let { produceId, produceName, tonnage, cost, dealerName, branchId, userId } = req.body;
+
         // Basic validation
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.status(400).json({ error: 'Bad Request: Request body is empty' });
+        if (!tonnage || !cost) {
+            return res.status(400).json({ error: 'Tonnage and Cost are required' });
         }
 
-        await ensureDataFile();
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        
-        let records = [];
-        try {
-            records = JSON.parse(data);
-            if (!Array.isArray(records)) records = [];
-        } catch (parseError) {
-            records = [];
+        // 1. Resolve Produce
+        let produce;
+        if (produceId) {
+            produce = await Produce.findById(produceId);
+        } else if (produceName) {
+            produce = await Produce.findOne({ name: new RegExp('^' + produceName + '$', 'i') });
         }
 
-        // Add timestamp and ID if not provided (optional enhancement)
-        const newRecord = {
-            id: Date.now(),
-            timestamp: new Date().toISOString(),
-            ...req.body
-        };
+        if (!produce) {
+             return res.status(400).json({ error: `Produce '${produceName}' not found. Please create it first.` });
+        }
 
-        records.push(newRecord);
+        // 2. Resolve Branch & User (Default to first found if missing - for Demo/Capstone only)
+        if (!branchId) {
+            const b = await Branch.findOne();
+            if (b) branchId = b._id;
+        }
+        if (!userId) {
+            const u = await User.findOne({ role: 'manager' });
+            if (u) userId = u._id;
+        }
 
-        await fs.writeFile(DATA_FILE, JSON.stringify(records, null, 2), 'utf8');
+        if (!branchId || !userId) {
+            return res.status(500).json({ error: 'System configuration error: No Branch or Manager found. Please run seed script.' });
+        }
+
+        // 3. Create Procurement
+        const procurement = new Procurement({
+            produce: produce._id,
+            dealer: {
+                name: dealerName || 'Unknown Dealer',
+                contact: { phone: '', email: '', address: '' }
+            },
+            quantity: {
+                tonnage: Number(tonnage),
+                unit: 'ton'
+            },
+            cost: {
+                unitCost: Number(cost) / Number(tonnage), // Assuming 'cost' input is total cost
+                totalCost: Number(cost),
+                currency: 'USD'
+            },
+            branch: branchId,
+            recordedBy: userId,
+            status: 'completed'
+        });
+
+        await procurement.save();
+
+        // 4. Update Produce Stock
+        produce.currentStock.tonnage = (produce.currentStock.tonnage || 0) + Number(tonnage);
+        // Optional: Update Weighted Average Cost here if needed
+        await produce.save();
 
         res.status(201).json({
-            message: 'Record created successfully',
-            record: newRecord
+            message: 'Procurement record created and stock updated successfully',
+            record: procurement,
+            newStock: produce.currentStock.tonnage
         });
+
     } catch (error) {
-        console.error('Error saving procurement data:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Procurement Error:', error);
+        res.status(400).json({ error: error.message });
     }
 });
 

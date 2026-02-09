@@ -273,86 +273,10 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <img src="https://ui-avatars.com/api/?name=Robert+Mugisha&background=2E7D32&color=fff" alt="Profile" class="rounded-circle me-2" width="32">
-                                                <strong>Robert Mugisha</strong>
-                                            </div>
-                                        </td>
-                                        <td>robert.mugisha@kgl.com</td>
-                                        <td><span class="badge bg-danger">Director</span></td>
-                                        <td>Head Office</td>
-                                        <td>CM89012345678</td>
-                                        <td>+256 772 123 456</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>Jan 8, 2024 09:30</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit User">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="Deactivate">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <img src="https://ui-avatars.com/api/?name=Maria+Nakato&background=FFA000&color=fff" alt="Profile" class="rounded-circle me-2" width="32">
-                                                <strong>Maria Nakato</strong>
-                                            </div>
-                                        </td>
-                                        <td>maria.nakato@kgl.com</td>
-                                        <td><span class="badge bg-warning">Manager</span></td>
-                                        <td>Kampala Main</td>
-                                        <td>CM78098765432</td>
-                                        <td>+256 701 987 654</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>Jan 8, 2024 08:45</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit User">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="Deactivate">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <img src="https://ui-avatars.com/api/?name=Peter+Okello&background=2196F3&color=fff" alt="Profile" class="rounded-circle me-2" width="32">
-                                                <strong>Peter Okello</strong>
-                                            </div>
-                                        </td>
-                                        <td>peter.okello@kgl.com</td>
-                                        <td><span class="badge bg-info">Sales Agent</span></td>
-                                        <td>Entebbe Branch</td>
-                                        <td>CM67045678901</td>
-                                        <td>+256 755 456 789</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>Jan 7, 2024 16:20</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit User">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="Deactivate">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="usersTableBody">
+                                    <!-- Users will be loaded dynamically here -->
                                 </tbody>
+
                             </table>
                         </div>
                         <div class="card-footer">
@@ -386,19 +310,19 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="addUserForm">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" required>
+                                <input type="text" class="form-control" id="userFullName" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" required>
+                                <input type="email" class="form-control" id="userEmail" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Role</label>
-                                <select class="form-select" required>
+                                <select class="form-select" id="userRole" required>
                                     <option value="">Select Role</option>
                                     <option value="director">Director</option>
                                     <option value="manager">Manager</option>
@@ -407,35 +331,32 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Branch</label>
-                                <select class="form-select" required>
-                                    <option value="">Select Branch</option>
-                                    <option value="kampala">Kampala Main</option>
-                                    <option value="entebbe">Entebbe Branch</option>
-                                    <option value="jinja">Jinja Branch</option>
+                                <select class="form-select" id="userBranch" required>
+                                    <option value="">Loading Branches...</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">NIN (National ID)</label>
-                                <input type="text" class="form-control" required>
+                                <input type="text" class="form-control" id="userNIN" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" required>
+                                <input type="tel" class="form-control" id="userPhone" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" id="userUsername" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Password</label>
-                                <input type="password" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" required>
+                                <input type="password" class="form-control" id="userPassword" required>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Create User</button>
+                    <button type="button" class="btn btn-primary" id="saveUserBtn">Create User</button>
                 </div>
             </div>
         </div>

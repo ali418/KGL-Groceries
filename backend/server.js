@@ -44,6 +44,23 @@ const connectDB = async () => {
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+// Sales Route
+const salesRoutes = require('./routes/sales');
+app.use('/api/sales', salesRoutes);
+
+// Produce Route (Helper for Dropdowns)
+const produceRoutes = require('./routes/produce');
+app.use('/api/produce', produceRoutes);
+
+// User Management Route
+const userRoutes = require('./routes/users');
+app.use('/api/users', userRoutes);
+
+// Branch Route (Helper)
+const branchRoutes = require('./routes/branches');
+app.use('/api/branches', branchRoutes);
+
+
 // Procurement Exercise Route (Capstone)
 const procurementRoutes = require('./routes/procurement');
 app.use('/kgl/procurement', procurementRoutes);
