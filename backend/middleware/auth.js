@@ -17,8 +17,9 @@ const protect = async (req, res, next) => {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).populate('branch');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key_here');
+      // Note: Payload uses 'userId' key from generateToken in authController
+      req.user = await User.findById(decoded.userId).populate('branch');
       
       if (!req.user) {
         return res.status(401).json({
