@@ -133,7 +133,7 @@ const login = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error during login',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: error.message // Expose error for debugging
     });
   }
 };
