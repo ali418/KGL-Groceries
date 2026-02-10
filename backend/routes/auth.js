@@ -12,6 +12,68 @@ const {
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *         - role
+ *         - branch
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the user
+ *         name:
+ *           type: string
+ *           description: The user's name
+ *         username:
+ *           type: string
+ *           description: The user's username
+ *         role:
+ *           type: string
+ *           enum: [director, manager, agent]
+ *           description: The user's role
+ *         branch:
+ *           type: string
+ *           description: The branch ID
+ *         isActive:
+ *           type: boolean
+ *           description: Whether the user is active
+ *     LoginRequest:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *         password:
+ *           type: string
+ *     AuthResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         data:
+ *           type: object
+ *           properties:
+ *             token:
+ *               type: string
+ *             user:
+ *               $ref: '#/components/schemas/User'
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: The authentication managing API
+ */
+
 // Validation rules
 const registerValidation = [
   body('name').trim().isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
@@ -39,10 +101,82 @@ const changePasswordValidation = [
 ];
 
 // Public routes
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: The user was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
+ */
 router.post('/register', registerValidation, register);
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Server error
+ */
 router.post('/login', loginValidation, login);
 
 // Protected routes
+/**
+ * @swagger
+ * /auth/profile:
+ *   get:
+ *     summary: Get current user profile
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: The user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Not authorized
+ */
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfileValidation, updateProfile);
 router.put('/change-password', protect, changePasswordValidation, changePassword);

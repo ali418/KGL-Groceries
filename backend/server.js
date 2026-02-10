@@ -36,6 +36,11 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+// Swagger Documentation
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./config/swagger');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
 // Logging
 app.use(morgan('combined'));
 

@@ -5,6 +5,94 @@ const Produce = require('../models/Produce');
 const Branch = require('../models/Branch');
 const User = require('../models/User');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Sales
+ *   description: Sales management API
+ */
+
+/**
+ * @swagger
+ * /sales:
+ *   get:
+ *     summary: Get all sales
+ *     tags: [Sales]
+ *     responses:
+ *       200:
+ *         description: List of sales
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   produce:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                   salesAgent:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                   branch:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                   pricing:
+ *                     type: object
+ *                     properties:
+ *                       totalPrice:
+ *                         type: number
+ *       500:
+ *         description: Server error
+ *   post:
+ *     summary: Create a new sale
+ *     tags: [Sales]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - produceId
+ *               - tonnage
+ *               - unitPrice
+ *             properties:
+ *               produceId:
+ *                 type: string
+ *               tonnage:
+ *                 type: number
+ *               unitPrice:
+ *                 type: number
+ *               buyerName:
+ *                 type: string
+ *               paymentMethod:
+ *                 type: string
+ *                 enum: [cash, mobile_money, bank_transfer]
+ *               amountPaid:
+ *                 type: number
+ *               branchId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Sale recorded successfully
+ *       400:
+ *         description: Validation error or insufficient stock
+ *       404:
+ *         description: Produce not found
+ *       500:
+ *         description: Server error
+ */
 // GET /api/sales
 // Returns list of all sales
 router.get('/', async (req, res) => {

@@ -5,6 +5,88 @@ const Produce = require('../models/Produce');
 const Branch = require('../models/Branch');
 const User = require('../models/User');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Procurement
+ *   description: Procurement management API
+ */
+
+/**
+ * @swagger
+ * /kgl/procurement:
+ *   get:
+ *     summary: Get all procurements
+ *     tags: [Procurement]
+ *     responses:
+ *       200:
+ *         description: List of procurements
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   produce:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                   recordedBy:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                   branch:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                   cost:
+ *                     type: object
+ *                     properties:
+ *                       totalCost:
+ *                         type: number
+ *       500:
+ *         description: Server error
+ *   post:
+ *     summary: Create a new procurement
+ *     tags: [Procurement]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tonnage
+ *               - cost
+ *             properties:
+ *               produceId:
+ *                 type: string
+ *               produceName:
+ *                 type: string
+ *               tonnage:
+ *                 type: number
+ *               cost:
+ *                 type: number
+ *               dealerName:
+ *                 type: string
+ *               branchId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Procurement record created successfully
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
+ */
 // GET /kgl/procurement
 // Returns list of all procurements
 router.get('/', async (req, res) => {
