@@ -110,6 +110,14 @@ app.use('/api/users', userRoutes);
 const branchRoutes = require('./routes/branches');
 app.use('/api/branches', branchRoutes);
 
+// Credit Sales Route (SRD Requirement)
+const creditSalesRoutes = require('./routes/creditSales');
+app.use('/api/credit-sales', creditSalesRoutes);
+
+// Reports Route (SRD Requirement)
+const reportsRoutes = require('./routes/reports');
+app.use('/api/reports', reportsRoutes);
+
 
 // Procurement Exercise Route (Capstone)
 const procurementRoutes = require('./routes/procurement');
