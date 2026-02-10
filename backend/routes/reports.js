@@ -3,7 +3,8 @@ const router = express.Router();
 const Sale = require('../models/Sale');
 const Produce = require('../models/Produce');
 const CreditSale = require('../models/CreditSale');
-const { protect, authorize } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
+const { authorize } = require('../middleware/roles');
 
 /**
  * @swagger
