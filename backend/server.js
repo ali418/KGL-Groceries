@@ -39,7 +39,32 @@ app.use('/api/', limiter);
 // Swagger Documentation
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
+// Basic Auth Middleware for Swagger
+const basicAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="KGL API Docs"');
+    return res.status(401).send('Authentication required');
+  }
+
+  const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
+  const user = auth[0];
+  const pass = auth[1];
+
+  // Default credentials (should be in .env)
+  const validUser = process.env.DOCS_USER || 'admin';
+  const validPass = process.env.DOCS_PASSWORD || 'password123';
+
+  if (user === validUser && pass === validPass) {
+    next();
+  } else {
+    res.setHeader('WWW-Authenticate', 'Basic realm="KGL API Docs"');
+    return res.status(401).send('Authentication required');
+  }
+};
+
+app.use('/api-docs', basicAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Logging
 app.use(morgan('combined'));
