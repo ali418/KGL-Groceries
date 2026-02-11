@@ -70,10 +70,14 @@ app.use('/api-docs', basicAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use(morgan('combined'));
 
 // Database connection
+// Database connection string logic
+const getDbConnectionString = () => {
+  return process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+};
+
 let dbConnectionError = null;
 const connectDB = async () => {
-  // Use environment variable (Recommended) or provided fallback
-  const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+  const connStr = getDbConnectionString();
   
   // Log masked connection string for debugging
   if (!process.env.MONGODB_URI) {
@@ -86,7 +90,9 @@ const connectDB = async () => {
     await mongoose.connect(connStr, {
       serverSelectionTimeoutMS: 30000, // Increased to 30s
       socketTimeoutMS: 45000,
-      family: 4 // Use IPv4
+      family: 4, // Use IPv4
+      authSource: 'admin', // Explicitly set auth database
+      directConnection: true // Force direct connection for proxy URLs
     });
     console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
     dbConnectionError = null;
@@ -107,7 +113,7 @@ app.use((req, res, next) => {
   }
 
   if (mongoose.connection.readyState !== 1) {
-    const connStr = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries';
+    const connStr = getDbConnectionString();
     const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
     
     return res.status(503).json({
@@ -124,7 +130,7 @@ app.use((req, res, next) => {
 
 // DB Debug Route
 app.get('/api/debug/db', (req, res) => {
-  const connStr = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries';
+  const connStr = getDbConnectionString();
   const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
   
   res.status(200).json({
