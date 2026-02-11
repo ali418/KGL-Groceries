@@ -362,10 +362,22 @@ function updateDashboardUI() {
     // Enforce Role Access
     const path = window.location.pathname;
     
-    // Sales Agent -> Only Sales Dashboard
-    if (user.role === 'sales_agent' && !path.includes('sales_dashboard.html')) {
-        window.location.href = 'sales_dashboard.html';
+    // Strict Role Redirection
+    if (user.role === 'sales_agent' && !path.includes('sales_dashboard.html') && !path.includes('pos.html')) {
+        // Allow pos.html too since it's a sub-page
+         // Wait, we need to allow other agent pages too
+         // For now, let's just ensure they don't go to director/manager pages
+         if (path.includes('director_') || path.includes('manager_')) {
+             window.location.href = 'sales_dashboard.html';
+             return;
+         }
+    } else if (user.role === 'manager' && path.includes('director_')) {
+        window.location.href = 'manager_dashboard.html';
         return;
+    } else if (user.role === 'director' && path.includes('manager_')) {
+        // Director can view manager pages? Maybe. But for now keep them separate.
+        // Actually director monitors, so maybe they have their own view.
+        // Let's stick to the requested sitemap.
     }
 
     // 1. Update Profile Section (Sidebar pages)
@@ -404,7 +416,10 @@ function updateDashboardUI() {
                      link.href = 'manager_dashboard.html';
                  }
             } else if (user.role === 'sales_agent') {
-                 allowed = false;
+                 // Agents: specific restrictions handled by separate HTML structure usually
+                 // But if we reuse pages, we might need logic.
+                 // Currently Agent has their own dashboard file, so this block might be redundant 
+                 // unless we share pages like 'login.html' (handled above)
             } else if (user.role === 'director') {
                  // Directors: See everything.
                  // Ensure dashboard link points to director_dashboard.html
