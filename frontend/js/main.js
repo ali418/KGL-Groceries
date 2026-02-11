@@ -340,3 +340,85 @@ async function handleLogin(e) {
         loginBtn.textContent = 'Login';
     }
 }
+
+// --- Dashboard UI Logic ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Only run if we are NOT on the login page
+    if (!window.location.pathname.includes('login.html')) {
+        updateDashboardUI();
+    }
+});
+
+function updateDashboardUI() {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const user = JSON.parse(userJson);
+
+    // 1. Update Profile Section (Sidebar pages)
+    const profileName = document.querySelector('.user-profile span');
+    const profileImg = document.querySelector('.user-profile img');
+    if (profileName) profileName.textContent = user.name + ' (' + capitalize(user.role) + ')';
+    if (profileImg) profileImg.src = `https://ui-avatars.com/api/?name=${user.name}&background=random`;
+
+    // 2. Update POS Navbar (Sales Agent)
+    const posUser = document.querySelector('.navbar .text-muted strong');
+    if (posUser) posUser.textContent = user.name;
+
+    // 3. Filter Sidebar Links based on Role
+    const sidebar = document.querySelector('.sidebar-menu');
+    if (sidebar) {
+        const items = sidebar.querySelectorAll('li');
+        
+        items.forEach(item => {
+            const link = item.querySelector('a');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            const text = link.textContent.trim().toLowerCase();
+            
+            // Logic to hide/show based on role
+            let allowed = true;
+
+            // Common Logic: Logout is always allowed
+            if (href.includes('login.html')) return;
+
+            // Role-Specific Rules
+            if (user.role === 'manager') {
+                 // Managers: No User Management
+                 if (href.includes('user_management.html') || text.includes('user management')) allowed = false;
+                 // Managers: Dashboard link should point to manager_dashboard.html
+                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
+                     link.href = 'manager_dashboard.html';
+                 }
+            } else if (user.role === 'sales_agent') {
+                 // Agents: Only Sales Dashboard usually. 
+                 // If they are here, hide most things.
+                 if (!href.includes('sales_dashboard.html') && !text.includes('dashboard')) allowed = false;
+                 
+                 // Update dashboard link
+                 if (text.includes('dashboard')) {
+                     link.href = 'sales_dashboard.html';
+                 }
+            } else if (user.role === 'director') {
+                 // Directors: See everything.
+                 // Ensure dashboard link points to director_dashboard.html
+                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
+                     link.href = 'director_dashboard.html';
+                 }
+            }
+
+            if (!allowed) {
+                item.style.display = 'none';
+            }
+        });
+    }
+}
+
+function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
