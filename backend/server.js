@@ -75,20 +75,34 @@ const connectDB = async () => {
     // Use environment variable or fallback to the provided Railway MongoDB URI
     const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
     
+    // Log masked connection string for debugging
+    const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
+    console.log(`Attempting to connect to MongoDB: ${maskedStr}`);
+
     await mongoose.connect(connStr, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
+      serverSelectionTimeoutMS: 30000, // Wait 30s for server selection
+      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     });
     console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    // Don't exit process in production, just log error so app stays up (though non-functional for DB)
-    if (process.env.NODE_ENV !== 'production') {
-      process.exit(1);
-    }
+    // Exit process on connection failure to trigger restart/alert
+    process.exit(1);
   }
 };
+
+// Middleware to check DB connection status
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      message: 'Service Unavailable: Database connection not established',
+      ready_state: mongoose.connection.readyState
+    });
+  }
+  next();
+});
 
 // Routes
 const authRoutes = require('./routes/auth');
