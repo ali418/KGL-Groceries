@@ -107,7 +107,7 @@ app.use((req, res, next) => {
     return res.status(503).json({
       message: 'Service Unavailable: Database connection not established',
       ready_state: mongoose.connection.readyState,
-      last_error: process.env.NODE_ENV === 'development' ? dbConnectionError : undefined
+      last_error: dbConnectionError // Show error in production for debugging
     });
   }
   next();
@@ -115,11 +115,15 @@ app.use((req, res, next) => {
 
 // DB Debug Route
 app.get('/api/debug/db', (req, res) => {
+  const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+  const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
+  
   res.status(200).json({
     readyState: mongoose.connection.readyState,
     readyStateText: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState] || 'unknown',
     lastError: dbConnectionError,
-    env_uri_set: !!process.env.MONGODB_URI
+    env_uri_set: !!process.env.MONGODB_URI,
+    using_uri: maskedStr
   });
 });
 
