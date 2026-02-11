@@ -80,11 +80,9 @@ const connectDB = async () => {
 
   try {
     await mongoose.connect(connStr, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000, // Increased to 30s
+      serverSelectionTimeoutMS: 10000, // 10s timeout
       socketTimeoutMS: 45000,
-      family: 4 // Use IPv4, skip IPv6
+      family: 4 // Use IPv4
     });
     console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
     dbConnectionError = null;
@@ -105,10 +103,16 @@ app.use((req, res, next) => {
   }
 
   if (mongoose.connection.readyState !== 1) {
+    const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+    const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
+    
     return res.status(503).json({
       message: 'Service Unavailable: Database connection not established',
       ready_state: mongoose.connection.readyState,
-      last_error: dbConnectionError // Show error in production for debugging
+      ready_state_text: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState],
+      last_error: dbConnectionError,
+      env_uri_set: !!process.env.MONGODB_URI,
+      using_uri: maskedStr
     });
   }
   next();
