@@ -380,25 +380,37 @@ function updateDashboardUI() {
             const href = link.getAttribute('href');
             const text = link.textContent.trim().toLowerCase();
             
-            // Logic to hide/show based on role - DISABLED PER USER REQUEST
-            // All roles see all sidebar items now.
+            // Logic to hide/show based on role
             let allowed = true;
 
             // Common Logic: Logout is always allowed
             if (href.includes('login.html')) return;
 
-            // Update dashboard link to point to the correct dashboard for the user
-            if (text.includes('dashboard') || href.includes('dashboard.html')) {
-                if (user.role === 'manager') {
-                    link.href = 'manager_dashboard.html';
-                } else if (user.role === 'sales_agent') {
-                    link.href = 'sales_dashboard.html';
-                } else {
-                    link.href = 'director_dashboard.html';
-                }
+            // Role-Specific Rules
+            if (user.role === 'manager') {
+                 // Managers: No User Management
+                 if (href.includes('user_management.html') || text.includes('user management')) allowed = false;
+                 // Managers: Dashboard link should point to manager_dashboard.html
+                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
+                     link.href = 'manager_dashboard.html';
+                 }
+            } else if (user.role === 'sales_agent') {
+                 // Agents: Only Sales Dashboard usually. 
+                 // If they are here, hide most things.
+                 if (!href.includes('sales_dashboard.html') && !text.includes('dashboard')) allowed = false;
+                 
+                 // Update dashboard link
+                 if (text.includes('dashboard')) {
+                     link.href = 'sales_dashboard.html';
+                 }
+            } else if (user.role === 'director') {
+                 // Directors: See everything.
+                 // Ensure dashboard link points to director_dashboard.html
+                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
+                     link.href = 'director_dashboard.html';
+                 }
             }
             
-            // Previously hidden logic removed to show same sidebar for all roles
             if (!allowed) {
                 item.style.display = 'none';
             }
