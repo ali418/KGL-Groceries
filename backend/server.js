@@ -72,20 +72,19 @@ app.use(morgan('combined'));
 // Database connection
 let dbConnectionError = null;
 const connectDB = async () => {
-  // Use environment variable (Recommended) or local fallback
-  const connStr = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries';
+  // Use environment variable (Recommended) or provided fallback
+  const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
   
   // Log masked connection string for debugging
   if (!process.env.MONGODB_URI) {
-    console.warn('⚠️ MONGODB_URI not found in environment variables. Using localhost fallback.');
-    console.warn('   If running in production (Railway), please set MONGODB_URI in the Variables tab.');
+    console.warn('⚠️ MONGODB_URI not found in environment variables. Using provided fallback.');
   }
   const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
   console.log(`Attempting to connect to MongoDB: ${maskedStr}`);
 
   try {
     await mongoose.connect(connStr, {
-      serverSelectionTimeoutMS: 10000, // 10s timeout
+      serverSelectionTimeoutMS: 30000, // Increased to 30s
       socketTimeoutMS: 45000,
       family: 4 // Use IPv4
     });
