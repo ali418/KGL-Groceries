@@ -179,6 +179,11 @@ app.use('/api/credit-sales', creditSalesRoutes);
 const reportsRoutes = require('./routes/reports');
 app.use('/api/reports', reportsRoutes);
 
+// Seed Route (To populate DB on remote server)
+const seedRoutes = require('./routes/seed');
+app.use('/api/seed', seedRoutes);
+
+
 
 // Procurement Exercise Route (Capstone)
 const procurementRoutes = require('./routes/procurement');
