@@ -87,14 +87,23 @@ const connectDB = async () => {
   console.log(`Attempting to connect to MongoDB: ${maskedStr}`);
 
   try {
-    await mongoose.connect(connStr, {
-      serverSelectionTimeoutMS: 30000, // Increased to 30s
-      socketTimeoutMS: 45000,
-      family: 4, // Use IPv4
-      authSource: 'admin', // Explicitly set auth database
-      directConnection: true // Force direct connection for proxy URLs
+    // Add event listeners for better debugging
+    mongoose.connection.on('connecting', () => { console.log('⏳ MongoDB connecting...'); });
+    mongoose.connection.on('connected', () => { console.log('✅ MongoDB connected'); });
+    mongoose.connection.on('disconnected', () => { console.log('❌ MongoDB disconnected'); });
+    mongoose.connection.on('error', (err) => { 
+      console.error('❌ MongoDB connection error event:', err); 
+      dbConnectionError = err.message;
     });
-    console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
+
+    await mongoose.connect(connStr, {
+      serverSelectionTimeoutMS: 30000, // Keep high timeout
+      socketTimeoutMS: 45000,
+      authSource: 'admin',
+      // Removed directConnection and family: 4 to let driver auto-detect best settings for the proxy
+    });
+    
+    // Explicitly set null on success (though event listener handles logging)
     dbConnectionError = null;
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
