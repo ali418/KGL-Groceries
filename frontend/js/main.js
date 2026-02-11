@@ -322,8 +322,7 @@ async function handleLogin(e) {
             if (user.role === 'director') {
                 window.location.href = 'director_dashboard.html';
             } else if (user.role === 'sales_agent') {
-                // Redirect to Manager Dashboard to show full sidebar as requested
-                window.location.href = 'manager_dashboard.html';
+                window.location.href = 'sales_dashboard.html';
             } else if (user.role === 'manager') {
                 window.location.href = 'manager_dashboard.html';
             } else {
@@ -359,6 +358,15 @@ function updateDashboardUI() {
     }
 
     const user = JSON.parse(userJson);
+
+    // Enforce Role Access
+    const path = window.location.pathname;
+    
+    // Sales Agent -> Only Sales Dashboard
+    if (user.role === 'sales_agent' && !path.includes('sales_dashboard.html')) {
+        window.location.href = 'sales_dashboard.html';
+        return;
+    }
 
     // 1. Update Profile Section (Sidebar pages)
     const profileName = document.querySelector('.user-profile span');
@@ -396,11 +404,7 @@ function updateDashboardUI() {
                      link.href = 'manager_dashboard.html';
                  }
             } else if (user.role === 'sales_agent') {
-                 // Agents: See everything (Same as Director/Manager per request)
-                 // Dashboard link points to manager_dashboard.html to maintain sidebar access
-                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
-                     link.href = 'manager_dashboard.html';
-                 }
+                 allowed = false;
             } else if (user.role === 'director') {
                  // Directors: See everything.
                  // Ensure dashboard link points to director_dashboard.html
