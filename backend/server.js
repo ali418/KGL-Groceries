@@ -72,9 +72,14 @@ app.use(morgan('combined'));
 // Database connection
 let dbConnectionError = null;
 const connectDB = async () => {
-  const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+  // Use environment variable (Recommended) or local fallback
+  const connStr = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries';
   
   // Log masked connection string for debugging
+  if (!process.env.MONGODB_URI) {
+    console.warn('⚠️ MONGODB_URI not found in environment variables. Using localhost fallback.');
+    console.warn('   If running in production (Railway), please set MONGODB_URI in the Variables tab.');
+  }
   const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
   console.log(`Attempting to connect to MongoDB: ${maskedStr}`);
 
@@ -103,7 +108,7 @@ app.use((req, res, next) => {
   }
 
   if (mongoose.connection.readyState !== 1) {
-    const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+    const connStr = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries';
     const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
     
     return res.status(503).json({
@@ -120,7 +125,7 @@ app.use((req, res, next) => {
 
 // DB Debug Route
 app.get('/api/debug/db', (req, res) => {
-  const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+  const connStr = process.env.MONGODB_URI || 'mongodb://localhost:27017/kgl-groceries';
   const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
   
   res.status(200).json({
