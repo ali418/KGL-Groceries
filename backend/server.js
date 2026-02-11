@@ -82,8 +82,9 @@ const connectDB = async () => {
     await mongoose.connect(connStr, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, 
+      serverSelectionTimeoutMS: 30000, // Increased to 30s
       socketTimeoutMS: 45000,
+      family: 4 // Use IPv4, skip IPv6
     });
     console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
     dbConnectionError = null;
