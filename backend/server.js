@@ -70,38 +70,57 @@ app.use('/api-docs', basicAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use(morgan('combined'));
 
 // Database connection
+let dbConnectionError = null;
 const connectDB = async () => {
-  try {
-    // Use environment variable or fallback to the provided Railway MongoDB URI
-    const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
-    
-    // Log masked connection string for debugging
-    const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
-    console.log(`Attempting to connect to MongoDB: ${maskedStr}`);
+  const connStr = process.env.MONGODB_URI || 'mongodb://mongo:krlXDpEwvHqYqEreBvIMjvCnwsjwTGTA@trolley.proxy.rlwy.net:47875';
+  
+  // Log masked connection string for debugging
+  const maskedStr = connStr.replace(/:([^:@]+)@/, ':****@');
+  console.log(`Attempting to connect to MongoDB: ${maskedStr}`);
 
+  try {
     await mongoose.connect(connStr, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000, // Wait 30s for server selection
-      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+      serverSelectionTimeoutMS: 5000, 
+      socketTimeoutMS: 45000,
     });
     console.log(`✅ MongoDB connected successfully: ${connStr.includes('localhost') ? 'Local' : 'Remote'}`);
+    dbConnectionError = null;
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    // Exit process on connection failure to trigger restart/alert
-    process.exit(1);
+    dbConnectionError = error.message;
+    // Retry logic
+    console.log('Retrying connection in 5 seconds...');
+    setTimeout(connectDB, 5000);
   }
 };
 
 // Middleware to check DB connection status
 app.use((req, res, next) => {
+  // Allow health check and debug routes even if DB is down
+  if (req.path === '/api/health' || req.path === '/api/debug/db') {
+    return next();
+  }
+
   if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({
       message: 'Service Unavailable: Database connection not established',
-      ready_state: mongoose.connection.readyState
+      ready_state: mongoose.connection.readyState,
+      last_error: process.env.NODE_ENV === 'development' ? dbConnectionError : undefined
     });
   }
   next();
+});
+
+// DB Debug Route
+app.get('/api/debug/db', (req, res) => {
+  res.status(200).json({
+    readyState: mongoose.connection.readyState,
+    readyStateText: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState] || 'unknown',
+    lastError: dbConnectionError,
+    env_uri_set: !!process.env.MONGODB_URI
+  });
 });
 
 // Routes
