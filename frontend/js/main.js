@@ -322,9 +322,10 @@ async function handleLogin(e) {
             if (user.role === 'director') {
                 window.location.href = 'director_dashboard.html';
             } else if (user.role === 'sales_agent') {
-                window.location.href = 'sales_dashboard.html';
+                // Redirect to Manager Dashboard to show full sidebar as requested
+                window.location.href = 'manager_dashboard.html';
             } else if (user.role === 'manager') {
-                window.location.href = 'director_dashboard.html'; // Or manager dashboard if exists
+                window.location.href = 'manager_dashboard.html';
             } else {
                 window.location.href = 'director_dashboard.html';
             }
@@ -395,13 +396,10 @@ function updateDashboardUI() {
                      link.href = 'manager_dashboard.html';
                  }
             } else if (user.role === 'sales_agent') {
-                 // Agents: Only Sales Dashboard usually. 
-                 // If they are here, hide most things.
-                 if (!href.includes('sales_dashboard.html') && !text.includes('dashboard')) allowed = false;
-                 
-                 // Update dashboard link
-                 if (text.includes('dashboard')) {
-                     link.href = 'sales_dashboard.html';
+                 // Agents: See everything (Same as Director/Manager per request)
+                 // Dashboard link points to manager_dashboard.html to maintain sidebar access
+                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
+                     link.href = 'manager_dashboard.html';
                  }
             } else if (user.role === 'director') {
                  // Directors: See everything.
