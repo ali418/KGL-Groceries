@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Dashboard - KGL Groceries LTD</title>
-    
+
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -12,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
     <!-- Sidebar -->
@@ -49,7 +51,9 @@
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Branch Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
             </ul>
         </div>
@@ -58,176 +62,157 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container-fluid">
-            
-            <!-- Action Bar -->
+
+            <!-- Dashboard Overview -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 class="fw-bold">Stock Management</h2>
-                    <p class="text-muted">Manage incoming produce and set prices.</p>
+                    <h2 class="fw-bold">Manager Dashboard</h2>
+                    <p class="text-muted">Overview of branch operations and performance</p>
                 </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#procurementModal">
-                    <i class="fas fa-plus me-2"></i> New Procurement
-                </button>
+                <div>
+                    <button class="btn btn-outline-primary me-2">
+                        <i class="fas fa-download me-2"></i> Export Report
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-calendar-alt me-2"></i> Today
+                    </button>
+                </div>
             </div>
 
-            <!-- Stock Status Cards -->
+            <!-- Key Metrics Cards -->
             <div class="row g-4 mb-4">
-                <div class="col-md-4">
-                    <div class="card p-3 h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%); color: white;">
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 border-0 shadow-sm"
+                        style="background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%); color: white;">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="mb-1">Healthy Stock</h5>
-                                <h2 class="mb-0">85%</h2>
+                                <h6 class="mb-1">Today's Sales</h6>
+                                <h3 class="mb-0">UGX 2.4M</h3>
                             </div>
-                            <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                            <i class="fas fa-cash-register fa-2x opacity-50"></i>
                         </div>
-                        <small class="mt-3 d-block opacity-75">12 items well stocked</small>
+                        <small class="mt-2 d-block opacity-75">+12% from yesterday</small>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card p-3 h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #FFA000 0%, #FFC107 100%); color: white;">
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 border-0 shadow-sm"
+                        style="background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: white;">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="mb-1">Low Stock</h5>
-                                <h2 class="mb-0">3 Items</h2>
+                                <h6 class="mb-1">Stock Value</h6>
+                                <h3 class="mb-0">UGX 8.5M</h3>
                             </div>
-                            <i class="fas fa-exclamation-circle fa-2x opacity-50"></i>
+                            <i class="fas fa-warehouse fa-2x opacity-50"></i>
                         </div>
-                        <small class="mt-3 d-block opacity-75">Action needed soon</small>
+                        <small class="mt-2 d-block opacity-75">Across all items</small>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card p-3 h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #D32F2F 0%, #E57373 100%); color: white;">
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 border-0 shadow-sm"
+                        style="background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%); color: white;">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="mb-1">Out of Stock</h5>
-                                <h2 class="mb-0">0 Items</h2>
+                                <h6 class="mb-1">Low Stock Items</h6>
+                                <h3 class="mb-0">3 Items</h3>
                             </div>
-                            <i class="fas fa-times-circle fa-2x opacity-50"></i>
+                            <i class="fas fa-exclamation-triangle fa-2x opacity-50"></i>
                         </div>
-                        <small class="mt-3 d-block opacity-75">Great job keeping up!</small>
+                        <small class="mt-2 d-block opacity-75">Need attention</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-3 h-100 border-0 shadow-sm"
+                        style="background: linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%); color: white;">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="mb-1">Active Agents</h6>
+                                <h3 class="mb-0">8 / 10</h3>
+                            </div>
+                            <i class="fas fa-users fa-2x opacity-50"></i>
+                        </div>
+                        <small class="mt-2 d-block opacity-75">On duty today</small>
                     </div>
                 </div>
             </div>
 
-            <!-- Inventory Table -->
-            <div class="card">
-                <div class="card-header bg-white py-3">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h5 class="mb-0 fw-bold">Current Inventory</h5>
+            <!-- Quick Actions & Recent Activity -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Recent Transactions</h5>
                         </div>
-                        <div class="col-auto">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search produce...">
+                        <div class="table-responsive">
+                            <table class="table table-custom align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice #</th>
+                                        <th>Agent</th>
+                                        <th>Amount</th>
+                                        <th>Payment</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>INV-2024-045</strong></td>
+                                        <td>John Doe</td>
+                                        <td>UGX 145,000</td>
+                                        <td><span class="badge bg-success">Cash</span></td>
+                                        <td>10:45 AM</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INV-2024-044</strong></td>
+                                        <td>Sarah Smith</td>
+                                        <td>UGX 89,500</td>
+                                        <td><span class="badge bg-warning">Credit</span></td>
+                                        <td>10:32 AM</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INV-2024-043</strong></td>
+                                        <td>Mike Johnson</td>
+                                        <td>UGX 234,000</td>
+                                        <td><span class="badge bg-success">Cash</span></td>
+                                        <td>10:15 AM</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-custom align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>Item Name</th>
-                                <th>Category</th>
-                                <th>Stock (Kg)</th>
-                                <th>Cost/Kg</th>
-                                <th>Sale Price/Kg</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-light rounded p-2 me-2"><i class="fas fa-apple-alt text-danger"></i></div>
-                                        <strong>Red Apples</strong>
-                                    </div>
-                                </td>
-                                <td>Fruits</td>
-                                <td>1,200</td>
-                                <td>$1.50</td>
-                                <td>$2.20</td>
-                                <td><span class="badge bg-success">In Stock</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light text-primary"><i class="fas fa-edit"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-light rounded p-2 me-2"><i class="fas fa-carrot text-warning"></i></div>
-                                        <strong>Carrots</strong>
-                                    </div>
-                                </td>
-                                <td>Vegetables</td>
-                                <td>150</td>
-                                <td>$0.80</td>
-                                <td>$1.20</td>
-                                <td><span class="badge bg-warning text-dark">Low Stock</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-light text-primary"><i class="fas fa-edit"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Quick Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="procurement.html" class="btn btn-outline-primary">
+                                    <i class="fas fa-truck-loading me-2"></i> New Procurement
+                                </a>
+                                <a href="inventory_overview.html" class="btn btn-outline-success">
+                                    <i class="fas fa-warehouse me-2"></i> Check Inventory
+                                </a>
+                                <a href="pricing.html" class="btn btn-outline-warning">
+                                    <i class="fas fa-tags me-2"></i> Update Prices
+                                </a>
+                                <a href="sales_reports.html" class="btn btn-outline-info">
+                                    <i class="fas fa-chart-bar me-2"></i> View Reports
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Procurement Modal -->
-    <div class="modal fade" id="procurementModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Record New Procurement</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Produce Name</label>
-                            <select class="form-select">
-                                <option>Select Produce...</option>
-                                <option>Tomatoes</option>
-                                <option>Potatoes</option>
-                                <option>Onions</option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Dealer Name</label>
-                                <input type="text" class="form-control" placeholder="e.g. FreshFarms Ltd">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Quantity (Kg)</label>
-                                <input type="number" class="form-control" placeholder="0.00">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Cost per Kg</label>
-                                <input type="number" class="form-control" placeholder="$0.00">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Sale Price</label>
-                                <input type="number" class="form-control" placeholder="$0.00">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Save Record</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="js/main.js"></script>
 </body>
+
 </html>
