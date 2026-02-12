@@ -155,7 +155,7 @@ function getRoleBadgeColor(role) {
     switch (role) {
         case 'director': return 'danger';
         case 'manager': return 'warning';
-        case 'sales_agent': return 'info';
+        case 'agent': return 'info';
         default: return 'secondary';
     }
 }
@@ -253,7 +253,7 @@ function updateUserStats(users) {
 
     // Agents
     const agentsEl = document.querySelector('.card.bg-success h3');
-    if (agentsEl) agentsEl.textContent = users.filter(u => u.role === 'sales_agent').length;
+    if (agentsEl) agentsEl.textContent = users.filter(u => u.role === 'agent').length;
 }
 
 // Global scope for onclick handlers
@@ -321,7 +321,7 @@ async function handleLogin(e) {
         setTimeout(() => {
             if (user.role === 'director') {
                 window.location.href = 'director_dashboard.html';
-            } else if (user.role === 'sales_agent') {
+            } else if (user.role === 'agent') {
                 window.location.href = 'sales_dashboard.html';
             } else if (user.role === 'manager') {
                 window.location.href = 'manager_dashboard.html';
@@ -362,7 +362,7 @@ function updateDashboardUI() {
     // Enforce Role Access (allow only existing pages for each role)
     const path = window.location.pathname.split('/').pop();
     const allowedByRole = {
-        sales_agent: [
+        agent: [
             'sales_dashboard.html',
             'pos.html',
             'credit_sales.html',
@@ -389,7 +389,7 @@ function updateDashboardUI() {
     };
     const allowed = allowedByRole[user.role] || [];
     if (allowed.length && !allowed.some(name => path.includes(name))) {
-        if (user.role === 'sales_agent') {
+        if (user.role === 'agent') {
             window.location.href = 'sales_dashboard.html';
         } else if (user.role === 'manager') {
             window.location.href = 'manager_dashboard.html';
@@ -434,7 +434,7 @@ function updateDashboardUI() {
                  if (text.includes('dashboard') || href.includes('dashboard.html')) {
                      link.href = 'manager_dashboard.html';
                  }
-            } else if (user.role === 'sales_agent') {
+            } else if (user.role === 'agent') {
                  // Agents: specific restrictions handled by separate HTML structure usually
                  // But if we reuse pages, we might need logic.
                  // Currently Agent has their own dashboard file, so this block might be redundant 
