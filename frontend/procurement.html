@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Procurement - KGL Groceries LTD</title>
-    
+
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -12,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
     <!-- Sidebar -->
@@ -27,6 +29,7 @@
             <li><a href="credit_exposure.html"><i class="fas fa-hand-holding-usd"></i> Credit Sales</a></li>
             <li><a href="sales_reports.html"><i class="fas fa-file-alt"></i> Reports</a></li>
             <li><a href="pricing.html"><i class="fas fa-tags"></i> Settings (Prices)</a></li>
+            <li><a href="stock_control.html"><i class="fas fa-boxes"></i> Stock Control</a></li>
             <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
@@ -48,7 +51,9 @@
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
             </ul>
         </div>
@@ -57,7 +62,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container-fluid">
-            
+
             <!-- Page Header -->
             <div class="row mb-4">
                 <div class="col-12">
@@ -133,12 +138,14 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#createOrderModal">
+                                    <button class="btn btn-success w-100" data-bs-toggle="modal"
+                                        data-bs-target="#createOrderModal">
                                         <i class="fas fa-plus me-2"></i>Create Order
                                     </button>
                                 </div>
                                 <div class="col-md-3">
-                                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
+                                    <button class="btn btn-primary w-100" data-bs-toggle="modal"
+                                        data-bs-target="#addSupplierModal">
                                         <i class="fas fa-user-plus me-2"></i>Add Supplier
                                     </button>
                                 </div>
@@ -453,7 +460,8 @@
     </div>
 
     <!-- Create Order Modal -->
-    <div class="modal fade" id="createOrderModal" tabindex="-1" aria-labelledby="createOrderModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createOrderModal" tabindex="-1" aria-labelledby="createOrderModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -498,9 +506,12 @@
                                                         <option>Carrots</option>
                                                     </select>
                                                 </td>
-                                                <td><input type="number" class="form-control form-control-sm" value="50"></td>
-                                                <td><input type="number" class="form-control form-control-sm" value="3500"></td>
-                                                <td><input type="number" class="form-control form-control-sm" value="175000" readonly></td>
+                                                <td><input type="number" class="form-control form-control-sm"
+                                                        value="50"></td>
+                                                <td><input type="number" class="form-control form-control-sm"
+                                                        value="3500"></td>
+                                                <td><input type="number" class="form-control form-control-sm"
+                                                        value="175000" readonly></td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-outline-danger">
                                                         <i class="fas fa-trash"></i>
@@ -516,7 +527,8 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Notes</label>
-                                <textarea class="form-control" rows="3" placeholder="Special instructions or notes..."></textarea>
+                                <textarea class="form-control" rows="3"
+                                    placeholder="Special instructions or notes..."></textarea>
                             </div>
                         </div>
                     </form>
@@ -530,7 +542,8 @@
     </div>
 
     <!-- Add Supplier Modal -->
-    <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -581,10 +594,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
     <script src="js/main.js"></script>
-    
+
     <!-- Chart Initialization Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Procurement Trend Chart
             const ctxProcurement = document.getElementById('procurementChart').getContext('2d');
             new Chart(ctxProcurement, {
@@ -625,7 +638,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: function(value) {
+                                callback: function (value) {
                                     return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
                                 }
                             }
@@ -657,4 +670,5 @@
         });
     </script>
 </body>
+
 </html>

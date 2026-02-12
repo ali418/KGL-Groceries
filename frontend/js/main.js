@@ -405,53 +405,13 @@ function updateDashboardUI() {
     if (profileName) profileName.textContent = user.name + ' (' + capitalize(user.role) + ')';
     if (profileImg) profileImg.src = `https://ui-avatars.com/api/?name=${user.name}&background=random`;
 
+
     // 2. Update POS Navbar (Sales Agent)
     const posUser = document.querySelector('.navbar .text-muted strong');
     if (posUser) posUser.textContent = user.name;
 
-    // 3. Filter Sidebar Links based on Role
-    const sidebar = document.querySelector('.sidebar-menu');
-    if (sidebar) {
-        const items = sidebar.querySelectorAll('li');
-        
-        items.forEach(item => {
-            const link = item.querySelector('a');
-            if (!link) return;
-            const href = link.getAttribute('href');
-            const text = link.textContent.trim().toLowerCase();
-            
-            // Logic to hide/show based on role
-            let allowed = true;
-
-            // Common Logic: Logout is always allowed
-            if (href.includes('login.html')) return;
-
-            // Role-Specific Rules
-            if (user.role === 'manager') {
-                 // Managers: No User Management
-                 if (href.includes('user_management.html') || text.includes('user management')) allowed = false;
-                 // Managers: Dashboard link should point to manager_dashboard.html
-                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
-                     link.href = 'manager_dashboard.html';
-                 }
-            } else if (user.role === 'agent') {
-                 // Agents: specific restrictions handled by separate HTML structure usually
-                 // But if we reuse pages, we might need logic.
-                 // Currently Agent has their own dashboard file, so this block might be redundant 
-                 // unless we share pages like 'login.html' (handled above)
-            } else if (user.role === 'director') {
-                 // Directors: See everything.
-                 // Ensure dashboard link points to director_dashboard.html
-                 if (text.includes('dashboard') || href.includes('dashboard.html')) {
-                     link.href = 'director_dashboard.html';
-                 }
-            }
-            
-            if (!allowed) {
-                item.style.display = 'none';
-            }
-        });
-    }
+    // Note: Sidebar links are now fixed in each HTML file for each role
+    // No dynamic filtering needed
 }
 
 function capitalize(str) {
