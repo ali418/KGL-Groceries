@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sales History - KGL Groceries LTD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-leaf me-2"></i> KGL Sales
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="sales_dashboard.html"><i class="fas fa-tachometer-alt"></i> My Dashboard</a></li>
+            <li><a href="pos.html"><i class="fas fa-cash-register"></i> POS / Sell Produce</a></li>
+            <li><a href="credit_sales.html"><i class="fas fa-hand-holding-usd"></i> Credit Sales</a></li>
+            <li><a href="my_history.html" class="active"><i class="fas fa-history"></i> My History</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="top-navbar">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-dark me-3 d-md-none" id="sidebarToggle">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+            <h5 class="m-0 fw-bold text-muted">My Sales History</h5>
+        </div>
+        <div class="user-profile dropdown">
+            <div class="d-flex align-items-center" data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name=Sales+Agent&background=random&color=fff" alt="Profile">
+                <span class="d-none d-md-block fw-medium">Sales Agent</span>
+                <i class="fas fa-chevron-down ms-2 small"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold">My Sales</h2>
+                    <p class="text-muted">Transactions recorded by me.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Recent Transactions</span>
+                    <div class="d-flex gap-2">
+                        <input type="text" class="form-control form-control-sm" placeholder="Search...">
+                        <select class="form-select form-select-sm">
+                            <option>All</option>
+                            <option>Cash</option>
+                            <option>Credit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Date & Time</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>AG-2026-001</strong></td>
+                                <td>Feb 12, 2026 10:30 AM</td>
+                                <td>Fresh Tomatoes</td>
+                                <td>12 Kg</td>
+                                <td>UGX 2,000</td>
+                                <td>UGX 24,000</td>
+                                <td><span class="badge bg-success">Cash</span></td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>AG-2026-002</strong></td>
+                                <td>Feb 12, 2026 11:05 AM</td>
+                                <td>Red Onions</td>
+                                <td>8 Kg</td>
+                                <td>UGX 1,800</td>
+                                <td>UGX 14,400</td>
+                                <td><span class="badge bg-warning">Credit</span></td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

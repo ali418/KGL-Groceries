@@ -359,25 +359,44 @@ function updateDashboardUI() {
 
     const user = JSON.parse(userJson);
 
-    // Enforce Role Access
-    const path = window.location.pathname;
-    
-    // Strict Role Redirection
-    if (user.role === 'sales_agent' && !path.includes('sales_dashboard.html') && !path.includes('pos.html')) {
-        // Allow pos.html too since it's a sub-page
-         // Wait, we need to allow other agent pages too
-         // For now, let's just ensure they don't go to director/manager pages
-         if (path.includes('director_') || path.includes('manager_')) {
-             window.location.href = 'sales_dashboard.html';
-             return;
-         }
-    } else if (user.role === 'manager' && path.includes('director_')) {
-        window.location.href = 'manager_dashboard.html';
+    // Enforce Role Access (allow only existing pages for each role)
+    const path = window.location.pathname.split('/').pop();
+    const allowedByRole = {
+        sales_agent: [
+            'sales_dashboard.html',
+            'pos.html',
+            'credit_sales.html',
+            'my_history.html',
+            'login.html'
+        ],
+        manager: [
+            'manager_dashboard.html',
+            'inventory_overview.html',
+            'procurement.html',
+            'sales_dashboard.html',
+            'credit_exposure.html',
+            'sales_reports.html',
+            'pricing.html',
+            'stock_control.html',
+            'login.html'
+        ],
+        director: [
+            'director_dashboard.html',
+            'sales_reports.html',
+            'user_management.html',
+            'login.html'
+        ]
+    };
+    const allowed = allowedByRole[user.role] || [];
+    if (allowed.length && !allowed.some(name => path.includes(name))) {
+        if (user.role === 'sales_agent') {
+            window.location.href = 'sales_dashboard.html';
+        } else if (user.role === 'manager') {
+            window.location.href = 'manager_dashboard.html';
+        } else {
+            window.location.href = 'director_dashboard.html';
+        }
         return;
-    } else if (user.role === 'director' && path.includes('manager_')) {
-        // Director can view manager pages? Maybe. But for now keep them separate.
-        // Actually director monitors, so maybe they have their own view.
-        // Let's stick to the requested sitemap.
     }
 
     // 1. Update Profile Section (Sidebar pages)
