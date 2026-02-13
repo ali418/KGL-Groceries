@@ -1,9 +1,79 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadBranches();
     loadProducts();
+    initializeCharts();
 });
 
 let allProducts = [];
+
+function initializeCharts() {
+    // Stock Movement Chart
+    const ctxMovement = document.getElementById('stockMovementChart');
+    if (ctxMovement) {
+        new Chart(ctxMovement.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7'],
+                datasets: [{
+                    label: 'Stock In',
+                    data: [850, 920, 780, 1050, 980, 1120, 890],
+                    borderColor: '#2E7D32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Stock Out',
+                    data: [650, 720, 680, 850, 780, 920, 690],
+                    borderColor: '#D32F2F',
+                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' kg';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Stock Status Distribution Chart
+    const ctxStatus = document.getElementById('stockStatusChart');
+    if (ctxStatus) {
+        new Chart(ctxStatus.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Well Stocked', 'Low Stock', 'Out of Stock', 'Below Minimum'],
+                datasets: [{
+                    data: [156, 23, 7, 15],
+                    backgroundColor: ['#4CAF50', '#FFA000', '#F44336', '#FF9800']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+}
 
 async function loadBranches() {
     try {
