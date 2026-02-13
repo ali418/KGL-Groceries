@@ -74,7 +74,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Total Users</h5>
-                                    <h3 class="mb-0">47</h3>
+                                    <h3 class="mb-0" id="totalUsersCount">0</h3>
                                     <small>Active accounts</small>
                                 </div>
                                 <i class="fas fa-users fa-2x opacity-75"></i>
@@ -88,7 +88,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Directors</h5>
-                                    <h3 class="mb-0">3</h3>
+                                    <h3 class="mb-0" id="directorsCount">0</h3>
                                     <small>System administrators</small>
                                 </div>
                                 <i class="fas fa-user-tie fa-2x opacity-75"></i>
@@ -102,7 +102,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Managers</h5>
-                                    <h3 class="mb-0">8</h3>
+                                    <h3 class="mb-0" id="managersCount">0</h3>
                                     <small>Branch managers</small>
                                 </div>
                                 <i class="fas fa-user-cog fa-2x opacity-75"></i>
@@ -116,7 +116,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Sales Agents</h5>
-                                    <h3 class="mb-0">36</h3>
+                                    <h3 class="mb-0" id="agentsCount">0</h3>
                                     <small>Field sales staff</small>
                                 </div>
                                 <i class="fas fa-user-friends fa-2x opacity-75"></i>
@@ -262,7 +262,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span>All Users</span>
-                            <span class="badge bg-primary">47 users</span>
+                            <span class="badge bg-primary" id="totalUsersBadge">0 users</span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-custom table-hover align-middle mb-0">
@@ -332,7 +332,7 @@
                                     <option value="">Select Role</option>
                                     <option value="director">Director</option>
                                     <option value="manager">Manager</option>
-                                    <option value="sales_agent">Sales Agent</option>
+                                    <option value="agent">Sales Agent</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -371,7 +371,9 @@
     <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/users.js"></script>
 </body>
 
 </html>

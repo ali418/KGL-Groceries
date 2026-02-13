@@ -75,7 +75,11 @@ const saleSchema = new mongoose.Schema({
       required: [true, 'Amount paid is required'],
       min: [0, 'Amount paid cannot be negative']
     },
-    status: {
+    transactionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    index: true
+  },
+  status: {
       type: String,
       enum: ['paid', 'partial', 'pending'],
       default: 'paid'

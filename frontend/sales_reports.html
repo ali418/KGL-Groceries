@@ -137,8 +137,8 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Total Sales</h5>
-                                    <h3 class="mb-0">UGX 2,450,000</h3>
-                                    <small>+12% from last period</small>
+                                    <h3 class="mb-0" id="totalSalesAmount">Loading...</h3>
+                                    <small>Revenue</small>
                                 </div>
                                 <i class="fas fa-chart-line fa-2x opacity-75"></i>
                             </div>
@@ -151,8 +151,8 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Cash Sales</h5>
-                                    <h3 class="mb-0">UGX 1,850,000</h3>
-                                    <small>75% of total</small>
+                                    <h3 class="mb-0" id="cashSalesAmount">Loading...</h3>
+                                    <small>Collected</small>
                                 </div>
                                 <i class="fas fa-money-bill-wave fa-2x opacity-75"></i>
                             </div>
@@ -165,8 +165,8 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Credit Sales</h5>
-                                    <h3 class="mb-0">UGX 600,000</h3>
-                                    <small>25% of total</small>
+                                    <h3 class="mb-0" id="creditSalesAmount">Loading...</h3>
+                                    <small>Outstanding</small>
                                 </div>
                                 <i class="fas fa-credit-card fa-2x opacity-75"></i>
                             </div>
@@ -179,8 +179,8 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Transactions</h5>
-                                    <h3 class="mb-0">156</h3>
-                                    <small>Average UGX 15,700</small>
+                                    <h3 class="mb-0" id="totalTransactions">Loading...</h3>
+                                    <small>Total Orders</small>
                                 </div>
                                 <i class="fas fa-exchange-alt fa-2x opacity-75"></i>
                             </div>
@@ -232,7 +232,7 @@
                                         <th>Date & Time</th>
                                         <th>Product</th>
                                         <th>Branch</th>
-                                        <th>Quantity (Kg)</th>
+                                        <th>Quantity</th>
                                         <th>Unit Price</th>
                                         <th>Total Amount</th>
                                         <th>Payment Type</th>
@@ -240,67 +240,8 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>TRX-2024-001</strong></td>
-                                        <td>Jan 8, 2024 10:30 AM</td>
-                                        <td>Fresh Tomatoes</td>
-                                        <td>Kampala Main</td>
-                                        <td>50</td>
-                                        <td>UGX 2,000</td>
-                                        <td>UGX 100,000</td>
-                                        <td><span class="badge bg-success">Cash</span></td>
-                                        <td>John Smith</td>
-                                        <td><span class="badge bg-success">Completed</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>TRX-2024-002</strong></td>
-                                        <td>Jan 8, 2024 11:15 AM</td>
-                                        <td>Red Onions</td>
-                                        <td>Entebbe Branch</td>
-                                        <td>25</td>
-                                        <td>UGX 1,800</td>
-                                        <td>UGX 45,000</td>
-                                        <td><span class="badge bg-warning">Credit</span></td>
-                                        <td>Sarah Johnson</td>
-                                        <td><span class="badge bg-warning">Pending</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>TRX-2024-003</strong></td>
-                                        <td>Jan 8, 2024 2:45 PM</td>
-                                        <td>Irish Potatoes</td>
-                                        <td>Jinja Branch</td>
-                                        <td>75</td>
-                                        <td>UGX 1,500</td>
-                                        <td>UGX 112,500</td>
-                                        <td><span class="badge bg-success">Cash</span></td>
-                                        <td>Mike Davis</td>
-                                        <td><span class="badge bg-success">Completed</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>TRX-2024-004</strong></td>
-                                        <td>Jan 8, 2024 3:30 PM</td>
-                                        <td>Green Peppers</td>
-                                        <td>Kampala Main</td>
-                                        <td>30</td>
-                                        <td>UGX 2,500</td>
-                                        <td>UGX 75,000</td>
-                                        <td><span class="badge bg-success">Cash</span></td>
-                                        <td>John Smith</td>
-                                        <td><span class="badge bg-success">Completed</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>TRX-2024-005</strong></td>
-                                        <td>Jan 8, 2024 4:15 PM</td>
-                                        <td>Carrots</td>
-                                        <td>Entebbe Branch</td>
-                                        <td>40</td>
-                                        <td>UGX 1,200</td>
-                                        <td>UGX 48,000</td>
-                                        <td><span class="badge bg-warning">Credit</span></td>
-                                        <td>Sarah Johnson</td>
-                                        <td><span class="badge bg-warning">Pending</span></td>
-                                    </tr>
+                                <tbody id="salesTableBody">
+                                    <!-- Dynamic Content -->
                                 </tbody>
                             </table>
                         </div>
@@ -331,75 +272,10 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/sales_reports.js"></script>
 
-    <!-- Chart Initialization Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Sales Trend Chart
-            const ctxTrend = document.getElementById('salesTrendChart').getContext('2d');
-            new Chart(ctxTrend, {
-                type: 'line',
-                data: {
-                    labels: ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7'],
-                    datasets: [{
-                        label: 'Daily Sales (UGX)',
-                        data: [1800000, 2100000, 1900000, 2500000, 2300000, 2700000, 2450000],
-                        borderColor: '#2E7D32',
-                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }, {
-                        label: 'Credit Sales (UGX)',
-                        data: [400000, 500000, 350000, 600000, 450000, 700000, 600000],
-                        borderColor: '#FFA000',
-                        backgroundColor: 'rgba(255, 160, 0, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (value) {
-                                    return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Category Chart
-            const ctxCategory = document.getElementById('categoryChart').getContext('2d');
-            new Chart(ctxCategory, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Vegetables', 'Fruits', 'Grains', 'Others'],
-                    datasets: [{
-                        data: [45, 30, 15, 10],
-                        backgroundColor: ['#2E7D32', '#81C784', '#FFC107', '#E0E0E0']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

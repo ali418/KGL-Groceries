@@ -152,42 +152,53 @@ app.get('/api/debug/db', (req, res) => {
 });
 
 // Routes
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth'); // Keep for legacy frontend auth (profile, etc)
 app.use('/api/auth', authRoutes);
 
-// Sales Route
-const salesRoutes = require('./routes/sales');
-app.use('/api/sales', salesRoutes);
+// New Modular Routers (Assignment Requirements)
+const salesRoutes = require('./routes/salesRoutes');
+const procurementRoutes = require('./routes/procurementRoutes');
+const userRoutes = require('./routes/userRoutes');
 
-// Produce Route (Helper for Dropdowns)
+// Mount at root paths (per assignment description implications)
+app.use('/sales', salesRoutes);
+app.use('/procurement', procurementRoutes);
+app.use('/users', userRoutes);
+
+// Mount at /api paths (for Frontend compatibility)
+app.use('/api/sales', salesRoutes); // Handles /checkout, /credit
+app.use('/api/procurement', procurementRoutes); // Handles /, /receive
+app.use('/api/users', userRoutes); // Handles /login, /
+// Note: /api/users might conflict with old users.js if we kept it. We replaced it.
+
+// Helper Routes (Keep existing helpers)
 const produceRoutes = require('./routes/produce');
 app.use('/api/produce', produceRoutes);
 
-// User Management Route
-const userRoutes = require('./routes/users');
-app.use('/api/users', userRoutes);
-
-// Branch Route (Helper)
 const branchRoutes = require('./routes/branches');
 app.use('/api/branches', branchRoutes);
 
-// Credit Sales Route (SRD Requirement)
-const creditSalesRoutes = require('./routes/creditSales');
-app.use('/api/credit-sales', creditSalesRoutes);
-
-// Reports Route (SRD Requirement)
 const reportsRoutes = require('./routes/reports');
 app.use('/api/reports', reportsRoutes);
 
-// Seed Route (To populate DB on remote server)
+const supplierRoutes = require('./routes/suppliers');
+app.use('/api/suppliers', supplierRoutes);
+
 const seedRoutes = require('./routes/seed');
 app.use('/api/seed', seedRoutes);
 
+// Handling /api/credit-sales compatibility
+// Forward /api/credit-sales to /api/sales/credit or similar? 
+// Frontend calls POST /api/credit-sales. 
+// salesRoutes has POST /credit.
+// We can mount salesRoutes at /api/credit-sales but rewrite path?
+// Or just add a specific route for it.
+app.use('/api/credit-sales', (req, res, next) => {
+    // Rewrite path from / (root of credit-sales) to /credit (in salesRoutes)
+    if (req.path === '/') req.url = '/credit';
+    next();
+}, salesRoutes);
 
-
-// Procurement Exercise Route (Capstone)
-const procurementRoutes = require('./routes/procurement');
-app.use('/kgl/procurement', procurementRoutes);
 
 app.use(express.static(path.resolve(__dirname, '../frontend')));
 app.get('/', (req, res) => {
@@ -228,11 +239,14 @@ app.use('*', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
-});
-connectDB();
+// Start Server
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
+    });
+    connectDB();
+}
 
 module.exports = app;

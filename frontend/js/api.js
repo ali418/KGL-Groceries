@@ -1,6 +1,7 @@
-const API_URL = 'https://kgl-groceries-production.up.railway.app/api';
+// const API_URL = 'https://kgl-groceries-production.up.railway.app/api';
+const API_URL = 'http://localhost:5000/api';
 
-const api = {
+window.api = {
     async request(endpoint, options = {}) {
         const token = localStorage.getItem('token');
         const headers = {
