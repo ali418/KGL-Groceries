@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - KGL Groceries LTD</title>
-    
+
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -12,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
     <div class="login-container">
@@ -31,7 +33,7 @@
                     <input type="password" class="form-control" id="password" placeholder="Password" required>
                     <label for="password">Password</label>
                 </div>
-                
+
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="rememberMe">
@@ -41,7 +43,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Login</button>
-                
+
                 <!-- Demo Hints -->
                 <div class="alert alert-light border small text-start mt-4">
                     <strong>Demo Login:</strong><br>
@@ -55,7 +57,81 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="js/main.js"></script>
+    <!-- API Helper -->
+    <script src="js/api.js"></script>
+    <!-- Login Script -->
+    <script>
+        // Check if already logged in
+        if (isAuthenticated()) {
+            const user = getCurrentUser();
+            // Redirect based on role
+            if (user.role === 'director') {
+                window.location.href = '/director_dashboard.html';
+            } else if (user.role === 'manager') {
+                window.location.href = '/manager_dashboard.html';
+            } else {
+                window.location.href = '/sales_dashboard.html';
+            }
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const submitButton = e.target.querySelector('button[type="submit"]');
+
+            // Disable button and show loading
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Logging in...';
+
+            try {
+                // Call login API
+                const response = await API.auth.login({ username, password });
+
+                // Save token and user data
+                localStorage.setItem('kgl_token', response.data.token);
+                localStorage.setItem('kgl_user', JSON.stringify(response.data.user));
+
+                // Show success message briefly
+                submitButton.innerHTML = '<i class="fas fa-check me-2"></i>Success!';
+                submitButton.classList.remove('btn-primary');
+                submitButton.classList.add('btn-success');
+
+                // Redirect based on role
+                setTimeout(() => {
+                    if (response.data.user.role === 'director') {
+                        window.location.href = '/director_dashboard.html';
+                    } else if (response.data.user.role === 'manager') {
+                        window.location.href = '/manager_dashboard.html';
+                    } else {
+                        window.location.href = '/sales_dashboard.html';
+                    }
+                }, 500);
+
+            } catch (error) {
+                console.error('Login error:', error);
+
+                // Show error
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                errorDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Login Failed:</strong> ${error.message || 'Invalid username or password'}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+
+                // Insert error above form
+                const form = document.getElementById('loginForm');
+                form.insertBefore(errorDiv, form.firstChild);
+
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Login';
+            }
+        });
+    </script>
 </body>
+
 </html>

@@ -30,7 +30,7 @@ const produceSchema = new mongoose.Schema({
     },
     unit: {
       type: String,
-      enum: ['kg', 'ton', 'bag', 'crate'],
+      enum: ['kg', 'ton', 'bag', 'crate', 'pieces', 'boxes', 'bunch', 'liter'],
       default: 'kg'
     }
   },
