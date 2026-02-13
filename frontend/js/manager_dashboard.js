@@ -62,8 +62,9 @@ function renderRecentTransactions(transactions) {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-UG', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'UGX',
+        maximumFractionDigits: 0
     }).format(amount);
 }

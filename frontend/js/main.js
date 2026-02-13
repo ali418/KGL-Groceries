@@ -501,6 +501,6 @@ function formatCurrency(amount) {
 }
 
 // Initialize Dashboard Data
-if (window.location.pathname.includes('manager_dashboard.html')) {
-    document.addEventListener('DOMContentLoaded', loadManagerDashboardData);
-}
+// if (window.location.pathname.includes('manager_dashboard.html')) {
+//    document.addEventListener('DOMContentLoaded', loadManagerDashboardData);
+// }
