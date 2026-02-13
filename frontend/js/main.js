@@ -418,3 +418,58 @@ function capitalize(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+// --- Manager Dashboard Logic ---
+async function loadManagerDashboardData() {
+    try {
+        console.log('Loading dashboard data...');
+        
+        // Fetch Dashboard Stats
+        const stats = await API.reports.getDashboardStats();
+        
+        // Update Stats in DOM
+        if (document.getElementById('todaySales')) {
+            document.getElementById('todaySales').textContent = formatCurrency(stats.todaySales || 0);
+        }
+        if (document.getElementById('stockValue')) {
+            document.getElementById('stockValue').textContent = formatCurrency(stats.stockValue || 0);
+        }
+        if (document.getElementById('lowStockCount')) {
+            document.getElementById('lowStockCount').textContent = (stats.lowStockCount || 0) + ' Items';
+        }
+        if (document.getElementById('totalCredit')) {
+            document.getElementById('totalCredit').textContent = formatCurrency(stats.totalCredit || 0);
+        }
+
+        // Fetch Recent Transactions (using sales API)
+        const recentSales = await API.sales.getAll({ limit: 5, sort: '-saleDate' });
+        const tbody = document.getElementById('recentTransactionsBody');
+        
+        if (tbody && recentSales.length > 0) {
+            tbody.innerHTML = recentSales.map(sale => `
+                <tr>
+                    <td><strong>${sale.invoiceNumber || 'N/A'}</strong></td>
+                    <td>${sale.agent?.name || 'Unknown'}</td>
+                    <td>${formatCurrency(sale.payment?.amountPaid || 0)}</td>
+                    <td><span class="badge bg-${sale.payment?.method === 'credit' ? 'warning' : 'success'}">${capitalize(sale.payment?.method || 'cash')}</span></td>
+                    <td>${new Date(sale.saleDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                </tr>
+            `).join('');
+        } else if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent transactions</td></tr>';
+        }
+
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
+        showToast('Failed to load dashboard data', 'error');
+    }
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX', maximumFractionDigits: 0 }).format(amount);
+}
+
+// Initialize Dashboard Data
+if (window.location.pathname.includes('manager_dashboard.html')) {
+    document.addEventListener('DOMContentLoaded', loadManagerDashboardData);
+}

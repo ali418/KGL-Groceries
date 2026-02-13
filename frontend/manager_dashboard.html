@@ -87,11 +87,11 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="mb-1">Today's Sales</h6>
-                                <h3 class="mb-0">UGX 2.4M</h3>
+                                <h3 class="mb-0" id="todaySales">Loading...</h3>
                             </div>
                             <i class="fas fa-cash-register fa-2x opacity-50"></i>
                         </div>
-                        <small class="mt-2 d-block opacity-75">+12% from yesterday</small>
+                        <small class="mt-2 d-block opacity-75">Daily Revenue</small>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -100,11 +100,11 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="mb-1">Stock Value</h6>
-                                <h3 class="mb-0">UGX 8.5M</h3>
+                                <h3 class="mb-0" id="stockValue">Loading...</h3>
                             </div>
                             <i class="fas fa-warehouse fa-2x opacity-50"></i>
                         </div>
-                        <small class="mt-2 d-block opacity-75">Across all items</small>
+                        <small class="mt-2 d-block opacity-75">Total Inventory Cost</small>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -113,7 +113,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="mb-1">Low Stock Items</h6>
-                                <h3 class="mb-0">3 Items</h3>
+                                <h3 class="mb-0" id="lowStockCount">Loading...</h3>
                             </div>
                             <i class="fas fa-exclamation-triangle fa-2x opacity-50"></i>
                         </div>
@@ -125,12 +125,12 @@
                         style="background: linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%); color: white;">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="mb-1">Active Agents</h6>
-                                <h3 class="mb-0">8 / 10</h3>
+                                <h6 class="mb-1">Total Credit</h6>
+                                <h3 class="mb-0" id="totalCredit">Loading...</h3>
                             </div>
-                            <i class="fas fa-users fa-2x opacity-50"></i>
+                            <i class="fas fa-hand-holding-usd fa-2x opacity-50"></i>
                         </div>
-                        <small class="mt-2 d-block opacity-75">On duty today</small>
+                        <small class="mt-2 d-block opacity-75">Outstanding Amount</small>
                     </div>
                 </div>
             </div>
@@ -153,27 +153,10 @@
                                         <th>Time</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="recentTransactionsBody">
+                                    <!-- Populated via JS -->
                                     <tr>
-                                        <td><strong>INV-2024-045</strong></td>
-                                        <td>John Doe</td>
-                                        <td>UGX 145,000</td>
-                                        <td><span class="badge bg-success">Cash</span></td>
-                                        <td>10:45 AM</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>INV-2024-044</strong></td>
-                                        <td>Sarah Smith</td>
-                                        <td>UGX 89,500</td>
-                                        <td><span class="badge bg-warning">Credit</span></td>
-                                        <td>10:32 AM</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>INV-2024-043</strong></td>
-                                        <td>Mike Johnson</td>
-                                        <td>UGX 234,000</td>
-                                        <td><span class="badge bg-success">Cash</span></td>
-                                        <td>10:15 AM</td>
+                                        <td colspan="5" class="text-center text-muted">Loading transactions...</td>
                                     </tr>
                                 </tbody>
                             </table>
