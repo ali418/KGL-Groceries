@@ -61,16 +61,29 @@
     <script src="js/api.js"></script>
     <!-- Login Script -->
     <script>
+        // Auth Helper Functions
+        function isAuthenticated() {
+            const token = localStorage.getItem('token');
+            return !!token;
+        }
+
+        function getCurrentUser() {
+            const userStr = localStorage.getItem('user');
+            return userStr ? JSON.parse(userStr) : null;
+        }
+
         // Check if already logged in
         if (isAuthenticated()) {
             const user = getCurrentUser();
-            // Redirect based on role
-            if (user.role === 'director') {
-                window.location.href = '/director_dashboard.html';
-            } else if (user.role === 'manager') {
-                window.location.href = '/manager_dashboard.html';
-            } else {
-                window.location.href = '/sales_dashboard.html';
+            if (user) {
+                // Redirect based on role
+                if (user.role === 'director') {
+                    window.location.href = 'director_dashboard.html';
+                } else if (user.role === 'manager') {
+                    window.location.href = 'manager_dashboard.html';
+                } else {
+                    window.location.href = 'sales_dashboard.html';
+                }
             }
         }
 
@@ -86,29 +99,39 @@
             submitButton.disabled = true;
             submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Logging in...';
 
+            // Clear previous errors
+            const existingAlert = document.querySelector('.alert.alert-danger');
+            if (existingAlert) existingAlert.remove();
+
             try {
-                // Call login API
-                const response = await API.auth.login({ username, password });
+                // Call login API using api.js helper
+                // api.post returns the parsed JSON body
+                const response = await api.post('/auth/login', { username, password });
 
-                // Save token and user data
-                localStorage.setItem('kgl_token', response.data.token);
-                localStorage.setItem('kgl_user', JSON.stringify(response.data.user));
+                if (response.success) {
+                    // Save token and user data
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('user', JSON.stringify(response.data.user));
 
-                // Show success message briefly
-                submitButton.innerHTML = '<i class="fas fa-check me-2"></i>Success!';
-                submitButton.classList.remove('btn-primary');
-                submitButton.classList.add('btn-success');
+                    // Show success message briefly
+                    submitButton.innerHTML = '<i class="fas fa-check me-2"></i>Success!';
+                    submitButton.classList.remove('btn-primary');
+                    submitButton.classList.add('btn-success');
 
-                // Redirect based on role
-                setTimeout(() => {
-                    if (response.data.user.role === 'director') {
-                        window.location.href = '/director_dashboard.html';
-                    } else if (response.data.user.role === 'manager') {
-                        window.location.href = '/manager_dashboard.html';
-                    } else {
-                        window.location.href = '/sales_dashboard.html';
-                    }
-                }, 500);
+                    // Redirect based on role
+                    setTimeout(() => {
+                        const role = response.data.user.role;
+                        if (role === 'director') {
+                            window.location.href = 'director_dashboard.html';
+                        } else if (role === 'manager') {
+                            window.location.href = 'manager_dashboard.html';
+                        } else {
+                            window.location.href = 'sales_dashboard.html';
+                        }
+                    }, 500);
+                } else {
+                    throw new Error(response.message || 'Login failed');
+                }
 
             } catch (error) {
                 console.error('Login error:', error);
