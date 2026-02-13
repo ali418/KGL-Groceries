@@ -1,4 +1,22 @@
 
+// --- Logout Logic ---
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.replace('login.html'); // Use replace to prevent back navigation
+}
+
+// Attach logout listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutLinks = document.querySelectorAll('a[href="login.html"]');
+    logoutLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
+    });
+});
+
 // --- Utilities ---
 function showToast(message, type = 'info') {
     const toastContainer = document.querySelector('.toast-container');
@@ -451,7 +469,7 @@ async function loadManagerDashboardData() {
         console.log('Loading dashboard data...');
         
         // Fetch Dashboard Stats using api.js
-        const stats = await api.get('/reports');
+        const stats = await api.get('/reports/dashboard');
         
         // Update Stats in DOM
         if (document.getElementById('todaySales')) {

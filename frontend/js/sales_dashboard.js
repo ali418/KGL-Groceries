@@ -2,6 +2,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     loadStats();
+    
+    // Logout listener for Sales Dashboard specifically if needed, 
+    // but main.js should handle it if included. 
+    // If main.js is NOT included in sales_dashboard.html (it is not currently based on my read), we need it here.
+    const logoutLinks = document.querySelectorAll('a[href="login.html"]');
+    logoutLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.replace('login.html');
+        });
+    });
 });
 
 function checkAuth() {
@@ -24,8 +37,9 @@ async function loadStats() {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-UG', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'UGX',
+        maximumFractionDigits: 0
     }).format(amount);
 }

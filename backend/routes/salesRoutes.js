@@ -233,6 +233,82 @@ router.post('/credit', protect, authorize('agent', 'manager'), async (req, res) 
 
 /**
  * @swagger
+ * /sales/my-stats:
+ *   get:
+ *     summary: Get current agent's sales statistics
+ *     tags: [Sales]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Agent stats
+ *       500:
+ *         description: Server error
+ */
+router.get('/my-stats', protect, authorize('agent', 'manager', 'director'), async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 1. Today's Sales for this agent
+        const todaySales = await Sale.find({
+            salesAgent: req.user._id,
+            saleDate: { $gte: today }
+        });
+        const todayTotal = todaySales.reduce((acc, curr) => acc + (curr.payment?.amountPaid || 0), 0);
+
+        // 2. This Month's Sales
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const monthSales = await Sale.find({
+            salesAgent: req.user._id,
+            saleDate: { $gte: firstDayOfMonth }
+        });
+        const monthTotal = monthSales.reduce((acc, curr) => acc + (curr.payment?.amountPaid || 0), 0);
+
+        // 3. Pending Credits (if agent manages them, or just all sales by agent that are credit and not paid)
+        const creditSales = await Sale.find({
+            salesAgent: req.user._id,
+            'payment.method': 'credit',
+            'payment.status': { $ne: 'paid' }
+        });
+        // Also check formal CreditSale model
+        const formalCredit = await CreditSale.find({
+            salesAgent: req.user._id,
+            status: { $ne: 'paid' }
+        });
+
+        let creditTotal = creditSales.reduce((acc, curr) => acc + (curr.pricing.totalPrice - (curr.payment.amountPaid || 0)), 0);
+        creditTotal += formalCredit.reduce((acc, curr) => {
+             const paid = curr.payments.reduce((p, c) => p + c.amount, 0);
+             return acc + (curr.pricing.totalAmount - paid);
+        }, 0);
+
+        // 4. Commission (Optional logic)
+        // Let's assume flat 5% for now or 0 if not defined
+        const commission = monthTotal * 0.05;
+
+        // 5. Recent Sales
+        const recentSales = await Sale.find({ salesAgent: req.user._id })
+            .sort({ saleDate: -1 })
+            .limit(5)
+            .populate('produce', 'name');
+
+        res.status(200).json({
+            todaySales: todayTotal,
+            monthSales: monthTotal,
+            pendingCredit: creditTotal,
+            commission: commission,
+            recentSales: recentSales
+        });
+
+    } catch (error) {
+        console.error('My stats error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+/**
+ * @swagger
  * /sales:
  *   get:
  *     summary: List all sales
