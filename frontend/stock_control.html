@@ -116,8 +116,8 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Stock Control Management</h5>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addStockModal">
-                                    <i class="fas fa-plus me-1"></i> Add Stock
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                    <i class="fas fa-plus me-1"></i> Add Product
                                 </button>
                                 <button class="btn btn-outline-secondary btn-sm">
                                     <i class="fas fa-download me-1"></i> Export
@@ -129,108 +129,17 @@
                                 <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Product Code</th>
-                                            <th>Product Name</th>
+                                            <th>Name</th>
                                             <th>Category</th>
                                             <th>Current Stock</th>
+                                            <th>Price (Cost/Sale)</th>
                                             <th>Min Level</th>
-                                            <th>Max Level</th>
-                                            <th>Status</th>
-                                            <th>Last Updated</th>
+                                            <th>Supplier</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>PRD001</strong></td>
-                                            <td>Fresh Tomatoes</td>
-                                            <td>Vegetables</td>
-                                            <td><span class="badge bg-danger">15 kg</span></td>
-                                            <td>50 kg</td>
-                                            <td>200 kg</td>
-                                            <td><span class="badge bg-danger">Low Stock</span></td>
-                                            <td>2024-01-08</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#adjustStockModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD002</strong></td>
-                                            <td>Onions</td>
-                                            <td>Vegetables</td>
-                                            <td><span class="badge bg-success">180 kg</span></td>
-                                            <td>100 kg</td>
-                                            <td>300 kg</td>
-                                            <td><span class="badge bg-success">Well Stocked</span></td>
-                                            <td>2024-01-08</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#adjustStockModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD003</strong></td>
-                                            <td>Potatoes</td>
-                                            <td>Vegetables</td>
-                                            <td><span class="badge bg-warning">45 kg</span></td>
-                                            <td>80 kg</td>
-                                            <td>250 kg</td>
-                                            <td><span class="badge bg-warning">Below Min</span></td>
-                                            <td>2024-01-08</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#adjustStockModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD004</strong></td>
-                                            <td>Carrots</td>
-                                            <td>Vegetables</td>
-                                            <td><span class="badge bg-danger">0 kg</span></td>
-                                            <td>30 kg</td>
-                                            <td>150 kg</td>
-                                            <td><span class="badge bg-danger">Out of Stock</span></td>
-                                            <td>2024-01-07</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#adjustStockModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD005</strong></td>
-                                            <td>Green Peppers</td>
-                                            <td>Vegetables</td>
-                                            <td><span class="badge bg-success">95 kg</span></td>
-                                            <td>60 kg</td>
-                                            <td>180 kg</td>
-                                            <td><span class="badge bg-success">Good</span></td>
-                                            <td>2024-01-08</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#adjustStockModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <tbody id="productsTableBody">
+                                        <!-- Data will be populated by JS -->
                                     </tbody>
                                 </table>
                             </div>
@@ -280,58 +189,77 @@
         </div>
     </div>
 
-    <!-- Add Stock Modal -->
-    <div class="modal fade" id="addStockModal" tabindex="-1">
+    <!-- Add/Edit Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Stock</h5>
+                    <h5 class="modal-title" id="productModalTitle">Add New Product</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="addProductForm">
+                        <input type="hidden" id="productId">
                         <div class="mb-3">
-                            <label class="form-label">Product</label>
-                            <select class="form-select">
-                                <option>Select Product</option>
-                                <option>Fresh Tomatoes</option>
-                                <option>Onions</option>
-                                <option>Potatoes</option>
-                                <option>Carrots</option>
-                                <option>Green Peppers</option>
-                            </select>
+                            <label class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="productType" required>
+                                    <option value="">Select Category</option>
+                                    <option value="fruits">Fruits</option>
+                                    <option value="vegetables">Vegetables</option>
+                                    <option value="grains">Grains</option>
+                                    <option value="dairy">Dairy</option>
+                                    <option value="meat">Meat</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Unit</label>
+                                <select class="form-select" id="productUnit" required>
+                                    <option value="kg">kg</option>
+                                    <option value="ton">ton</option>
+                                    <option value="bag">bag</option>
+                                    <option value="crate">crate</option>
+                                    <option value="pieces">pieces</option>
+                                    <option value="boxes">boxes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cost Price (UGX)</label>
+                                <input type="number" class="form-control" id="costPrice" required min="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Sale Price (UGX)</label>
+                                <input type="number" class="form-control" id="salePrice" required min="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Min Stock Level</label>
+                                <input type="number" class="form-control" id="minStock" required min="0" value="10">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Branch</label>
+                                <select class="form-select" id="productBranch">
+                                    <option value="">Loading...</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Quantity</label>
-                            <input type="number" class="form-control" placeholder="Enter quantity">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Unit</label>
-                            <select class="form-select">
-                                <option>kg</option>
-                                <option>pieces</option>
-                                <option>boxes</option>
-                                <option>bags</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Supplier</label>
-                            <select class="form-select">
-                                <option>Select Supplier</option>
-                                <option>Green Valley Farms</option>
-                                <option>Fresh Produce Ltd</option>
-                                <option>Quality Vegetables</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Notes</label>
-                            <textarea class="form-control" rows="3" placeholder="Additional notes"></textarea>
+                            <label class="form-label">Supplier Name (Optional)</label>
+                            <input type="text" class="form-control" id="supplierName">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Add Stock</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Save Product</button>
                 </div>
             </div>
         </div>
@@ -382,7 +310,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/stock_control.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
