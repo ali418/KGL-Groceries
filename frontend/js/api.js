@@ -1,5 +1,10 @@
-// const API_URL = 'https://kgl-groceries-production.up.railway.app/api';
-const API_URL = 'http://localhost:5000/api';
+const API_URL = (function () {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+        return 'http://localhost:5000/api';
+    }
+    return '/api';
+})();
 
 window.api = {
     async request(endpoint, options = {}) {

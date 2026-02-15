@@ -209,7 +209,7 @@ function setupEventListeners() {
         }
 
         try {
-            const response = await api.post('/api/suppliers', {
+            const response = await api.post('/suppliers', {
                 name, contactPerson: contact, phone, email, address, specialization
             });
             if (response.success) {
@@ -270,7 +270,7 @@ function setupEventListeners() {
         }
 
         try {
-            const response = await api.post('/api/procurement', {
+            const response = await api.post('/procurement', {
                 supplierId, items, notes, expectedDate
             });
             if (response.success) {
