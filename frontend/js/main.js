@@ -3,18 +3,24 @@
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.replace('login.html'); // Use replace to prevent back navigation
+    window.location.replace('login.html');
 }
 
-// Attach logout listeners
-document.addEventListener('DOMContentLoaded', () => {
+function attachLogoutListeners() {
     const logoutLinks = document.querySelectorAll('a[href="login.html"]');
     logoutLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            logout();
-        });
+        if (!link.dataset.logoutBound) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+            link.dataset.logoutBound = 'true';
+        }
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    attachLogoutListeners();
 });
 
 // --- Utilities ---
@@ -387,8 +393,64 @@ async function handleLogin(e) {
 
 // --- Dashboard UI Logic ---
 
+const sidebarConfig = {
+    agent: {
+        brand: 'KGL Sales',
+        items: [
+            { href: 'sales_dashboard.html', icon: 'fas fa-tachometer-alt', label: 'My Dashboard' },
+            { href: 'pos.html', icon: 'fas fa-cash-register', label: 'POS / Sell Produce' },
+            { href: 'credit_sales.html', icon: 'fas fa-hand-holding-usd', label: 'Credit Sales' },
+            { href: 'my_history.html', icon: 'fas fa-history', label: 'My History' }
+        ]
+    },
+    manager: {
+        brand: 'KGL Manager',
+        items: [
+            { href: 'manager_dashboard.html', icon: 'fas fa-tachometer-alt', label: 'Dashboard' },
+            { href: 'inventory_overview.html', icon: 'fas fa-warehouse', label: 'Inventory / Stock' },
+            { href: 'procurement.html', icon: 'fas fa-truck-loading', label: 'Procurement' },
+            { href: 'sales_dashboard.html', icon: 'fas fa-cash-register', label: 'Sales' },
+            { href: 'credit_exposure.html', icon: 'fas fa-hand-holding-usd', label: 'Credit Sales' },
+            { href: 'sales_reports.html', icon: 'fas fa-file-alt', label: 'Reports' },
+            { href: 'pricing.html', icon: 'fas fa-tags', label: 'Pricing' },
+            { href: 'stock_control.html', icon: 'fas fa-boxes', label: 'Stock Control' }
+        ]
+    },
+    director: {
+        brand: 'KGL Groceries',
+        items: [
+            { href: 'director_dashboard.html', icon: 'fas fa-chart-line', label: 'Master Dashboard' },
+            { href: 'sales_reports.html', icon: 'fas fa-chart-pie', label: 'Aggregated Reports' },
+            { href: 'user_management.html', icon: 'fas fa-users', label: 'System Users' },
+            { href: 'agents.html', icon: 'fas fa-user-tie', label: 'Agents' }
+        ]
+    }
+};
+
+function renderSidebar(user) {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    const config = sidebarConfig[user.role];
+    if (!config) return;
+    const path = window.location.pathname.split('/').pop();
+    const linksHtml = config.items.map(item => {
+        const isActive = path === item.href;
+        const activeClass = isActive ? 'active' : '';
+        return `<li><a href="${item.href}" class="${activeClass}"><i class="${item.icon}"></i> ${item.label}</a></li>`;
+    }).join('');
+    sidebar.innerHTML = `
+        <div class="sidebar-brand">
+            <i class="fas fa-leaf me-2"></i> ${config.brand}
+        </div>
+        <ul class="sidebar-menu">
+            ${linksHtml}
+            <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    `;
+    attachLogoutListeners();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Only run if we are NOT on the login page
     if (!window.location.pathname.includes('login.html')) {
         updateDashboardUI();
     }
@@ -428,6 +490,7 @@ function updateDashboardUI() {
             'director_dashboard.html',
             'sales_reports.html',
             'user_management.html',
+            'agents.html',
             'login.html'
         ]
     };
@@ -442,6 +505,8 @@ function updateDashboardUI() {
         }
         return;
     }
+
+    renderSidebar(user);
 
     // 1. Update Profile Section (Sidebar pages)
     const profileName = document.querySelector('.user-profile span');
