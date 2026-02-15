@@ -31,7 +31,7 @@ async function loadStats() {
         document.getElementById('targetProgress').textContent = (response.targetProgress || 0) + '%';
     } catch (error) {
         console.error('Error loading stats:', error);
-        document.getElementById('todaySales').textContent = '$0.00';
+        document.getElementById('todaySales').textContent = formatCurrency(0);
         document.getElementById('targetProgress').textContent = '0%';
     }
 }

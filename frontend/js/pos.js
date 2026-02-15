@@ -17,6 +17,10 @@ function checkAuth() {
     }
 }
 
+function formatCurrency(amount) {
+    return `UGX ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 function setupEventListeners() {
     // Search and Filter
     document.getElementById('productSearch').addEventListener('input', (e) => {
@@ -122,7 +126,7 @@ function filterAndRenderProducts() {
                 <p class="text-muted small mb-2 ${isOutOfStock ? 'text-danger fw-bold' : ''}">
                     ${isOutOfStock ? 'Out of Stock' : `${currentStock} ${unit} left`}
                 </p>
-                <h5 class="text-success fw-bold">$${price.toFixed(2)} <small class="text-muted fs-6">/${unit}</small></h5>
+                <h5 class="text-success fw-bold">${formatCurrency(price)} <small class="text-muted fs-6">/${unit}</small></h5>
             </div>
         `;
         grid.appendChild(card);
@@ -226,10 +230,10 @@ function renderCart() {
                            onchange="updateCartQuantity('${item.produceId}', this.value)">
                     <span class="input-group-text">${item.unit}</span>
                 </div>
-                <small class="text-muted">@ $${item.unitPrice.toFixed(2)}/${item.unit}</small>
+                <small class="text-muted">@ ${formatCurrency(item.unitPrice)}/${item.unit}</small>
             </div>
-            <div class="text-end ms-3">
-                <h6 class="mb-0 fw-bold">$${itemTotal.toFixed(2)}</h6>
+                <div class="text-end ms-3">
+                <h6 class="mb-0 fw-bold">${formatCurrency(itemTotal)}</h6>
                 <i class="fas fa-trash-alt text-danger small cursor-pointer mt-2" onclick="removeFromCart('${item.produceId}')"></i>
             </div>
         `;
@@ -246,8 +250,8 @@ function calculateTotal() {
 
 function updateTotals() {
     const total = calculateTotal();
-    document.getElementById('cartSubtotal').textContent = `$${total.toFixed(2)}`;
-    document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+    document.getElementById('cartSubtotal').textContent = formatCurrency(total);
+    document.getElementById('cartTotal').textContent = formatCurrency(total);
 }
 
 function clearCart() {
