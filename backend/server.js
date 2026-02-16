@@ -205,6 +205,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/login.html'));
 });
 
+app.get('/marketing', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../frontend/marketing.html'));
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
