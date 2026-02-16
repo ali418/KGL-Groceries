@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGL Groceries LTD – Management System Overview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4f9f4, #ffffff);
+        }
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .hero-badge {
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+        }
+        .refactory-logo-badge {
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-leaf me-2 text-success"></i>
+                <span class="fw-bold">KGL Groceries LTD</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#overview">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#modules">Modules</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#flow">System Flow</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#refactory">About the Builder</a></li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <a href="login.html" class="btn btn-outline-success">Login</a>
+                    <a href="login.html" class="btn btn-success">
+                        <i class="fas fa-play-circle me-2"></i>Try Live Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero-section" id="overview">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-7">
+                        <span class="badge rounded-pill bg-success-subtle text-success hero-badge mb-3">
+                            END–TO–END AGRI–TRADING MANAGEMENT
+                        </span>
+                        <h1 class="display-5 fw-bold mb-3">
+                            KGL Groceries LTD Management System
+                        </h1>
+                        <p class="lead text-muted mb-4">
+                            A full-stack web system that digitizes KGL’s operations from procurement and stock management,
+                            to POS sales, credit exposure tracking, and executive analytics for branch performance.
+                        </p>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3 feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-warehouse text-success"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">Real-time Inventory & Pricing</div>
+                                        <small class="text-muted">Procurement, stock control and price management per branch.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3 feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-cash-register text-success"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">POS & Credit Sales</div>
+                                        <small class="text-muted">Modern POS for agents with formal credit sales and exposure tracking.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-center gap-3">
+                            <a href="login.html" class="btn btn-success btn-lg px-4">
+                                <i class="fas fa-play-circle me-2"></i>Try Demo Now
+                            </a>
+                            <div class="d-flex flex-column">
+                                <span class="text-muted small">Demo Credentials</span>
+                                <span class="small">
+                                    Director: <code>director / password123</code> ·
+                                    Manager: <code>manager / password123</code> ·
+                                    Agent: <code>agent / password123</code>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="card border-0 shadow-lg">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-3">What this system covers</h5>
+                                <ul class="list-unstyled mb-3">
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Branch-based procurement, suppliers and produce management.
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        POS checkout with automatic stock deduction and pricing controls.
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Formal credit sales, exposure dashboards and repayment tracking.
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Director-level reports: sales, credit, stock value and agent performance.
+                                    </li>
+                                </ul>
+                                <div class="border-top pt-3 d-flex align-items-center justify-content-between">
+                                    <div class="small">
+                                        <span class="text-muted d-block">Built with</span>
+                                        <span class="fw-semibold">Node.js · Express · MongoDB · Bootstrap</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-success-subtle text-success refactory-logo-badge mb-1">CAPSTONE PROJECT</span>
+                                        <div class="small text-muted">KGL Groceries LTD Management System</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modules" class="py-5 bg-white">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold mb-2">Core Modules</h2>
+                    <p class="text-muted mb-0">Designed around the real workflows of KGL Groceries LTD.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-truck-loading text-success"></i>
+                                </div>
+                                <h5 class="fw-semibold">Procurement & Inventory</h5>
+                                <p class="text-muted small mb-2">
+                                    Capture produce purchases, suppliers, cost prices and tonnage per branch.
+                                </p>
+                                <ul class="text-muted small mb-0">
+                                    <li>Procurement orders and suppliers</li>
+                                    <li>Branch-level stock and thresholds</li>
+                                    <li>Stock value analytics</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-cash-register text-success"></i>
+                                </div>
+                                <h5 class="fw-semibold">POS & Cash Sales</h5>
+                                <p class="text-muted small mb-2">
+                                    Modern POS for sales agents with category filters and live stock validation.
+                                </p>
+                                <ul class="text-muted small mb-0">
+                                    <li>Fast product search and filters</li>
+                                    <li>Automatic stock deduction</li>
+                                    <li>Agent performance stats</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-hand-holding-usd text-success"></i>
+                                </div>
+                                <h5 class="fw-semibold">Credit Sales & Exposure</h5>
+                                <p class="text-muted small mb-2">
+                                    Formal credit module with buyer details, limits and repayments.
+                                </p>
+                                <ul class="text-muted small mb-0">
+                                    <li>Credit accounts and limits</li>
+                                    <li>Outstanding balances</li>
+                                    <li>Overdue and risk insights</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4 mt-1">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-chart-line text-success"></i>
+                                </div>
+                                <h5 class="fw-semibold">Analytics & Reports</h5>
+                                <p class="text-muted small mb-2">
+                                    Executive dashboards for daily sales, credit, and stock health.
+                                </p>
+                                <ul class="text-muted small mb-0">
+                                    <li>Branch and global KPIs</li>
+                                    <li>Recent transactions</li>
+                                    <li>Downloadable reports</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-users-cog text-success"></i>
+                                </div>
+                                <h5 class="fw-semibold">User & Branch Management</h5>
+                                <p class="text-muted small mb-2">
+                                    Central control of directors, managers and sales agents across branches.
+                                </p>
+                                <ul class="text-muted small mb-0">
+                                    <li>Role-based accounts</li>
+                                    <li>Branch assignment</li>
+                                    <li>Agent performance overview</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="feature-icon rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-shield-alt text-success"></i>
+                                </div>
+                                <h5 class="fw-semibold">Security & RBAC</h5>
+                                <p class="text-muted small mb-2">
+                                    JWT-based authentication and role-based access control for every module.
+                                </p>
+                                <ul class="text-muted small mb-0">
+                                    <li>JWT auth and protected APIs</li>
+                                    <li>Director, manager, agent roles</li>
+                                    <li>Per-page access enforcement</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="flow" class="py-5 bg-light">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold mb-2">End-to-End Flow</h2>
+                    <p class="text-muted mb-0">From stock coming in, to sales going out, to insights for leadership.</p>
+                </div>
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="fw-semibold mb-3">1. Procurement & Stock In</h5>
+                                <p class="text-muted small mb-0">
+                                    Managers record deliveries from suppliers, set cost and sale prices, and assign stock to branches.
+                                    The system tracks current tonnage, minimum levels, and total stock value automatically.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="fw-semibold mb-3">2. POS & Credit Sales</h5>
+                                <p class="text-muted small mb-0">
+                                    Sales agents use the POS to sell produce in cash or credit. Stock is reduced in real time, and
+                                    credit exposure is tracked per buyer with formal records and due dates.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="fw-semibold mb-3">3. Reports & Decisions</h5>
+                                <p class="text-muted small mb-0">
+                                    Directors view consolidated dashboards: daily sales, outstanding credit, low-stock alerts, and
+                                    branch comparisons, helping KGL plan procurement, pricing and collections.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="refactory" class="py-5">
+            <div class="container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <span class="badge bg-dark text-uppercase refactory-logo-badge">Refactory Academy</span>
+                        </div>
+                        <h2 class="fw-bold mb-3">Built as a Refactory Academy capstone project</h2>
+                        <p class="text-muted mb-3">
+                            This system was designed and implemented as a professional capstone project by a student of
+                            Refactory Academy, applying industry-level practices from requirements gathering, to data modelling,
+                            API design, frontend engineering and deployment.
+                        </p>
+                        <p class="text-muted mb-3">
+                            The goal was not just to pass an assignment, but to simulate a real-world product for a growing
+                            agribusiness like KGL Groceries LTD: secure, role-based, and ready to grow with more branches and
+                            higher transaction volumes.
+                        </p>
+                        <div class="border rounded-3 p-3 bg-light mb-3">
+                            <p class="mb-0 small">
+                                I am a learner from Refactory Academy, and this KGL Groceries LTD Management System is the result
+                                of the skills, mentorship and continuous support I received there. Many thanks to the instructors
+                                and the Refactory team for their commitment to high-quality, practical software training.
+                            </p>
+                        </div>
+                        <div class="border rounded-3 p-3 bg-white">
+                            <p class="mb-1 small fw-semibold">
+                                A note to anyone just starting out in software development:
+                            </p>
+                            <p class="mb-0 small text-muted">
+                                Even if you are completely new to programming, a well-structured program like Refactory’s can give
+                                you a clear path, from fundamentals to building full systems like this one. By engaging seriously
+                                with the content, practicing consistently, and treating each project as if it were for a real
+                                client, you build skills that are valuable in the real job market. I am grateful for the quality
+                                of the learning content and the way it prepares us to contribute professionally.
+                            </p>
+                        </div>
+                        <div class="mt-4 d-flex gap-3 align-items-center">
+                            <a href="login.html" class="btn btn-success">
+                                <i class="fas fa-play-circle me-2"></i>Try the Demo
+                            </a>
+                            <a href="https://refactory.academy/" target="_blank" class="btn btn-outline-dark">
+                                Learn more about Refactory
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-lg">
+                            <div class="card-body p-4">
+                                <h5 class="fw-semibold mb-3">Why this matters for KGL</h5>
+                                <ul class="text-muted small mb-0">
+                                    <li class="mb-2">Reduces manual paperwork and reconciliation across branches.</li>
+                                    <li class="mb-2">Gives management a single source of truth for stock, sales and credit.</li>
+                                    <li class="mb-2">Improves accountability for agents and managers through clear roles.</li>
+                                    <li class="mb-2">Prepares KGL for future integrations (mobile money, SMS reminders, etc.).</li>
+                                    <li>Built with an architecture that can evolve as the business grows.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-4 bg-white border-top">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div class="small text-muted">
+                © <span id="yearSpan"></span> KGL Groceries LTD Management System. All rights reserved.
+            </div>
+            <div class="small text-muted">
+                Built as a Refactory Academy capstone project.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const yearSpan = document.getElementById('yearSpan');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    </script>
+</body>
+</html>

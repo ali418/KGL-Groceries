@@ -42,14 +42,45 @@
                     <a href="#" class="text-decoration-none small text-success">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Login</button>
+                <button type="submit" class="btn btn-primary w-100 py-2 mb-4">Login</button>
 
-                <!-- Demo Hints -->
-                <div class="alert alert-light border small text-start mt-4">
-                    <strong>Demo Login:</strong><br>
-                    - Director: <code>director</code> / <code>password123</code><br>
-                    - Manager: <code>manager</code> / <code>password123</code><br>
-                    - Agent: <code>agent</code> / <code>password123</code>
+                <!-- Demo Accounts Panel -->
+                <div class="border rounded-3 p-3 text-start bg-light">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="me-2 d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10" style="width:32px;height:32px;">
+                            <i class="fas fa-key text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-primary small">Demo Accounts</div>
+                            <div class="text-muted small">Click to auto-fill username &amp; password</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex justify-content-between align-items-center demo-login-btn" data-username="director" data-password="password123">
+                            <span>
+                                <span class="badge bg-primary me-2">Director</span>
+                                <span class="text-muted small">director / password123</span>
+                            </span>
+                            <i class="fas fa-mouse-pointer text-muted"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex justify-content-between align-items-center demo-login-btn" data-username="manager" data-password="password123">
+                            <span>
+                                <span class="badge bg-success me-2">Manager</span>
+                                <span class="text-muted small">manager / password123</span>
+                            </span>
+                            <i class="fas fa-mouse-pointer text-muted"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex justify-content-between align-items-center demo-login-btn" data-username="agent" data-password="password123">
+                            <span>
+                                <span class="badge bg-warning text-dark me-2">Agent</span>
+                                <span class="text-muted small">agent / password123</span>
+                            </span>
+                            <i class="fas fa-mouse-pointer text-muted"></i>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -86,6 +117,22 @@
                 }
             }
         }
+
+        // Demo accounts autofill
+        document.querySelectorAll('.demo-login-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+                const username = btn.getAttribute('data-username');
+                const password = btn.getAttribute('data-password');
+
+                if (usernameInput && passwordInput) {
+                    usernameInput.value = username;
+                    passwordInput.value = password;
+                    usernameInput.focus();
+                }
+            });
+        });
 
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
