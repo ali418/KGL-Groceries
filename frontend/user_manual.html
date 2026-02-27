@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual & Catalog - KGL Groceries LTD</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .manual-hero {
+            background: linear-gradient(135deg, #198754 0%, #157347 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        .role-badge {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.5em 1em;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: #198754;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .nav-pills .nav-link {
+            color: #495057;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .nav-pills .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #198754;
+            color: white;
+            border-color: #198754;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-pills .nav-link i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        .screenshot-placeholder {
+            background-color: #e9ecef;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            margin: 1rem 0;
+        }
+        .feature-card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="marketing.html">
+                <i class="fas fa-leaf me-2"></i>KGL Groceries
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="marketing.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">User Manual</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="login.html" class="btn btn-light btn-sm fw-bold text-success px-4 rounded-pill">
+                            <i class="fas fa-sign-in-alt me-2"></i>System Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="manual-hero text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">System User Manual</h1>
+            <p class="lead mb-0 opacity-75">Comprehensive guide for Directors, Managers, and Sales Agents</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mb-5">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3 mb-4">
+                <div class="sticky-top" style="top: 90px; z-index: 100;">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3 small ps-2">Documentation Menu</h6>
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link active" id="v-pills-intro-tab" data-bs-toggle="pill" href="#v-pills-intro" role="tab">
+                            <i class="fas fa-info-circle"></i> Introduction
+                        </a>
+                        <a class="nav-link" id="v-pills-director-tab" data-bs-toggle="pill" href="#v-pills-director" role="tab">
+                            <i class="fas fa-user-tie"></i> Director's Guide
+                        </a>
+                        <a class="nav-link" id="v-pills-manager-tab" data-bs-toggle="pill" href="#v-pills-manager" role="tab">
+                            <i class="fas fa-tasks"></i> Manager's Guide
+                        </a>
+                        <a class="nav-link" id="v-pills-agent-tab" data-bs-toggle="pill" href="#v-pills-agent" role="tab">
+                            <i class="fas fa-cash-register"></i> Agent's Guide
+                        </a>
+                        <a class="nav-link" id="v-pills-troubleshoot-tab" data-bs-toggle="pill" href="#v-pills-troubleshoot" role="tab">
+                            <i class="fas fa-tools"></i> Troubleshooting
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    
+                    <!-- Introduction Section -->
+                    <div class="tab-pane fade show active" id="v-pills-intro" role="tabpanel">
+                        <div class="card feature-card mb-4">
+                            <div class="card-body p-4">
+                                <h2 class="fw-bold text-success mb-4">Welcome to KGL System</h2>
+                                <p class="lead">
+                                    The KGL Groceries Management System is a comprehensive web application designed to streamline operations across all our branches.
+                                    It replaces manual paper records with a secure, digital solution for inventory, sales, and reporting.
+                                </p>
+                                
+                                <div class="alert alert-info border-0 shadow-sm mt-4">
+                                    <h5 class="alert-heading"><i class="fas fa-shield-alt me-2"></i>Secure Access</h5>
+                                    <p class="mb-0">
+                                        The system uses Role-Based Access Control (RBAC). This means you will only see features and data relevant to your specific job role.
+                                        Always keep your login credentials private.
+                                    </p>
+                                </div>
+
+                                <h4 class="mt-4 mb-3">System Roles Overview</h4>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="border rounded p-3 text-center h-100 bg-light">
+                                            <div class="display-6 text-primary mb-2"><i class="fas fa-user-tie"></i></div>
+                                            <h5 class="fw-bold">Director</h5>
+                                            <p class="small text-muted mb-0">Full visibility of all branches, aggregated reports, and user management.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="border rounded p-3 text-center h-100 bg-light">
+                                            <div class="display-6 text-info mb-2"><i class="fas fa-tasks"></i></div>
+                                            <h5 class="fw-bold">Manager</h5>
+                                            <p class="small text-muted mb-0">Branch-level control: procurement, stock management, and local reporting.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="border rounded p-3 text-center h-100 bg-light">
+                                            <div class="display-6 text-success mb-2"><i class="fas fa-cash-register"></i></div>
+                                            <h5 class="fw-bold">Sales Agent</h5>
+                                            <p class="small text-muted mb-0">Front-line operations: Point of Sale (POS), credit sales, and personal stats.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Director's Guide -->
+                    <div class="tab-pane fade" id="v-pills-director" role="tabpanel">
+                        <div class="card feature-card mb-4">
+                            <div class="card-body p-4">
+                                <span class="badge bg-primary role-badge mb-3">Director Access Only</span>
+                                <h2 class="fw-bold mb-4">Director's Dashboard & Tools</h2>
+                                
+                                <div class="mb-5">
+                                    <h4 class="text-primary"><i class="fas fa-chart-pie me-2"></i>Overview Dashboard</h4>
+                                    <p>Your landing page provides a high-level view of the entire company's performance.</p>
+                                    <ul class="list-group list-group-flush bg-light rounded">
+                                        <li class="list-group-item bg-transparent"><i class="fas fa-check text-success me-2"></i><strong>KPI Cards:</strong> View Total Revenue, Outstanding Credit, and Total Stock Value instantly.</li>
+                                        <li class="list-group-item bg-transparent"><i class="fas fa-check text-success me-2"></i><strong>Sales Charts:</strong> Analyze trends over the last 7 days or month.</li>
+                                        <li class="list-group-item bg-transparent"><i class="fas fa-check text-success me-2"></i><strong>Recent Transactions:</strong> Monitor the latest sales from all branches in real-time.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-5">
+                                    <h4 class="text-primary"><i class="fas fa-users-cog me-2"></i>User Management</h4>
+                                    <p>You have the authority to manage system access for all employees.</p>
+                                    
+                                    <div class="card bg-light border-0 p-3">
+                                        <h6 class="fw-bold">How to Add a New User:</h6>
+                                        <ol class="mb-0">
+                                            <li class="mb-2">Navigate to <strong>User Management</strong> from the sidebar.</li>
+                                            <li class="mb-2">Click the <strong><i class="fas fa-plus-circle"></i> Add New User</strong> button.</li>
+                                            <li class="mb-2">Fill in the required details: Name, Role (Manager/Agent), Branch, and Credentials.</li>
+                                            <li>Click <strong>Create User</strong>. The account is active immediately.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-primary"><i class="fas fa-file-invoice-dollar me-2"></i>Advanced Reporting</h4>
+                                    <p>Access detailed financial reports for strategic decision making.</p>
+                                    <p>Go to the <strong>Sales Reports</strong> page to view breakdown by:</p>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <span class="badge bg-secondary">Product Category</span>
+                                        <span class="badge bg-secondary">Branch Performance</span>
+                                        <span class="badge bg-secondary">Payment Method (Cash vs Credit)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manager's Guide -->
+                    <div class="tab-pane fade" id="v-pills-manager" role="tabpanel">
+                        <div class="card feature-card mb-4">
+                            <div class="card-body p-4">
+                                <span class="badge bg-info role-badge mb-3">Manager Access Only</span>
+                                <h2 class="fw-bold mb-4">Manager's Operations Guide</h2>
+
+                                <div class="mb-5">
+                                    <h4 class="text-info"><i class="fas fa-truck-loading me-2"></i>Procurement (Stock In)</h4>
+                                    <p>You are responsible for recording all incoming stock from suppliers.</p>
+                                    
+                                    <div class="border-start border-4 border-info ps-3 bg-light py-2">
+                                        <h6 class="fw-bold">Step-by-Step Process:</h6>
+                                        <ol class="mb-0">
+                                            <li class="mb-2">Go to <strong>Procurement</strong> page.</li>
+                                            <li class="mb-2">Click <strong>Record New Purchase</strong>.</li>
+                                            <li class="mb-2">Enter Supplier details and Select the Produce (e.g., Beans, Maize).</li>
+                                            <li class="mb-2">Input <strong>Tonnage (kg)</strong> and <strong>Cost Price</strong>.</li>
+                                            <li class="mb-2">System automatically calculates Total Cost.</li>
+                                            <li>Submit the form. Stock level increases immediately in your branch.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+
+                                <div class="mb-5">
+                                    <h4 class="text-info"><i class="fas fa-boxes me-2"></i>Stock Control</h4>
+                                    <p>Monitor inventory levels to prevent stock-outs.</p>
+                                    <ul>
+                                        <li><strong>Low Stock Alerts:</strong> Items below minimum level appear in the "Low Stock" widget.</li>
+                                        <li><strong>Stock Value:</strong> View the current monetary value of your warehouse.</li>
+                                        <li><strong>Pricing:</strong> You can update the Selling Price of produce from this page.</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-info"><i class="fas fa-user-friends me-2"></i>Sales Team Oversight</h4>
+                                    <p>Monitor your branch's Sales Agents.</p>
+                                    <p>Use the <strong>Sales Dashboard</strong> to see daily performance of each agent and verify cash collected vs system records.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent's Guide -->
+                    <div class="tab-pane fade" id="v-pills-agent" role="tabpanel">
+                        <div class="card feature-card mb-4">
+                            <div class="card-body p-4">
+                                <span class="badge bg-success role-badge mb-3">Sales Agent Access Only</span>
+                                <h2 class="fw-bold mb-4">Sales Agent's Daily Guide</h2>
+
+                                <div class="mb-5">
+                                    <h4 class="text-success"><i class="fas fa-shopping-cart me-2"></i>Point of Sale (POS)</h4>
+                                    <p>The POS is your main tool for recording daily sales quickly and accurately.</p>
+                                    
+                                    <div class="row g-4 mt-2">
+                                        <div class="col-md-6">
+                                            <div class="card h-100 border-success">
+                                                <div class="card-header bg-success text-white fw-bold">1. Select Products</div>
+                                                <div class="card-body">
+                                                    <p class="small">Click on product cards (e.g., Beans, Rice). They are added to the cart instantly.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100 border-success">
+                                                <div class="card-header bg-success text-white fw-bold">2. Adjust Quantity</div>
+                                                <div class="card-body">
+                                                    <p class="small">In the cart section, use (+) or (-) buttons to adjust the weight (kg) for the customer.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100 border-success">
+                                                <div class="card-header bg-success text-white fw-bold">3. Review Total</div>
+                                                <div class="card-body">
+                                                    <p class="small">Check the Grand Total (UGX). Ensure the customer has paid this amount.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100 border-success">
+                                                <div class="card-header bg-success text-white fw-bold">4. Checkout</div>
+                                                <div class="card-body">
+                                                    <p class="small">Click <strong>Complete Sale</strong>. A receipt preview will appear, and stock is deducted.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-5">
+                                    <h4 class="text-success"><i class="fas fa-hand-holding-usd me-2"></i>Credit Sales (Debts)</h4>
+                                    <p>For trusted customers buying on credit, use the <strong>Credit Sale</strong> option instead of regular checkout.</p>
+                                    
+                                    <div class="alert alert-warning">
+                                        <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> 
+                                        You MUST collect the customer's <strong>National ID (NIN)</strong> and <strong>Phone Number</strong> before recording a credit sale.
+                                    </div>
+                                    
+                                    <ul>
+                                        <li>Navigate to <strong>Credit Sales</strong> page.</li>
+                                        <li>Fill in the Buyer Form completely (Name, NIN, Contact, Due Date).</li>
+                                        <li>Select the produce and quantity.</li>
+                                        <li>Submit to create a formal debt record.</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-success"><i class="fas fa-history me-2"></i>My Stats</h4>
+                                    <p>Check your own performance on the <strong>Sales Dashboard</strong>.</p>
+                                    <p>See your Total Sales for the day and calculate your expected commission (if applicable).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Troubleshooting -->
+                    <div class="tab-pane fade" id="v-pills-troubleshoot" role="tabpanel">
+                        <div class="card feature-card mb-4">
+                            <div class="card-body p-4">
+                                <h2 class="fw-bold text-danger mb-4">Troubleshooting & Support</h2>
+                                
+                                <div class="accordion" id="accordionTroubleshoot">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                                <strong>I forgot my password. What should I do?</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionTroubleshoot">
+                                            <div class="accordion-body">
+                                                Contact your system administrator (Director). They can reset your password from the User Management dashboard.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                                <strong>"Insufficient Stock" error during sale</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionTroubleshoot">
+                                            <div class="accordion-body">
+                                                This means the system thinks the warehouse is empty for that item. Contact your Manager to check if new stock needs to be recorded in the Procurement module.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                                <strong>System is slow or not loading</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionTroubleshoot">
+                                            <div class="accordion-body">
+                                                Check your internet connection first. If the problem persists, try refreshing the page (Ctrl+R). If the server is down, contact IT Support.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 p-4 bg-light rounded text-center">
+                                    <h5>Need more help?</h5>
+                                    <p class="text-muted">Contact the technical support team.</p>
+                                    <a href="mailto:support@kgl-groceries.com" class="btn btn-outline-dark"><i class="fas fa-envelope me-2"></i>Email Support</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top py-4 mt-auto">
+        <div class="container text-center text-muted small">
+            <p class="mb-0">&copy; 2026 KGL Groceries LTD. All rights reserved.</p>
+            <p class="mb-0">System Version 1.0.0 | <a href="marketing.html" class="text-decoration-none text-success">Home</a></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

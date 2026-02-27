@@ -209,6 +209,10 @@ app.get('/marketing', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/marketing.html'));
 });
 
+app.get('/manual', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../frontend/user_manual.html'));
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
