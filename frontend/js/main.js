@@ -1,4 +1,116 @@
 
+// --- Profile & Settings Modals ---
+function showProfileModal() {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return;
+    const user = JSON.parse(userStr);
+
+    const modalHtml = `
+        <div class="modal fade" id="profileModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-user-circle me-2"></i>My Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2E7D32&color=fff&size=128" 
+                             class="rounded-circle mb-3 shadow-sm" alt="Avatar">
+                        <h4 class="fw-bold mb-1">${user.name}</h4>
+                        <p class="text-muted text-uppercase small mb-3">${user.role.replace('_', ' ')}</p>
+                        
+                        <div class="row g-3 text-start mt-2">
+                            <div class="col-12 border-bottom pb-2">
+                                <small class="text-muted d-block">Username</small>
+                                <span class="fw-medium">${user.username}</span>
+                            </div>
+                            <div class="col-12 border-bottom pb-2">
+                                <small class="text-muted d-block">Branch</small>
+                                <span class="fw-medium">${user.branch ? (user.branch.name || user.branch) : 'General'}</span>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted d-block">System Status</small>
+                                <span class="badge bg-success">Active Account</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Remove old modal if exists
+    const oldModal = document.getElementById('profileModal');
+    if (oldModal) oldModal.remove();
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+    modal.show();
+}
+
+function showSettingsModal() {
+    const modalHtml = `
+        <div class="modal fade" id="settingsModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-cog me-2"></i>Settings</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item px-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">Notifications</h6>
+                                        <small class="text-muted">Receive alerts for low stock</small>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item px-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">Dark Mode</h6>
+                                        <small class="text-muted">Toggle visual theme</small>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item px-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">Currency Format</h6>
+                                        <small class="text-muted">Display as UGX</small>
+                                    </div>
+                                    <span class="badge bg-light text-dark border">UGX</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const oldModal = document.getElementById('settingsModal');
+    if (oldModal) oldModal.remove();
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById('settingsModal'));
+    modal.show();
+}
+
 // --- Logout Logic ---
 function logout() {
     localStorage.removeItem('token');
@@ -291,6 +403,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
+    
+    // Bind Profile and Settings links in Dropdown
+    const profileLinks = document.querySelectorAll('a[href="#"][class*="dropdown-item"]');
+    profileLinks.forEach(link => {
+        if (link.textContent.trim() === 'Profile') {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showProfileModal();
+            });
+        }
+        if (link.textContent.trim() === 'Settings' || link.textContent.trim() === 'Branch Settings') {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSettingsModal();
+            });
+        }
+    });
 
     // Sidebar Toggle Logic
     const sidebarToggle = document.getElementById('sidebarToggle');

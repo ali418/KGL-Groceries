@@ -155,7 +155,7 @@
                 // api.post returns the parsed JSON body
                 const response = await api.post('/auth/login', { username, password });
 
-                if (response.success) {
+                if (response && response.success) {
                     // Save token and user data
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -177,7 +177,7 @@
                         }
                     }, 500);
                 } else {
-                    throw new Error(response.message || 'Login failed');
+                    throw new Error((response && response.message) || 'Login failed');
                 }
 
             } catch (error) {

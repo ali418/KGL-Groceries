@@ -26,15 +26,18 @@ window.api = {
         try {
             const response = await fetch(`${API_URL}${endpoint}`, config);
             
+            const data = await response.json();
+
             if (response.status === 401) {
                 // Token expired or invalid
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.href = 'login.html';
-                return;
+                // Only redirect if not already on login page
+                if (!window.location.pathname.endsWith('login.html')) {
+                    window.location.href = 'login.html';
+                }
+                throw new Error(data.message || 'Unauthorized');
             }
-
-            const data = await response.json();
             
             if (!response.ok) {
                 throw new Error(data.error || data.message || 'Something went wrong');
