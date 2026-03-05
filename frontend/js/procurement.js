@@ -301,19 +301,22 @@ function addOrderItemRow() {
 
     tr.innerHTML = `
         <td>
-            <select class="form-select form-select-sm item-select" onchange="updateRowUnit(this)">
+            <select class="form-select item-select" required onchange="updateRowUnit(this)">
                 ${productOptions}
             </select>
         </td>
         <td>
-            <div class="input-group input-group-sm">
-                <input type="number" class="form-control item-qty" min="1" onchange="calculateRowTotal(this)">
-                <span class="input-group-text unit-label">-</span>
-            </div>
-            <input type="hidden" class="item-unit" value="kg">
+            <input type="number" class="form-control item-qty" placeholder="0" min="1" required oninput="calculateRowTotal(this)">
         </td>
-        <td><input type="number" class="form-control form-control-sm item-cost" min="0" onchange="calculateRowTotal(this)"></td>
-        <td><input type="number" class="form-control form-control-sm item-total" readonly></td>
+        <td>
+            <input type="text" class="form-control item-unit" value="kg" readonly>
+        </td>
+        <td>
+            <input type="number" class="form-control item-cost" placeholder="0.00" min="0" required oninput="calculateRowTotal(this)">
+        </td>
+        <td>
+            <span class="fw-bold item-total">0.00</span>
+        </td>
         <td>
             <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()">
                 <i class="fas fa-trash"></i>
@@ -323,12 +326,11 @@ function addOrderItemRow() {
     tbody.appendChild(tr);
 }
 
-// Global functions for inline events
+// Helpers for dynamic rows
 window.updateRowUnit = function(select) {
     const option = select.options[select.selectedIndex];
-    const unit = option.getAttribute('data-unit') || '-';
+    const unit = option.getAttribute('data-unit') || 'kg';
     const row = select.closest('tr');
-    row.querySelector('.unit-label').textContent = unit;
     row.querySelector('.item-unit').value = unit;
 };
 
@@ -336,23 +338,23 @@ window.calculateRowTotal = function(input) {
     const row = input.closest('tr');
     const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
     const cost = parseFloat(row.querySelector('.item-cost').value) || 0;
-    row.querySelector('.item-total').value = (qty * cost).toFixed(2);
+    row.querySelector('.item-total').textContent = (qty * cost).toFixed(2);
 };
 
 window.receiveOrder = async function(orderId) {
-    if (!confirm('Are you sure you want to receive this order? This will update stock levels.')) return;
+    if (!confirm('Are you sure you want to mark this order as received? This will update stock levels.')) return;
 
     try {
-        const response = await api.put(`/api/procurement/${orderId}/receive`, {});
+        const response = await api.put(`/procurement/${orderId}/receive`, {});
         if (response.success) {
             showAlert('Order received and stock updated', 'success');
             loadOrders();
         } else {
-            showAlert(response.message, 'danger');
+            showAlert(response.message || 'Failed to receive order', 'danger');
         }
     } catch (error) {
         console.error('Error receiving order:', error);
-        showAlert('Failed to receive order', 'danger');
+        showAlert('Error receiving order', 'danger');
     }
 };
 
@@ -360,10 +362,6 @@ window.openOrderModal = function(supplierId) {
     const modal = new bootstrap.Modal(document.getElementById('createOrderModal'));
     document.getElementById('orderSupplier').value = supplierId;
     modal.show();
-    // Add one empty row if empty
-    if (document.getElementById('orderItemsTableBody').children.length === 0) {
-        addOrderItemRow();
-    }
 };
 
 // --- Helpers ---

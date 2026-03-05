@@ -36,7 +36,7 @@ async function loadProducts() {
 
 async function loadCreditSales() {
     try {
-        const sales = await api.get('/credit-sales');
+        const sales = await api.get('/sales/credit');
         const tbody = document.getElementById('creditSalesTableBody');
         tbody.innerHTML = '';
 
@@ -120,7 +120,21 @@ async function createCreditSale() {
         btn.disabled = true;
         btn.textContent = 'Processing...';
 
-        await api.post('/credit-sales', payload);
+        // Map frontend fields to backend expected fields
+        const backendPayload = {
+            buyerName: payload.buyerName,
+            nationalId: payload.nationalId || 'N/A',
+            location: 'Kampala', // Default as not in form
+            contact: payload.phone,
+            amountDue: Number(payload.quantity) * Number(payload.unitPrice),
+            salesAgentName: 'Current Agent', // Will be overridden by req.user
+            dueDate: payload.dueDate,
+            produceId: payload.produceId,
+            tonnage: payload.quantity,
+            dispatchDate: new Date().toISOString()
+        };
+
+        await api.post('/sales/credit', backendPayload);
         
         alert('Credit Sale recorded successfully!');
         // Reset form

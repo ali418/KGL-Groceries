@@ -15,10 +15,11 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+      "script-src-attr": ["'unsafe-inline'"],
       styleSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https://ui-avatars.com"],
       fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
-      connectSrc: ["'self'", "https://cdn.jsdelivr.net", "http://localhost:5000", "http://127.0.0.1:5000"],
+      connectSrc: ["'self'", "https://cdn.jsdelivr.net", "http://localhost:5000", "http://127.0.0.1:5000", "https://kgl-groceries.up.railway.app"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
     },

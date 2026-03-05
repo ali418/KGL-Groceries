@@ -2,9 +2,46 @@ document.addEventListener('DOMContentLoaded', () => {
     loadBranches();
     loadProducts();
     initializeCharts();
+    // Setup filters
+    const filterInputs = ['productSearch', 'stockFilter', 'productBranch'];
+    filterInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', filterProducts);
+            el.addEventListener('change', filterProducts);
+        }
+    });
 });
 
 let allProducts = [];
+
+function filterProducts() {
+    const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
+    const stockStatus = document.getElementById('stockFilter')?.value || 'all';
+    const branch = document.getElementById('productBranch')?.value || '';
+
+    const filtered = allProducts.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(search) || p.type.toLowerCase().includes(search);
+        
+        let matchesStock = true;
+        const current = p.currentStock?.tonnage || 0;
+        const min = p.thresholds?.minimumStock || 10;
+        
+        if (stockStatus === 'low') matchesStock = current < min && current > 0;
+        else if (stockStatus === 'out') matchesStock = current <= 0;
+        else if (stockStatus === 'well') matchesStock = current >= min;
+
+        let matchesBranch = true;
+        if (branch) {
+            const pBranch = typeof p.branch === 'object' ? p.branch._id : p.branch;
+            matchesBranch = pBranch === branch;
+        }
+
+        return matchesSearch && matchesStock && matchesBranch;
+    });
+
+    renderProductsTable(filtered);
+}
 
 function initializeCharts() {
     // Stock Movement Chart
@@ -294,18 +331,23 @@ window.deleteProduct = async function(id) {
     try {
         await api.delete(`/produce/${id}`);
         loadProducts();
+        alert('Product deleted successfully');
     } catch (error) {
         console.error('Error deleting product:', error);
         alert(error.message);
     }
 };
 
-// Reset modal on close
+// Ensure modal resets properly
 const modalEl = document.getElementById('addProductModal');
 if (modalEl) {
     modalEl.addEventListener('hidden.bs.modal', () => {
         document.getElementById('addProductForm').reset();
         document.getElementById('productId').value = '';
         document.getElementById('productModalTitle').textContent = 'Add New Product';
+        
+        // Reset select to first option if exists
+        const branchSelect = document.getElementById('productBranch');
+        if (branchSelect.options.length > 1) branchSelect.selectedIndex = 1;
     });
 }

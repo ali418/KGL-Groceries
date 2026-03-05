@@ -2,10 +2,27 @@
 // js/sales_reports.js
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('reportDate');
+    if (dateInput) dateInput.value = today;
+
     loadSummaryStats();
     loadSalesTrend();
     loadCategoryStats();
     loadDetailedSales();
+
+    // Setup filters
+    const filterInputs = ['reportDate', 'branchFilter', 'categoryFilter', 'paymentFilter'];
+    filterInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', () => {
+                loadSummaryStats();
+                loadDetailedSales();
+            });
+        }
+    });
     
     // Setup export buttons (mock functionality for now)
     const buttons = document.querySelectorAll('.btn-outline-secondary, .btn-outline-success');
@@ -19,7 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadSummaryStats() {
     try {
-        const stats = await api.get('/reports/stats');
+        const date = document.getElementById('reportDate')?.value;
+        const branch = document.getElementById('branchFilter')?.value;
+        
+        let query = '?';
+        if (date) query += `date=${date}&`;
+        if (branch) query += `branch=${branch}`;
+
+        const stats = await api.get(`/reports/stats${query}`);
         
         // Update cards
         document.getElementById('totalSalesAmount').textContent = formatCurrency(stats.totalRevenue);
@@ -112,59 +136,39 @@ async function loadCategoryStats() {
 
 async function loadDetailedSales() {
     try {
-        const sales = await api.get('/sales'); // This returns all sales
+        const date = document.getElementById('reportDate')?.value;
+        const branch = document.getElementById('branchFilter')?.value;
+        const category = document.getElementById('categoryFilter')?.value;
+        const payment = document.getElementById('paymentFilter')?.value;
+
+        let query = '?';
+        if (date) query += `date=${date}&`;
+        if (branch) query += `branch=${branch}&`;
+        if (category) query += `category=${category}&`;
+        if (payment) query += `payment=${payment}`;
+
+        const sales = await api.get(`/reports/detailed${query}`);
         const tbody = document.getElementById('salesTableBody');
         tbody.innerHTML = '';
         
         if (sales.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="10" class="text-center">No sales records found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">No sales found for this criteria</td></tr>';
             return;
         }
-        
-        // Limit to 50 for performance or pagination
-        const displaySales = sales.slice(0, 50);
-        
-        displaySales.forEach(sale => {
-            const tr = document.createElement('tr');
-            
-            const date = new Date(sale.saleDate).toLocaleString();
-            const product = sale.produce ? sale.produce.name : 'Unknown Product';
-            const branch = sale.branch ? sale.branch.name : 'Unknown Branch';
-            const quantity = sale.quantity ? `${sale.quantity.tonnage} ${sale.quantity.unit}` : '-';
-            const unitPrice = sale.pricing ? formatCurrency(sale.pricing.unitPrice) : '-';
-            const total = sale.payment ? formatCurrency(sale.payment.amountPaid) : '-';
-            const paymentMethod = sale.payment ? sale.payment.method : '-';
-            const agent = sale.salesAgent ? sale.salesAgent.name : 'Unknown';
-            const status = sale.status || 'completed';
-            
-            // Badges
-            const methodBadge = paymentMethod === 'cash' ? 'bg-success' : 'bg-warning';
-            const statusBadge = status === 'completed' ? 'bg-success' : 'bg-secondary';
-            
-            // Transaction ID extraction (from notes or ID)
-            const trxId = sale.notes && sale.notes.includes('Transaction ID:') 
-                ? sale.notes.split('Transaction ID:')[1].trim().substring(0, 8) + '...' 
-                : sale._id.substring(0, 8);
 
+        sales.forEach(sale => {
+            const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><strong>${trxId}</strong></td>
-                <td>${date}</td>
-                <td>${product}</td>
-                <td>${branch}</td>
-                <td>${quantity}</td>
-                <td>${unitPrice}</td>
-                <td>${total}</td>
-                <td><span class="badge ${methodBadge}">${paymentMethod}</span></td>
-                <td>${agent}</td>
-                <td><span class="badge ${statusBadge}">${status}</span></td>
+                <td>${new Date(sale.saleDate).toLocaleDateString()} ${new Date(sale.saleDate).toLocaleTimeString()}</td>
+                <td>${sale.produce ? sale.produce.name : 'Unknown'}</td>
+                <td>${sale.produce ? sale.produce.type : '-'}</td>
+                <td>${sale.quantity} kg</td>
+                <td>${formatCurrency(sale.amount)}</td>
+                <td><span class="badge bg-${sale.paymentMethod === 'cash' ? 'success' : 'warning'}">${sale.paymentMethod}</span></td>
+                <td>${sale.agent ? sale.agent.name : 'Unknown'}</td>
             `;
             tbody.appendChild(tr);
         });
-        
-        // Update badge count
-        const badge = document.querySelector('.card-header .badge.bg-primary');
-        if (badge) badge.textContent = `Showing ${displaySales.length} records`;
-        
     } catch (error) {
         console.error('Error loading detailed sales:', error);
     }
