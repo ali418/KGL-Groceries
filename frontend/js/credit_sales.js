@@ -38,7 +38,11 @@ async function loadCreditSales() {
     try {
         const sales = await api.get('/sales/credit');
         const tbody = document.getElementById('creditSalesTableBody');
-        tbody.innerHTML = '';
+        if (tbody) tbody.innerHTML = '';
+
+        updateCreditStats(sales);
+
+        if (!tbody) return;
 
         if (sales.length === 0) {
             tbody.innerHTML = '<tr><td colspan="9" class="text-center">No credit sales found</td></tr>';
@@ -76,6 +80,62 @@ async function loadCreditSales() {
     } catch (error) {
         console.error('Error loading credit sales:', error);
     }
+}
+
+function updateCreditStats(sales) {
+    let overdueAmount = 0;
+    let overdueCount = 0;
+    let dueThisWeekAmount = 0;
+    let dueThisWeekCount = 0;
+    let totalExposure = 0;
+    let activeAccounts = 0;
+    let collectedThisMonth = 0;
+
+    const now = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(now.getDate() + 7);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    sales.forEach(sale => {
+        const total = sale.pricing.totalAmount;
+        const paid = sale.payments.reduce((acc, curr) => acc + curr.amount, 0);
+        const balance = total - paid;
+        const dueDate = new Date(sale.creditTerms.dueDate);
+
+        if (balance > 0) {
+            totalExposure += balance;
+            activeAccounts++;
+
+            if (dueDate < now) {
+                overdueAmount += balance;
+                overdueCount++;
+            } else if (dueDate <= nextWeek) {
+                dueThisWeekAmount += balance;
+                dueThisWeekCount++;
+            }
+        }
+
+        // Collected this month
+        sale.payments.forEach(p => {
+            const pDate = new Date(p.date);
+            if (pDate >= startOfMonth) {
+                collectedThisMonth += p.amount;
+            }
+        });
+    });
+
+    const safeSetText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    safeSetText('overdueAmount', formatCurrency(overdueAmount));
+    safeSetText('overdueCount', `${overdueCount} accounts`);
+    safeSetText('dueThisWeekAmount', formatCurrency(dueThisWeekAmount));
+    safeSetText('dueThisWeekCount', `${dueThisWeekCount} accounts`);
+    safeSetText('totalExposure', formatCurrency(totalExposure));
+    safeSetText('activeAccountsCount', `${activeAccounts} active accounts`);
+    safeSetText('collectedThisMonth', formatCurrency(collectedThisMonth));
 }
 
 function setupEventListeners() {

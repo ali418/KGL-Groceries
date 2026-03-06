@@ -135,17 +135,33 @@ async function loadBranches() {
 
 async function loadProducts() {
     try {
-        const products = await api.get('/produce');
-        allProducts = products;
-        renderProductsTable(products);
-        updateSummaryCards(products);
+        const response = await api.get('/produce');
+        allProducts = response;
+        renderProductsTable(allProducts);
+        updateStockStats(allProducts);
     } catch (error) {
         console.error('Error loading products:', error);
-        // Don't alert on load, just log
     }
 }
 
-function renderProductsTable(products) {
+function updateStockStats(products) {
+    const lowStock = products.filter(p => (p.currentStock?.tonnage || 0) < (p.thresholds?.minimumStock || 10) && (p.currentStock?.tonnage || 0) > 0).length;
+    const outOfStock = products.filter(p => (p.currentStock?.tonnage || 0) <= 0).length;
+    const wellStocked = products.filter(p => (p.currentStock?.tonnage || 0) >= (p.thresholds?.minimumStock || 10)).length;
+    const totalValue = products.reduce((acc, curr) => acc + ((curr.currentStock?.tonnage || 0) * (curr.pricing?.costPrice || 0)), 0);
+
+    const safeSetText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    safeSetText('lowStockCount', lowStock);
+    safeSetText('outOfStockCount', outOfStock);
+    safeSetText('wellStockedCount', wellStocked);
+    safeSetText('stockValue', formatCurrency(totalValue));
+}
+
+function renderProductsTable(productsList) {
     const tbody = document.getElementById('productsTableBody');
     tbody.innerHTML = '';
 

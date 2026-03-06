@@ -29,6 +29,9 @@ async function loadSuppliers() {
             renderSuppliersTable(suppliers);
             updateSupplierStats(suppliers);
             populateSupplierDropdown(suppliers);
+            
+            const activeCountEl = document.getElementById('activeSuppliersCount');
+            if (activeCountEl) activeCountEl.textContent = suppliers.length;
         }
     } catch (error) {
         console.error('Error loading suppliers:', error);
@@ -42,6 +45,25 @@ async function loadOrders() {
         if (response.success) {
             renderOrdersTable(response.data);
             updateOrderStats(response.data);
+            
+            const orders = response.data;
+            const pendingCount = orders.filter(o => o.status === 'pending').length;
+            const completedCount = orders.filter(o => o.status === 'received').length;
+            
+            const now = new Date();
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const totalMonth = orders
+                .filter(o => new Date(o.orderDate) >= startOfMonth)
+                .reduce((acc, curr) => acc + curr.totalAmount, 0);
+
+            const safeSetText = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            };
+
+            safeSetText('pendingOrdersCount', pendingCount);
+            safeSetText('completedOrdersCount', completedCount);
+            safeSetText('totalProcurementMonth', formatCurrency(totalMonth));
         }
     } catch (error) {
         console.error('Error loading orders:', error);

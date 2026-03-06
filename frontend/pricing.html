@@ -57,7 +57,7 @@
                                 <i class="fas fa-tags text-primary"></i>
                             </div>
                             <h5 class="card-title">Total Products</h5>
-                            <h3 class="text-primary">186</h3>
+                            <h3 class="text-primary" id="totalProductsCount">0</h3>
                             <small class="text-muted">Active price lists</small>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                                 <i class="fas fa-exclamation-triangle text-warning"></i>
                             </div>
                             <h5 class="card-title">Pending Review</h5>
-                            <h3 class="text-warning">8</h3>
+                            <h3 class="text-warning">0</h3>
                             <small class="text-muted">Awaiting approval</small>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                                 <i class="fas fa-chart-line text-info"></i>
                             </div>
                             <h5 class="card-title">Avg Margin</h5>
-                            <h3 class="text-info">23.5%</h3>
+                            <h3 class="text-info" id="avgMargin">0%</h3>
                             <small class="text-muted">Gross profit margin</small>
                         </div>
                     </div>
@@ -124,113 +124,17 @@
                                 <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Product Code</th>
                                             <th>Product Name</th>
                                             <th>Category</th>
                                             <th>Cost Price</th>
                                             <th>Selling Price</th>
                                             <th>Margin %</th>
                                             <th>Last Updated</th>
-                                            <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>PRD001</strong></td>
-                                            <td>Fresh Tomatoes</td>
-                                            <td>Vegetables</td>
-                                            <td>UGX 2,500</td>
-                                            <td>UGX 3,200</td>
-                                            <td><span class="badge bg-success">28%</span></td>
-                                            <td>2024-01-08</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1"
-                                                    data-bs-toggle="modal" data-bs-target="#editPriceModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD002</strong></td>
-                                            <td>Onions</td>
-                                            <td>Vegetables</td>
-                                            <td>UGX 1,800</td>
-                                            <td>UGX 2,200</td>
-                                            <td><span class="badge bg-warning">22%</span></td>
-                                            <td>2024-01-07</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1"
-                                                    data-bs-toggle="modal" data-bs-target="#editPriceModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD003</strong></td>
-                                            <td>Potatoes</td>
-                                            <td>Vegetables</td>
-                                            <td>UGX 1,500</td>
-                                            <td>UGX 1,900</td>
-                                            <td><span class="badge bg-success">27%</span></td>
-                                            <td>2024-01-06</td>
-                                            <td><span class="badge bg-warning">Pending</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1"
-                                                    data-bs-toggle="modal" data-bs-target="#editPriceModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD004</strong></td>
-                                            <td>Carrots</td>
-                                            <td>Vegetables</td>
-                                            <td>UGX 2,000</td>
-                                            <td>UGX 2,500</td>
-                                            <td><span class="badge bg-success">25%</span></td>
-                                            <td>2024-01-05</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1"
-                                                    data-bs-toggle="modal" data-bs-target="#editPriceModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>PRD005</strong></td>
-                                            <td>Green Peppers</td>
-                                            <td>Vegetables</td>
-                                            <td>UGX 3,000</td>
-                                            <td>UGX 3,800</td>
-                                            <td><span class="badge bg-success">27%</span></td>
-                                            <td>2024-01-04</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1"
-                                                    data-bs-toggle="modal" data-bs-target="#editPriceModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-history"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <tbody id="pricingTableBody">
+                                        <tr><td colspan="7" class="text-center">Loading pricing data...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -380,7 +284,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/pricing.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
