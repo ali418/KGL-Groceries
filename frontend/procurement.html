@@ -171,61 +171,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>PO-2024-001</strong></td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-building text-primary"></i>
-                                                </div>
-                                                <strong>Fresh Foods Ltd</strong>
-                                            </div>
-                                        </td>
-                                        <td>25 items</td>
-                                        <td><span class="fw-bold">UGX 2,450,000</span></td>
-                                        <td>Jan 2, 2024</td>
-                                        <td><span class="text-warning">Jan 10, 2024</span></td>
-                                        <td><span class="badge bg-warning">In Transit</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success me-1" title="Receive">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning" title="Contact">
-                                                <i class="fas fa-phone"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>PO-2024-002</strong></td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-industry text-info"></i>
-                                                </div>
-                                                <strong>Agro Supplies Co</strong>
-                                            </div>
-                                        </td>
-                                        <td>18 items</td>
-                                        <td><span class="fw-bold">UGX 1,850,000</span></td>
-                                        <td>Jan 3, 2024</td>
-                                        <td><span class="text-danger">Jan 8, 2024</span></td>
-                                        <td><span class="badge bg-danger">Overdue</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success me-1" title="Receive">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning" title="Contact">
-                                                <i class="fas fa-phone"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="pendingOrdersTableBody">
+                                    <!-- Dynamic Content -->
+                                    <tr><td colspan="8" class="text-center">Loading orders...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -282,79 +230,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-seedling text-success"></i>
-                                                </div>
-                                                <strong>Fresh Harvest Ltd</strong>
-                                            </div>
-                                        </td>
-                                        <td>John Kizito</td>
-                                        <td>+256 772 345 678</td>
-                                        <td>john@freshharvest.ug</td>
-                                        <td>Fresh Produce</td>
-                                        <td>
-                                            <div class="text-warning">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star-half-alt"></i>
-                                                <small class="text-muted ms-1">4.5</small>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Order">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-box text-primary"></i>
-                                                </div>
-                                                <strong>Packaging Solutions</strong>
-                                            </div>
-                                        </td>
-                                        <td>Sarah Namuddu</td>
-                                        <td>+256 701 987 654</td>
-                                        <td>sarah@packsol.co.ug</td>
-                                        <td>Packaging Materials</td>
-                                        <td>
-                                            <div class="text-warning">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <small class="text-muted ms-1">4.0</small>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Order">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="suppliersTableBody">
+                                    <!-- Dynamic Content -->
+                                    <tr><td colspan="8" class="text-center">Loading suppliers...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -554,7 +432,15 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/procurement.js"></script>
+    <script>
+        // Procurement charts are handled in procurement.js if implemented there
+        // or we keep the inline script for charts if procurement.js doesn't cover it.
+        // But we should remove duplicate DOMContentLoaded listeners if possible.
+        // For now, I'll keep the inline script for charts but remove duplicate listeners if they conflict.
+    </script>
 
     <!-- Chart Initialization Script -->
     <script>

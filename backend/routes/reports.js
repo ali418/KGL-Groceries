@@ -186,6 +186,99 @@ router.get('/stats', protect, authorize('manager', 'director'), async (req, res)
 
 /**
  * @swagger
+ * /reports/detailed:
+ *   get:
+ *     summary: Get detailed sales report with filtering
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *         description: Filter by date (YYYY-MM-DD)
+ *       - in: query
+ *         name: branch
+ *         schema:
+ *           type: string
+ *         description: Filter by branch ID
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by product category
+ *       - in: query
+ *         name: payment
+ *         schema:
+ *           type: string
+ *         description: Filter by payment method
+ *     responses:
+ *       200:
+ *         description: List of sales
+ *       500:
+ *         description: Server error
+ */
+router.get('/detailed', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const { date, branch, category, payment } = req.query;
+        
+        let query = {};
+
+        // Date Filter
+        if (date) {
+            const startDate = new Date(date);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(date);
+            endDate.setHours(23, 59, 59, 999);
+            query.saleDate = { $gte: startDate, $lte: endDate };
+        }
+
+        // Branch Filter
+        if (branch) {
+            query.branch = branch;
+        }
+
+        // Payment Method Filter
+        if (payment && payment !== 'all') {
+            query['payment.method'] = payment;
+        }
+
+        // Category Filter needs to look up Produce IDs first
+        if (category && category !== 'all') {
+            const products = await Produce.find({ type: category }).select('_id');
+            const productIds = products.map(p => p._id);
+            query.produce = { $in: productIds };
+        }
+
+        const sales = await Sale.find(query)
+            .populate('produce', 'name type')
+            .populate('salesAgent', 'name')
+            .populate('branch', 'name')
+            .sort({ saleDate: -1 });
+
+        // Transform for frontend
+        const formattedSales = sales.map(sale => ({
+            _id: sale._id,
+            saleDate: sale.saleDate,
+            produce: sale.produce,
+            quantity: sale.quantity?.tonnage || 0,
+            amount: sale.pricing?.totalPrice || 0,
+            paymentMethod: sale.payment?.method || 'cash',
+            agent: sale.salesAgent,
+            branch: sale.branch,
+            status: sale.status
+        }));
+
+        res.status(200).json(formattedSales);
+    } catch (error) {
+        console.error('Error fetching detailed report:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
  * /reports/by-category:
  *   get:
  *     summary: Get sales by product category
@@ -200,19 +293,30 @@ router.get('/stats', protect, authorize('manager', 'director'), async (req, res)
  */
 router.get('/by-category', protect, authorize('manager', 'director'), async (req, res) => {
     try {
-        const sales = await Sale.find().populate('produce', 'type');
-        
-        const categoryStats = {};
-        
-        sales.forEach(sale => {
-            if (sale.produce && sale.produce.type) {
-                const type = sale.produce.type;
-                if (!categoryStats[type]) categoryStats[type] = 0;
-                categoryStats[type] += sale.payment?.amountPaid || 0;
+        const stats = await Sale.aggregate([
+            {
+                $lookup: {
+                    from: 'produces',
+                    localField: 'produce',
+                    foreignField: '_id',
+                    as: 'produceDetails'
+                }
+            },
+            { $unwind: '$produceDetails' },
+            {
+                $group: {
+                    _id: '$produceDetails.type',
+                    totalValue: { $sum: '$pricing.totalPrice' }
+                }
             }
+        ]);
+
+        const result = {};
+        stats.forEach(s => {
+            result[s._id] = s.totalValue;
         });
 
-        res.json(categoryStats);
+        res.status(200).json(result);
     } catch (error) {
         console.error('Error fetching category stats:', error);
         res.status(500).json({ error: 'Internal Server Error' });

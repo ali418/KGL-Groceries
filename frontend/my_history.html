@@ -67,27 +67,9 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>AG-2026-001</strong></td>
-                                <td>Feb 12, 2026 10:30 AM</td>
-                                <td>Fresh Tomatoes</td>
-                                <td>12 Kg</td>
-                                <td>UGX 2,000</td>
-                                <td>UGX 24,000</td>
-                                <td><span class="badge bg-success">Cash</span></td>
-                                <td><span class="badge bg-success">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>AG-2026-002</strong></td>
-                                <td>Feb 12, 2026 11:05 AM</td>
-                                <td>Red Onions</td>
-                                <td>8 Kg</td>
-                                <td>UGX 1,800</td>
-                                <td>UGX 14,400</td>
-                                <td><span class="badge bg-warning">Credit</span></td>
-                                <td><span class="badge bg-warning">Pending</span></td>
-                            </tr>
+                        <tbody id="historyTableBody">
+                            <!-- Dynamic Content -->
+                            <tr><td colspan="8" class="text-center">Loading sales history...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -96,6 +78,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/my_history.js"></script>
 </body>
 </html>

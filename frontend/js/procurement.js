@@ -68,23 +68,15 @@ async function loadProductsForDropdown() {
 // --- Rendering ---
 
 function renderSuppliersTable(suppliersList) {
-    const tbody = document.querySelector('table:nth-of-type(2) tbody'); // Assuming second table is suppliers
-    // Better selector: find the table inside the card "Active Suppliers"
-    // Since I can't easily change HTML structure right now, I'll use a more specific selector if possible,
-    // but the file has two tables. First is Pending Orders, Second is Active Suppliers.
-    // Let's rely on the context or add ID later if needed. For now, let's find the table that has "Supplier Name" in header.
-    
-    const tables = document.querySelectorAll('table');
-    let supplierTableBody = null;
-    tables.forEach(table => {
-        if (table.querySelector('th').textContent.includes('Supplier Name')) {
-            supplierTableBody = table.querySelector('tbody');
-        }
-    });
+    const tbody = document.getElementById('suppliersTableBody');
+    if (!tbody) return;
 
-    if (!supplierTableBody) return;
+    if (suppliersList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No suppliers found</td></tr>';
+        return;
+    }
 
-    supplierTableBody.innerHTML = suppliersList.map(supplier => `
+    tbody.innerHTML = suppliersList.map(supplier => `
         <tr>
             <td>
                 <div class="d-flex align-items-center">
@@ -100,14 +92,17 @@ function renderSuppliersTable(suppliersList) {
             <td>${supplier.specialization || 'General'}</td>
             <td>
                 <div class="text-warning">
-                    ${renderStars(supplier.rating)}
-                    <small class="text-muted ms-1">${supplier.rating}</small>
+                    ${renderStars(supplier.rating || 0)}
+                    <small class="text-muted ms-1">${supplier.rating || 'N/A'}</small>
                 </div>
             </td>
             <td><span class="badge bg-success">Active</span></td>
             <td>
                 <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
                     <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                    <i class="fas fa-edit"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-success" title="Order" onclick="openOrderModal('${supplier._id}')">
                     <i class="fas fa-shopping-cart"></i>
@@ -128,50 +123,53 @@ function renderStars(rating) {
 }
 
 function renderOrdersTable(orders) {
-    const pendingOrders = orders.filter(o => o.status === 'pending');
-    
-    // Find Pending Orders table (first table usually)
-    const tables = document.querySelectorAll('table');
-    let ordersTableBody = null;
-    tables.forEach(table => {
-        if (table.querySelector('th').textContent.includes('Order ID')) {
-            ordersTableBody = table.querySelector('tbody');
-        }
-    });
+    const tbody = document.getElementById('pendingOrdersTableBody');
+    if (!tbody) return;
 
-    if (!ordersTableBody) return;
-
-    if (pendingOrders.length === 0) {
-        ordersTableBody.innerHTML = '<tr><td colspan="8" class="text-center">No pending orders</td></tr>';
+    if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No pending orders</td></tr>';
         return;
     }
 
-    ordersTableBody.innerHTML = pendingOrders.map(order => `
+    tbody.innerHTML = orders.map(order => `
         <tr>
-            <td><strong>${order.orderId || 'N/A'}</strong></td>
+            <td><strong>${order.orderNumber || order._id.substring(0, 8).toUpperCase()}</strong></td>
             <td>
                 <div class="d-flex align-items-center">
                     <div class="bg-light rounded-circle p-2 me-2">
-                        <i class="fas fa-truck text-info"></i>
+                        <i class="fas fa-building text-primary"></i>
                     </div>
                     <strong>${order.supplier ? order.supplier.name : 'Unknown'}</strong>
                 </div>
             </td>
-            <td>${order.items.length} items</td>
+            <td>${order.items ? order.items.length : 0} items</td>
             <td><span class="fw-bold">${formatCurrency(order.totalAmount)}</span></td>
-            <td>${formatDate(order.createdAt)}</td>
-            <td><span class="text-warning">${formatDate(order.expectedDate)}</span></td>
-            <td><span class="badge bg-warning">${order.status}</span></td>
+            <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+            <td><span class="text-warning">${new Date(order.expectedDate).toLocaleDateString()}</span></td>
+            <td><span class="badge bg-${getStatusColor(order.status)}">${order.status}</span></td>
             <td>
                 <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
                     <i class="fas fa-eye"></i>
                 </button>
+                ${order.status !== 'received' ? `
                 <button class="btn btn-sm btn-outline-success me-1" title="Receive" onclick="receiveOrder('${order._id}')">
                     <i class="fas fa-check"></i>
+                </button>` : ''}
+                <button class="btn btn-sm btn-outline-warning" title="Contact">
+                    <i class="fas fa-phone"></i>
                 </button>
             </td>
         </tr>
     `).join('');
+}
+
+function getStatusColor(status) {
+    switch (status) {
+        case 'pending': return 'warning';
+        case 'received': return 'success';
+        case 'cancelled': return 'danger';
+        default: return 'secondary';
+    }
 }
 
 function populateSupplierDropdown(suppliersList) {

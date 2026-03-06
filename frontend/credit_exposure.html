@@ -220,104 +220,17 @@
                                     <tr>
                                         <th>Customer Name</th>
                                         <th>Contact</th>
-                                        <th>NIN</th>
-                                        <th>Credit Limit</th>
+                                        <th>Total Credit</th>
                                         <th>Outstanding</th>
-                                        <th>Due Date</th>
-                                        <th>Days Overdue</th>
+                                        <th>Last Payment</th>
                                         <th>Risk Level</th>
-                                        <th>Branch</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-user text-primary"></i>
-                                                </div>
-                                                <strong>Robert Mugisha</strong>
-                                            </div>
-                                        </td>
-                                        <td>+256 772 123 456</td>
-                                        <td>CM89012345678</td>
-                                        <td>UGX 500,000</td>
-                                        <td><span class="text-danger fw-bold">UGX 450,000</span></td>
-                                        <td><span class="text-danger">Dec 25, 2023</span></td>
-                                        <td><span class="badge bg-danger">14 days</span></td>
-                                        <td><span class="badge bg-danger">High</span></td>
-                                        <td>Kampala Main</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Send Reminder">
-                                                <i class="fas fa-bell"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Record Payment">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-user text-success"></i>
-                                                </div>
-                                                <strong>Sarah Namutebi</strong>
-                                            </div>
-                                        </td>
-                                        <td>+256 701 987 654</td>
-                                        <td>CM78098765432</td>
-                                        <td>UGX 300,000</td>
-                                        <td><span class="text-warning fw-bold">UGX 280,000</span></td>
-                                        <td><span class="text-warning">Jan 5, 2024</span></td>
-                                        <td><span class="badge bg-warning">3 days</span></td>
-                                        <td><span class="badge bg-warning">Medium</span></td>
-                                        <td>Entebbe Branch</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Send Reminder">
-                                                <i class="fas fa-bell"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Record Payment">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-user text-info"></i>
-                                                </div>
-                                                <strong>David Kato</strong>
-                                            </div>
-                                        </td>
-                                        <td>+256 755 456 789</td>
-                                        <td>CM67045678901</td>
-                                        <td>UGX 400,000</span></td>
-                                        <td><span class="text-success fw-bold">UGX 120,000</span></td>
-                                        <td><span class="text-success">Jan 20, 2024</span></td>
-                                        <td><span class="badge bg-success">0 days</span></td>
-                                        <td><span class="badge bg-success">Low</span></td>
-                                        <td>Jinja Branch</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Send Reminder">
-                                                <i class="fas fa-bell"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Record Payment">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="creditSalesTableBody">
+                                    <!-- Dynamic Content -->
+                                    <tr><td colspan="8" class="text-center">Loading credit accounts...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -348,7 +261,12 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/credit_sales.js"></script>
+    <script>
+        // Inline chart scripts can remain if credit_sales.js doesn't override them.
+    </script>
 
     <!-- Chart Initialization Script -->
     <script>

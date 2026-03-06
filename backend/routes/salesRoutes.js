@@ -309,6 +309,42 @@ router.get('/my-stats', protect, authorize('agent', 'manager', 'director'), asyn
 
 /**
  * @swagger
+ * /sales/my-history:
+ *   get:
+ *     summary: Get full sales history for the logged-in agent
+ *     tags: [Sales]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Limit number of results
+ *     responses:
+ *       200:
+ *         description: List of sales
+ *       500:
+ *         description: Server error
+ */
+router.get('/my-history', protect, authorize('agent', 'manager', 'director'), async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 50;
+        
+        const sales = await Sale.find({ salesAgent: req.user._id })
+            .populate('produce', 'name unit')
+            .sort({ saleDate: -1 })
+            .limit(limit);
+
+        res.status(200).json(sales);
+    } catch (error) {
+        console.error('Error fetching my history:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+/**
+ * @swagger
  * /sales:
  *   get:
  *     summary: List all sales

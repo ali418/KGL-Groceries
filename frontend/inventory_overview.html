@@ -300,76 +300,17 @@
                                 <thead>
                                     <tr>
                                         <th>Product Name</th>
-                                        <th>SKU</th>
                                         <th>Category</th>
                                         <th>Current Stock</th>
-                                        <th>Min Level</th>
-                                        <th>Unit Price</th>
-                                        <th>Total Value</th>
-                                        <th>Branch</th>
-                                        <th>Status</th>
+                                        <th>Pricing</th>
+                                        <th>Min. Stock</th>
+                                        <th>Supplier</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-carrot text-orange"></i>
-                                                </div>
-                                                <strong>Fresh Carrots</strong>
-                                            </div>
-                                        </td>
-                                        <td>FCR-002</td>
-                                        <td>Fresh Produce</td>
-                                        <td><span class="badge bg-success">120 kg</span></td>
-                                        <td>30 kg</td>
-                                        <td>UGX 3,500</td>
-                                        <td>UGX 420,000</td>
-                                        <td>Kampala Main</td>
-                                        <td><span class="badge bg-success">In Stock</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Restock">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-light rounded-circle p-2 me-2">
-                                                    <i class="fas fa-cookie-bite text-brown"></i>
-                                                </div>
-                                                <strong>Digestive Biscuits</strong>
-                                            </div>
-                                        </td>
-                                        <td>DBC-007</td>
-                                        <td>Dry Goods</td>
-                                        <td><span class="badge bg-success">85 packs</span></td>
-                                        <td>20 packs</td>
-                                        <td>UGX 8,000</td>
-                                        <td>UGX 680,000</td>
-                                        <td>Entebbe Branch</td>
-                                        <td><span class="badge bg-success">In Stock</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-warning me-1" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" title="Restock">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="productsTableBody">
+                                    <!-- Dynamic Content -->
+                                    <tr><td colspan="7" class="text-center">Loading inventory...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -400,7 +341,13 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/stock_control.js"></script>
+    <script>
+        // Override or adjust specific logic if needed for overview
+        // but stock_control.js should handle loading products
+    </script>
 
     <!-- Chart Initialization Script -->
     <script>

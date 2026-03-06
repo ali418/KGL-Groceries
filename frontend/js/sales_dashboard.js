@@ -2,19 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     loadStats();
-    
-    // Logout listener for Sales Dashboard specifically if needed, 
-    // but main.js should handle it if included. 
-    // If main.js is NOT included in sales_dashboard.html (it is not currently based on my read), we need it here.
-    const logoutLinks = document.querySelectorAll('a[href="login.html"]');
-    logoutLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.replace('login.html');
-        });
-    });
+    loadRecentSales();
 });
 
 function checkAuth() {
@@ -29,10 +17,47 @@ async function loadStats() {
         const response = await api.get('/sales/my-stats');
         document.getElementById('todaySales').textContent = formatCurrency(response.totalSalesToday || 0);
         document.getElementById('targetProgress').textContent = (response.targetProgress || 0) + '%';
+        
+        // Update progress bar width
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+            progressBar.style.width = (response.targetProgress || 0) + '%';
+            progressBar.setAttribute('aria-valuenow', response.targetProgress || 0);
+        }
     } catch (error) {
         console.error('Error loading stats:', error);
         document.getElementById('todaySales').textContent = formatCurrency(0);
         document.getElementById('targetProgress').textContent = '0%';
+    }
+}
+
+async function loadRecentSales() {
+    try {
+        // Fetch recent sales for the logged-in agent
+        const sales = await api.get('/sales/my-history?limit=5');
+        const tbody = document.getElementById('recentSalesTableBody');
+        
+        if (!tbody) return;
+
+        if (!sales || sales.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center">No recent sales</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = sales.map(sale => `
+            <tr>
+                <td>${new Date(sale.saleDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                <td>${sale.produce ? sale.produce.name : 'Unknown'}</td>
+                <td>${sale.quantity?.tonnage || 0} ${sale.produce?.unit || 'kg'}</td>
+                <td>${formatCurrency(sale.pricing?.totalPrice || 0)}</td>
+                <td><span class="badge bg-${sale.payment?.method === 'cash' ? 'success' : 'info'}">${sale.payment?.method || 'cash'}</span></td>
+                <td><span class="badge bg-success">Completed</span></td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading recent sales:', error);
+        const tbody = document.getElementById('recentSalesTableBody');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading sales</td></tr>';
     }
 }
 
