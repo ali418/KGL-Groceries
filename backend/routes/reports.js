@@ -150,7 +150,22 @@ router.get('/sales-trend', protect, authorize('manager', 'director'), async (req
  */
 router.get('/stats', protect, authorize('manager', 'director'), async (req, res) => {
     try {
-        const sales = await Sale.find();
+        const { date, branch } = req.query;
+        let query = {};
+
+        if (date) {
+            const startDate = new Date(date);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(date);
+            endDate.setHours(23, 59, 59, 999);
+            query.saleDate = { $gte: startDate, $lte: endDate };
+        }
+
+        if (branch) {
+            query.branch = branch;
+        }
+
+        const sales = await Sale.find(query);
 
         const totalRevenue = sales.reduce((acc, curr) => acc + (curr.payment?.amountPaid || 0), 0);
         
@@ -159,16 +174,8 @@ router.get('/stats', protect, authorize('manager', 'director'), async (req, res)
             .reduce((acc, curr) => acc + (curr.payment?.amountPaid || 0), 0);
             
         const creditSales = sales
-            .filter(s => s.payment?.method === 'credit' || s.payment?.status !== 'paid')
-            .reduce((acc, curr) => {
-                // For credit sales, we might want the total value of the sale, or just the outstanding amount?
-                // The card says "Credit Sales", usually means the volume of sales made on credit.
-                // Or "Outstanding Credit". 
-                // Let's assume it means "Total Value of sales that were Credit" or "Outstanding".
-                // In the HTML it says "Credit Sales ... 25% of total". This implies volume of credit transactions.
-                if (s.payment?.method === 'credit') return acc + curr.pricing.totalPrice;
-                return acc;
-            }, 0);
+            .filter(s => s.payment?.method === 'credit')
+            .reduce((acc, curr) => acc + (curr.pricing?.totalPrice || 0), 0);
 
         const transactionCount = sales.length;
 

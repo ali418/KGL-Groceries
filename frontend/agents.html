@@ -53,7 +53,7 @@
                                 <i class="fas fa-user-tie text-primary"></i>
                             </div>
                             <h5 class="card-title">Total Agents</h5>
-                            <h3 class="text-primary">24</h3>
+                            <h3 class="text-primary" id="totalAgents">0</h3>
                             <small class="text-muted">Active sales agents</small>
                         </div>
                     </div>
@@ -64,9 +64,9 @@
                             <div class="card-icon bg-success-light mb-3">
                                 <i class="fas fa-chart-line text-success"></i>
                             </div>
-                            <h5 class="card-title">Top Performer</h5>
-                            <h3 class="text-success">Sarah M.</h3>
-                            <small class="text-muted">UGX 12.5M this month</small>
+                            <h5 class="card-title">Active Now</h5>
+                            <h3 class="text-success" id="activeAgents">0</h3>
+                            <small class="text-muted">Currently in system</small>
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                                 <i class="fas fa-exclamation-triangle text-warning"></i>
                             </div>
                             <h5 class="card-title">Below Target</h5>
-                            <h3 class="text-warning">3</h3>
+                            <h3 class="text-warning">0</h3>
                             <small class="text-muted">Need attention</small>
                         </div>
                     </div>
@@ -88,9 +88,9 @@
                             <div class="card-icon bg-info-light mb-3">
                                 <i class="fas fa-coins text-info"></i>
                             </div>
-                            <h5 class="card-title">Total Commission</h5>
-                            <h3 class="text-info">UGX 3.2M</h3>
-                            <small class="text-muted">This month</small>
+                            <h5 class="card-title">Total Managers</h5>
+                            <h3 class="text-info" id="totalManagers">0</h3>
+                            <small class="text-muted">KGL Team</small>
                         </div>
                     </div>
                 </div>
@@ -123,104 +123,13 @@
                                             <th>Name</th>
                                             <th>Branch</th>
                                             <th>Phone</th>
-                                            <th>This Month</th>
-                                            <th>Target</th>
-                                            <th>Performance</th>
+                                            <th>Role</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>AGT001</strong></td>
-                                            <td>Sarah Mugisha</td>
-                                            <td>Kampala Central</td>
-                                            <td>+256-772-123-456</td>
-                                            <td>UGX 12,500,000</td>
-                                            <td>UGX 10,000,000</td>
-                                            <td><span class="badge bg-success">125%</span></td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-chart-bar"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>AGT002</strong></td>
-                                            <td>John Kato</td>
-                                            <td>Nakawa Branch</td>
-                                            <td>+256-772-234-567</td>
-                                            <td>UGX 8,750,000</td>
-                                            <td>UGX 9,000,000</td>
-                                            <td><span class="badge bg-warning">97%</span></td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-chart-bar"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>AGT003</strong></td>
-                                            <td>Maria Nalwoga</td>
-                                            <td>Makindye Branch</td>
-                                            <td>+256-772-345-678</td>
-                                            <td>UGX 11,200,000</td>
-                                            <td>UGX 8,500,000</td>
-                                            <td><span class="badge bg-success">132%</span></td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-chart-bar"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>AGT004</strong></td>
-                                            <td>David Okello</td>
-                                            <td>Kawempe Branch</td>
-                                            <td>+256-772-456-789</td>
-                                            <td>UGX 6,300,000</td>
-                                            <td>UGX 8,000,000</td>
-                                            <td><span class="badge bg-danger">79%</span></td>
-                                            <td><span class="badge bg-warning">Warning</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-chart-bar"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>AGT005</strong></td>
-                                            <td>Grace Achieng</td>
-                                            <td>Entebbe Branch</td>
-                                            <td>+256-772-567-890</td>
-                                            <td>UGX 7,800,000</td>
-                                            <td>UGX 7,500,000</td>
-                                            <td><span class="badge bg-success">104%</span></td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editAgentModal">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-chart-bar"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <tbody id="agentsTableBody">
+                                        <tr><td colspan="7" class="text-center">Loading agents...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -396,7 +305,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom JS -->
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/users.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

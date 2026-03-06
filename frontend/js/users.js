@@ -38,10 +38,70 @@ async function loadUsers() {
         const response = await api.get('/users');
         users = response;
         renderUsersTable(users);
+        renderAgentsTable(users); // For agents.html
         updateStats(users);
+        updateAgentStats(); // For agents.html
     } catch (error) {
         console.error('Error loading users:', error);
-        // alert('Failed to load users');
+    }
+}
+
+function renderAgentsTable(usersToRender) {
+    const tbody = document.getElementById('agentsTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    const agents = usersToRender.filter(u => u.role === 'agent');
+
+    if (agents.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No agents found</td></tr>';
+        return;
+    }
+
+    agents.forEach(user => {
+        const branchName = user.branch ? user.branch.name : 'N/A';
+        const roleBadge = getRoleBadge(user.role);
+        const statusBadge = user.isActive ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
+        const phone = user.contact?.phone || '-';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><strong>${user._id.substring(0, 8).toUpperCase()}</strong></td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff" 
+                         alt="Profile" class="rounded-circle me-2" width="32">
+                    <strong>${user.name}</strong>
+                </div>
+            </td>
+            <td>${branchName}</td>
+            <td>${phone}</td>
+            <td>${roleBadge}</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal('${user._id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user._id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+async function updateAgentStats() {
+    try {
+        const stats = await api.get('/users/stats');
+        if (document.getElementById('totalAgents')) {
+            document.getElementById('totalAgents').textContent = stats.totalAgents || 0;
+            document.getElementById('totalManagers').textContent = stats.totalManagers || 0;
+            document.getElementById('activeAgents').textContent = stats.activeNow || 0;
+        }
+    } catch (error) {
+        console.error('Error updating agent stats:', error);
     }
 }
 

@@ -80,6 +80,37 @@ router.post('/login', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/stats:
+ *   get:
+ *     summary: Get user/agent statistics
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User statistics
+ */
+router.get('/stats', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const totalAgents = await User.countDocuments({ role: 'agent' });
+        const totalManagers = await User.countDocuments({ role: 'manager' });
+        
+        // You could add more complex logic here for performance, etc.
+        // For now, let's keep it simple.
+        
+        res.status(200).json({
+            totalAgents,
+            totalManagers,
+            activeNow: totalAgents // Mock for now
+        });
+    } catch (error) {
+        console.error('Error fetching user stats:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // User Management Routes (Manager only)
 
 /**

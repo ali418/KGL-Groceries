@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) {
             el.addEventListener('change', () => {
                 loadSummaryStats();
+                loadSalesTrend();
+                loadCategoryStats();
                 loadDetailedSales();
             });
         }
@@ -67,6 +69,12 @@ async function loadSalesTrend() {
         const data = trendData.map(d => d.totalAmount);
         
         const ctxTrend = document.getElementById('salesTrendChart').getContext('2d');
+        // Clear previous chart if exists
+        const chartStatus = Chart.getChart("salesTrendChart");
+        if (chartStatus != undefined) {
+            chartStatus.destroy();
+        }
+
         new Chart(ctxTrend, {
             type: 'line',
             data: {
@@ -109,17 +117,20 @@ async function loadCategoryStats() {
         const labels = Object.keys(categoryData);
         const data = Object.values(categoryData);
         
-        // Colors for chart
-        const colors = ['#2E7D32', '#81C784', '#FFC107', '#E0E0E0', '#FF5722', '#03A9F4'];
-        
         const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+        // Clear previous chart if exists
+        const chartStatus = Chart.getChart("categoryChart");
+        if (chartStatus != undefined) {
+            chartStatus.destroy();
+        }
+
         new Chart(ctxCategory, {
             type: 'doughnut',
             data: {
                 labels: labels,
                 datasets: [{
                     data: data,
-                    backgroundColor: colors.slice(0, labels.length)
+                    backgroundColor: ['#2E7D32', '#43A047', '#66BB6A', '#81C784', '#A5D6A7']
                 }]
             },
             options: {

@@ -63,38 +63,33 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">Date Range</label>
-                                    <select class="form-select">
-                                        <option>Today</option>
-                                        <option>Last 7 Days</option>
-                                        <option>Last 30 Days</option>
-                                        <option>Custom Range</option>
-                                    </select>
+                                    <label class="form-label">Report Date</label>
+                                    <input type="date" class="form-control" id="reportDate">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Branch</label>
-                                    <select class="form-select">
-                                        <option>All Branches</option>
-                                        <option>Kampala Main</option>
-                                        <option>Entebbe Branch</option>
-                                        <option>Jinja Branch</option>
+                                    <select class="form-select" id="branchFilter">
+                                        <option value="">All Branches</option>
+                                        <option value="Kampala Main">Kampala Main</option>
+                                        <option value="Entebbe Branch">Entebbe Branch</option>
+                                        <option value="Jinja Branch">Jinja Branch</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Product Category</label>
-                                    <select class="form-select">
-                                        <option>All Categories</option>
-                                        <option>Vegetables</option>
-                                        <option>Fruits</option>
-                                        <option>Grains</option>
+                                    <select class="form-select" id="categoryFilter">
+                                        <option value="all">All Categories</option>
+                                        <option value="Vegetables">Vegetables</option>
+                                        <option value="Fruits">Fruits</option>
+                                        <option value="Grains">Grains</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Payment Type</label>
-                                    <select class="form-select">
-                                        <option>All Types</option>
-                                        <option>Cash</option>
-                                        <option>Credit</option>
+                                    <select class="form-select" id="paymentFilter">
+                                        <option value="all">All Types</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="credit">Credit</option>
                                     </select>
                                 </div>
                             </div>
