@@ -16,10 +16,12 @@ async function loadBranches() {
         const response = await api.get('/branches');
         branches = response;
         const branchSelect = document.getElementById('userBranch');
+        if (!branchSelect) return;
+
         // Keep the first option
         const firstOption = branchSelect.firstElementChild;
         branchSelect.innerHTML = '';
-        branchSelect.appendChild(firstOption);
+        if (firstOption) branchSelect.appendChild(firstOption);
         
         branches.forEach(branch => {
             const option = document.createElement('option');
@@ -29,7 +31,6 @@ async function loadBranches() {
         });
     } catch (error) {
         console.error('Error loading branches:', error);
-        // alert('Failed to load branches');
     }
 }
 
@@ -107,6 +108,7 @@ async function updateAgentStats() {
 
 function renderUsersTable(usersToRender) {
     const tbody = document.getElementById('usersTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     if (usersToRender.length === 0) {
@@ -179,18 +181,24 @@ function updateStats(usersData) {
 }
 
 function setupEventListeners() {
-    document.getElementById('saveUserBtn').addEventListener('click', saveUser);
+    const saveBtn = document.getElementById('saveUserBtn');
+    if (saveBtn) saveBtn.addEventListener('click', saveUser);
     
     // Reset modal when closed
     const modalEl = document.getElementById('addUserModal');
     if (modalEl) {
         modalEl.addEventListener('hidden.bs.modal', () => {
-            document.getElementById('addUserForm').reset();
+            const form = document.getElementById('addUserForm');
+            if (form) form.reset();
             editingUserId = null;
-            document.getElementById('addUserModalLabel').textContent = 'Add New User';
-            document.getElementById('saveUserBtn').textContent = 'Create User';
-            document.getElementById('userPassword').required = true;
-            document.getElementById('userPassword').parentElement.style.display = 'block'; // Ensure password field is shown
+            const label = document.getElementById('addUserModalLabel');
+            if (label) label.textContent = 'Add New User';
+            if (saveBtn) saveBtn.textContent = 'Create User';
+            const passField = document.getElementById('userPassword');
+            if (passField) {
+                passField.required = true;
+                passField.parentElement.style.display = 'block';
+            }
         });
     }
 
@@ -198,12 +206,13 @@ function setupEventListeners() {
     const searchInput = document.querySelector('input[placeholder="Name or NIN..."]');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredUsers = users.filter(user => 
-                user.name.toLowerCase().includes(searchTerm) || 
-                user.username.toLowerCase().includes(searchTerm)
+            const term = e.target.value.toLowerCase();
+            const filtered = users.filter(u => 
+                u.name.toLowerCase().includes(term) || 
+                u.username.toLowerCase().includes(term)
             );
-            renderUsersTable(filteredUsers);
+            renderUsersTable(filtered);
+            renderAgentsTable(filtered);
         });
     }
 }
