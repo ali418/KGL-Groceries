@@ -425,6 +425,10 @@ function showAlert(message, type) {
 function initializeCharts() {
     const ctxProcurement = document.getElementById('procurementChart');
     if (ctxProcurement) {
+        // Destroy existing chart if it exists
+        const existingChart = Chart.getChart(ctxProcurement);
+        if (existingChart) existingChart.destroy();
+
         new Chart(ctxProcurement.getContext('2d'), {
             type: 'line',
             data: {
@@ -436,14 +440,47 @@ function initializeCharts() {
                     backgroundColor: 'rgba(76, 175, 80, 0.1)',
                     fill: true,
                     tension: 0.4
+                }, {
+                    label: 'Dry Goods',
+                    data: [4500000, 5200000, 4800000, 6500000, 5800000, 6200000],
+                    borderColor: '#FFA000',
+                    backgroundColor: 'rgba(255, 160, 0, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Packaging',
+                    data: [2500000, 2800000, 2200000, 3500000, 3200000, 3800000],
+                    borderColor: '#2196F3',
+                    backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                    fill: true,
+                    tension: 0.4
                 }]
             },
-            options: { responsive: true }
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 
     const ctxSupplier = document.getElementById('supplierChart');
     if (ctxSupplier) {
+        // Destroy existing chart if it exists
+        const existingChart = Chart.getChart(ctxSupplier);
+        if (existingChart) existingChart.destroy();
+
         new Chart(ctxSupplier.getContext('2d'), {
             type: 'doughnut',
             data: {
@@ -453,7 +490,12 @@ function initializeCharts() {
                     backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#F44336']
                 }]
             },
-            options: { responsive: true }
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
         });
     }
 }
