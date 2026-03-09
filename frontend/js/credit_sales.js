@@ -20,6 +20,8 @@ async function loadProducts() {
         const products = await api.get('/produce');
         allProducts = products;
         const select = document.getElementById('productSelect');
+        if (!select) return;
+
         select.innerHTML = '<option value="">Select Product...</option>';
         
         products.forEach(p => {
@@ -139,17 +141,23 @@ function updateCreditStats(sales) {
 }
 
 function setupEventListeners() {
-    document.getElementById('createCreditSaleBtn').addEventListener('click', createCreditSale);
-    document.getElementById('submitPaymentBtn').addEventListener('click', submitPayment);
+    const createBtn = document.getElementById('createCreditSaleBtn');
+    if (createBtn) createBtn.addEventListener('click', createCreditSale);
+
+    const submitBtn = document.getElementById('submitPaymentBtn');
+    if (submitBtn) submitBtn.addEventListener('click', submitPayment);
     
     // Auto-fill price when product selected
-    document.getElementById('productSelect').addEventListener('change', (e) => {
-        const productId = e.target.value;
-        const product = allProducts.find(p => p._id === productId);
-        if (product && product.pricing) {
-            document.getElementById('unitPrice').value = product.pricing.salePrice || '';
-        }
-    });
+    const productSelect = document.getElementById('productSelect');
+    if (productSelect) {
+        productSelect.addEventListener('change', (e) => {
+            const productId = e.target.value;
+            const product = allProducts.find(p => p._id === productId);
+            if (product && product.pricing) {
+                document.getElementById('unitPrice').value = product.pricing.salePrice || '';
+            }
+        });
+    }
 }
 
 async function createCreditSale() {

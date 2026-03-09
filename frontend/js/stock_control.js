@@ -116,6 +116,8 @@ async function loadBranches() {
     try {
         const branches = await api.get('/branches');
         const branchSelect = document.getElementById('productBranch');
+        if (!branchSelect) return;
+
         branchSelect.innerHTML = '<option value="">Select Branch</option>';
         branches.forEach(branch => {
             const option = document.createElement('option');
@@ -163,14 +165,15 @@ function updateStockStats(products) {
 
 function renderProductsTable(productsList) {
     const tbody = document.getElementById('productsTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
-    if (!products || products.length === 0) {
+    if (!productsList || productsList.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No products found. Add one to get started!</td></tr>';
         return;
     }
 
-    products.forEach(product => {
+    productsList.forEach(product => {
         const tr = document.createElement('tr');
         
         const currentStock = product.currentStock?.tonnage || 0;

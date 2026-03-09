@@ -50,25 +50,37 @@ window.api = {
         }
     },
 
-    get(endpoint) {
-        return this.request(endpoint, { method: 'GET' });
+    get(endpoint, options = {}) {
+        return this.request(endpoint, { ...options, method: 'GET' });
     },
 
-    post(endpoint, body) {
+    post(endpoint, body, options = {}) {
         return this.request(endpoint, {
+            ...options,
             method: 'POST',
             body: JSON.stringify(body)
         });
     },
 
-    put(endpoint, body) {
+    put(endpoint, body, options = {}) {
         return this.request(endpoint, {
+            ...options,
             method: 'PUT',
             body: JSON.stringify(body)
         });
     },
 
-    delete(endpoint) {
-        return this.request(endpoint, { method: 'DELETE' });
+    delete(endpoint, options = {}) {
+        return this.request(endpoint, { ...options, method: 'DELETE' });
+    }
+};
+
+window.isAuthenticated = function() {
+    return !!localStorage.getItem('token');
+};
+
+window.checkAuth = function() {
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html';
     }
 };

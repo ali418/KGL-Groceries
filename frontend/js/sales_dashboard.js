@@ -15,7 +15,7 @@ function checkAuth() {
 async function loadStats() {
     try {
         const response = await api.get('/sales/my-stats');
-        document.getElementById('todaySales').textContent = formatCurrency(response.totalSalesToday || 0);
+        document.getElementById('todaySales').textContent = formatCurrency(response.todaySales || 0);
         document.getElementById('targetProgress').textContent = (response.targetProgress || 0) + '%';
         
         // Update progress bar width

@@ -233,6 +233,34 @@ router.post('/credit', protect, authorize('agent', 'manager'), async (req, res) 
 
 /**
  * @swagger
+ * /sales/credit:
+ *   get:
+ *     summary: List all credit sales
+ *     tags: [Sales]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of credit sales
+ *       500:
+ *         description: Server error
+ */
+router.get('/credit', protect, authorize('agent', 'manager', 'director'), async (req, res) => {
+    try {
+        const query = req.user.role === 'agent' ? { salesAgent: req.user._id } : {};
+        const creditSales = await CreditSale.find(query)
+            .populate('produce', 'name type')
+            .populate('salesAgent', 'name')
+            .sort({ createdAt: -1 });
+        res.status(200).json(creditSales);
+    } catch (error) {
+        console.error('Get credit sales error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+/**
+ * @swagger
  * /sales/my-stats:
  *   get:
  *     summary: Get current agent's sales statistics
@@ -287,7 +315,11 @@ router.get('/my-stats', protect, authorize('agent', 'manager', 'director'), asyn
         // Let's assume flat 5% for now or 0 if not defined
         const commission = monthTotal * 0.05;
 
-        // 5. Recent Sales
+        // 5. Target Progress (Mock target of 1,000,000 for agents)
+        const target = 1000000;
+        const targetProgress = Math.min(Math.round((monthTotal / target) * 100), 100);
+
+        // 6. Recent Sales
         const recentSales = await Sale.find({ salesAgent: req.user._id })
             .sort({ saleDate: -1 })
             .limit(5)
@@ -298,6 +330,7 @@ router.get('/my-stats', protect, authorize('agent', 'manager', 'director'), asyn
             monthSales: monthTotal,
             pendingCredit: creditTotal,
             commission: commission,
+            targetProgress: targetProgress,
             recentSales: recentSales
         });
 
