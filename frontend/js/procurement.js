@@ -429,7 +429,7 @@ function updateOrderStats(orders) {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX' }).format(amount);
+    return new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX', currencyDisplay: 'code' }).format(amount);
 }
 
 function formatDate(dateString) {

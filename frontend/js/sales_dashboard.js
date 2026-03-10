@@ -65,6 +65,7 @@ function formatCurrency(amount) {
     return new Intl.NumberFormat('en-UG', {
         style: 'currency',
         currency: 'UGX',
+        currencyDisplay: 'code',
         maximumFractionDigits: 0
     }).format(amount);
 }

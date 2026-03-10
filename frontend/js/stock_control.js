@@ -254,7 +254,7 @@ function getStockStatus(current, min) {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX', maximumFractionDigits: 0 }).format(amount);
+    return new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX', currencyDisplay: 'code', maximumFractionDigits: 0 }).format(amount);
 }
 
 // Make functions available globally for onclick events
