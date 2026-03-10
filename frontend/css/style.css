@@ -106,6 +106,17 @@ body {
     width: var(--sidebar-collapsed-width);
 }
 
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,0,0,0.08);
+    background-color: #fff;
+}
+
 .sidebar-brand {
     position: absolute;
     top: 0;
@@ -119,6 +130,22 @@ body {
     font-size: 1.2rem;
     color: var(--primary-color);
     border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0 10px;
+}
+
+.sidebar-brand .sidebar-collapse-btn {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sidebar.collapsed .sidebar-brand .brand-text {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-brand .sidebar-collapse-btn {
+    left: 8px;
 }
 
 .sidebar-menu {

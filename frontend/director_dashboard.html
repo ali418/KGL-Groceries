@@ -189,7 +189,7 @@
                     if (canvas) {
                         const existing = Chart.getChart(canvas);
                         if (existing) existing.destroy();
-                        const trend = await api.get('/reports/sales-trend');
+                        const trend = await api.get('/reports/sales-trend?days=7');
                         const labels = trend.map(d => d._id);
                         const values = trend.map(d => d.totalAmount);
                         new Chart(canvas.getContext('2d'), {
@@ -221,9 +221,9 @@
                     if (canvas) {
                         const existing = Chart.getChart(canvas);
                         if (existing) existing.destroy();
-                        const categoryData = await api.get('/reports/by-category');
-                        const labels = Object.keys(categoryData);
-                        const data = Object.values(categoryData);
+                        const top = await api.get('/reports/top-products?days=7&limit=5');
+                        const labels = top.map(t => t.productName);
+                        const data = top.map(t => t.totalValue);
                         new Chart(canvas.getContext('2d'), {
                             type: 'doughnut',
                             data: {

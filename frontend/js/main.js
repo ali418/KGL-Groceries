@@ -583,9 +583,9 @@ function renderSidebar(user) {
         return `<li><a href="${item.href}" class="${activeClass}"><i class="${item.icon}"></i><span class="label">${item.label}</span></a></li>`;
     }).join('');
     sidebar.innerHTML = `
-        <div class="sidebar-brand">
-            <button class="btn btn-sm btn-light me-2 sidebar-collapse-btn" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
-            <i class="fas fa-leaf me-2"></i> ${config.brand}
+        <div class="sidebar-brand" title="${config.brand}">
+            <button class="btn btn-icon sidebar-collapse-btn" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
+            <i class="fas fa-leaf me-2"></i><span class="brand-text">${config.brand}</span>
         </div>
         <ul class="sidebar-menu">
             ${linksHtml}

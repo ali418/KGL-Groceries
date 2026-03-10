@@ -118,7 +118,15 @@ router.get('/dashboard', protect, authorize('manager', 'director'), async (req, 
  */
 router.get('/sales-trend', protect, authorize('manager', 'director'), async (req, res) => {
     try {
+        const { days } = req.query;
+        let match = {};
+        if (days && Number(days) > 0) {
+            const start = new Date();
+            start.setDate(start.getDate() - Number(days));
+            match = { saleDate: { $gte: start } };
+        }
         const sales = await Sale.aggregate([
+            { $match: match },
             {
                 $group: {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$saleDate" } },
@@ -328,6 +336,47 @@ router.get('/by-category', protect, authorize('manager', 'director'), async (req
         res.status(200).json(result);
     } catch (error) {
         console.error('Error fetching category stats:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/top-products', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const days = Number(req.query.days) || 7;
+        const limit = Number(req.query.limit) || 5;
+        const start = new Date();
+        start.setDate(start.getDate() - days);
+        const top = await Sale.aggregate([
+            { $match: { saleDate: { $gte: start } } },
+            {
+                $group: {
+                    _id: '$produce',
+                    totalValue: { $sum: '$pricing.totalPrice' },
+                    totalQty: { $sum: '$quantity.tonnage' }
+                }
+            },
+            { $sort: { totalValue: -1 } },
+            { $limit: limit },
+            {
+                $lookup: {
+                    from: 'produces',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'produce'
+                }
+            },
+            { $unwind: '$produce' },
+            {
+                $project: {
+                    productName: '$produce.name',
+                    totalValue: 1,
+                    totalQty: 1
+                }
+            }
+        ]);
+        res.status(200).json(top);
+    } catch (error) {
+        console.error('Error fetching top products:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
