@@ -7,6 +7,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadDashboardStats();
+    
+    const container = document.querySelector('.main-content .container-fluid');
+    if (container) {
+        const actions = document.createElement('div');
+        actions.className = 'd-flex justify-content-end mb-3';
+        actions.innerHTML = `
+            <button class="btn btn-outline-secondary">
+                <i class="fas fa-file-pdf me-2"></i> Export PDF
+            </button>
+        `;
+        container.prepend(actions);
+        const btn = actions.querySelector('button');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.print();
+        });
+    }
 });
 
 async function loadDashboardStats() {

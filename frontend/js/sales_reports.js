@@ -26,14 +26,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Setup export buttons (mock functionality for now)
-    const buttons = document.querySelectorAll('.btn-outline-secondary, .btn-outline-success');
-    buttons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+    // Setup export buttons
+    const pdfBtn = Array.from(document.querySelectorAll('.btn-outline-secondary'))
+        .find(b => b.textContent.trim().toLowerCase().includes('export pdf'));
+    const excelBtn = Array.from(document.querySelectorAll('.btn-outline-success'))
+        .find(b => b.textContent.trim().toLowerCase().includes('export excel'));
+    if (pdfBtn) {
+        pdfBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Export functionality will be implemented in the next update.');
+            window.print();
         });
-    });
+    }
+    if (excelBtn) {
+        excelBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const date = document.getElementById('reportDate')?.value;
+            const branch = document.getElementById('branchFilter')?.value;
+            const category = document.getElementById('categoryFilter')?.value;
+            const payment = document.getElementById('paymentFilter')?.value;
+            let query = '?';
+            if (date) query += `date=${date}&`;
+            if (branch) query += `branch=${branch}&`;
+            if (category) query += `category=${category}&`;
+            if (payment) query += `payment=${payment}`;
+            try {
+                const sales = await api.get(`/reports/detailed${query}`);
+                if (!sales || sales.length === 0) {
+                    alert('No data to export for current filters.');
+                    return;
+                }
+                const rows = sales.map(s => ({
+                    date: new Date(s.saleDate).toLocaleString(),
+                    product: s.produce ? s.produce.name : 'Unknown',
+                    category: s.produce ? s.produce.type : '-',
+                    quantity_kg: s.quantity || 0,
+                    amount_ugx: s.amount || 0,
+                    payment: s.paymentMethod || 'cash',
+                    agent: s.agent ? s.agent.name : 'Unknown'
+                }));
+                // Reuse exporter from main.js if loaded
+                if (typeof exportArrayToCSV === 'function') {
+                    exportArrayToCSV(rows, ['date','product','category','quantity_kg','amount_ugx','payment','agent'], 'sales_report.csv');
+                } else {
+                    // Fallback inline CSV
+                    const headers = ['date','product','category','quantity_kg','amount_ugx','payment','agent'];
+                    const csvRows = [headers.join(',')].concat(rows.map(r => headers.map(h => `"${String(r[h]).replace(/"/g,'""')}"`).join(',')));
+                    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'sales_report.csv';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            } catch (err) {
+                console.error('Export error:', err);
+                alert('Failed to export data.');
+            }
+        });
+    }
 });
 
 async function loadSummaryStats() {

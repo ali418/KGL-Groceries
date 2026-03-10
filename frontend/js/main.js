@@ -178,6 +178,26 @@ function showToast(message, type = 'info') {
 let allUsers = [];
 let allBranches = [];
 
+function exportArrayToCSV(rows, headers, filename = 'export.csv') {
+    const csvRows = [];
+    if (headers && headers.length) csvRows.push(headers.join(','));
+    rows.forEach(r => {
+        const vals = headers.map(h => {
+            const v = r[h];
+            const s = (v === null || v === undefined) ? '' : String(v).replace(/"/g, '""');
+            return `"${s}"`;
+        });
+        csvRows.push(vals.join(','));
+    });
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
 function initUserManagement() {
     loadUsers();
     loadBranchesForDropdown();
@@ -217,6 +237,28 @@ function initUserManagement() {
     const saveBtn = document.getElementById('saveUserBtn');
     if (saveBtn) {
         saveBtn.addEventListener('click', saveUser);
+    }
+    
+    // Export Users
+    const exportBtn = Array.from(document.querySelectorAll('button'))
+        .find(b => b.textContent.trim().toLowerCase().includes('export users'));
+    if (exportBtn) {
+        exportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!allUsers || allUsers.length === 0) {
+                showToast('No users to export', 'info');
+                return;
+            }
+            const rows = allUsers.map(u => ({
+                name: u.name || '',
+                role: u.role || '',
+                username: u.username || '',
+                branch: (u.branch && (u.branch.name || u.branch)) || '',
+                phone: (u.contact && u.contact.phone) || '',
+                email: (u.contact && u.contact.email) || ''
+            }));
+            exportArrayToCSV(rows, ['name','role','username','branch','phone','email'], 'users.csv');
+        });
     }
 }
 
