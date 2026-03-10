@@ -257,7 +257,9 @@ function initUserManagement() {
                 phone: (u.contact && u.contact.phone) || '',
                 email: (u.contact && u.contact.email) || ''
             }));
-            exportArrayToCSV(rows, ['name','role','username','branch','phone','email'], 'users.csv');
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+            exportArrayToCSV(rows, ['name','role','username','branch','phone','email'], `users_${dateStr}.csv`);
         });
     }
 }

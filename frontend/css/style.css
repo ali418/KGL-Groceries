@@ -383,3 +383,41 @@ body {
     font-weight: 500;
     color: var(--text-dark);
 }
+
+/* =========================================
+   8. Print Styles
+   ========================================= */
+@media print {
+    body {
+        background: #fff !important;
+    }
+    .sidebar,
+    .top-navbar,
+    .sidebar-collapse-btn,
+    .btn,
+    .card-footer,
+    nav.pagination,
+    .dropdown,
+    .user-profile {
+        display: none !important;
+    }
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+    }
+    table {
+        page-break-inside: auto;
+    }
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    .table td, .table th {
+        border-color: #aaa !important;
+    }
+}

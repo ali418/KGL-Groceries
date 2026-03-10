@@ -66,7 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }));
                 // Reuse exporter from main.js if loaded
                 if (typeof exportArrayToCSV === 'function') {
-                    exportArrayToCSV(rows, ['date','product','category','quantity_kg','amount_ugx','payment','agent'], 'sales_report.csv');
+                    const dateStr = date || new Date().toISOString().split('T')[0];
+                    const branchStr = branch || 'all';
+                    exportArrayToCSV(rows, ['date','product','category','quantity_kg','amount_ugx','payment','agent'], `sales_report_${dateStr}_${branchStr}.csv`);
                 } else {
                     // Fallback inline CSV
                     const headers = ['date','product','category','quantity_kg','amount_ugx','payment','agent'];
@@ -75,7 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'sales_report.csv';
+                    const dateStr = date || new Date().toISOString().split('T')[0];
+                    const branchStr = branch || 'all';
+                    a.download = `sales_report_${dateStr}_${branchStr}.csv`;
                     a.click();
                     URL.revokeObjectURL(url);
                 }
