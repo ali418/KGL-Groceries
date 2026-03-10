@@ -123,7 +123,7 @@ function renderSuppliersTable(suppliersList) {
                 <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
                     <i class="fas fa-eye"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                <button class="btn btn-sm btn-outline-warning me-1" title="Edit" onclick="openEditSupplier('${supplier._id}')">
                     <i class="fas fa-edit"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-success" title="Order" onclick="openOrderModal('${supplier._id}')">
@@ -214,7 +214,6 @@ function populateSupplierDropdown(suppliersList) {
 // --- Actions ---
 
 function setupEventListeners() {
-    // Add Supplier
     document.getElementById('saveSupplierBtn').addEventListener('click', async () => {
         const name = document.getElementById('supplierName').value;
         const contact = document.getElementById('supplierContact').value;
@@ -229,21 +228,32 @@ function setupEventListeners() {
         }
 
         try {
-            const response = await api.post('/suppliers', {
-                name, contactPerson: contact, phone, email, address, specialization
-            });
+            let response;
+            if (window.editingSupplierId) {
+                response = await api.put(`/suppliers/${window.editingSupplierId}`, {
+                    name, contactPerson: contact, phone, email, address, specialization
+                });
+            } else {
+                response = await api.post('/suppliers', {
+                    name, contactPerson: contact, phone, email, address, specialization
+                });
+            }
             if (response.success) {
-                showAlert('Supplier added successfully', 'success');
+                showAlert(window.editingSupplierId ? 'Supplier updated successfully' : 'Supplier added successfully', 'success');
                 const modal = bootstrap.Modal.getInstance(document.getElementById('addSupplierModal'));
                 modal.hide();
                 document.getElementById('addSupplierForm').reset();
+                window.editingSupplierId = null;
+                const labelEl = document.querySelector('#addSupplierModal .modal-title');
+                if (labelEl) labelEl.textContent = 'Add Supplier';
+                const btn = document.getElementById('saveSupplierBtn');
+                if (btn) btn.textContent = 'Add Supplier';
                 loadSuppliers();
             } else {
                 showAlert(response.message, 'danger');
             }
         } catch (error) {
-            console.error('Error adding supplier:', error);
-            showAlert('Failed to add supplier', 'danger');
+            showAlert(window.editingSupplierId ? 'Failed to update supplier' : 'Failed to add supplier', 'danger');
         }
     });
 
@@ -381,6 +391,24 @@ window.receiveOrder = async function(orderId) {
 window.openOrderModal = function(supplierId) {
     const modal = new bootstrap.Modal(document.getElementById('createOrderModal'));
     document.getElementById('orderSupplier').value = supplierId;
+    modal.show();
+};
+
+window.openEditSupplier = function(supplierId) {
+    const supplier = suppliers.find(s => s._id === supplierId);
+    if (!supplier) return;
+    window.editingSupplierId = supplierId;
+    document.getElementById('supplierName').value = supplier.name || '';
+    document.getElementById('supplierContact').value = supplier.contactPerson || '';
+    document.getElementById('supplierPhone').value = supplier.phone || '';
+    document.getElementById('supplierEmail').value = supplier.email || '';
+    document.getElementById('supplierAddress').value = supplier.address || '';
+    document.getElementById('supplierSpecialization').value = supplier.specialization || '';
+    const labelEl = document.querySelector('#addSupplierModal .modal-title');
+    if (labelEl) labelEl.textContent = 'Edit Supplier';
+    const btn = document.getElementById('saveSupplierBtn');
+    if (btn) btn.textContent = 'Save Changes';
+    const modal = new bootstrap.Modal(document.getElementById('addSupplierModal'));
     modal.show();
 };
 

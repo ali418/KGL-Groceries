@@ -40,4 +40,28 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
+// PUT /api/suppliers/:id - Update supplier
+router.put('/:id', protect, async (req, res) => {
+    try {
+        const supplier = await Supplier.findById(req.params.id);
+        if (!supplier) {
+            return res.status(404).json({ success: false, message: 'Supplier not found' });
+        }
+        const { name, phone, email, address, contactPerson, specialization, status, rating } = req.body;
+        if (name) supplier.name = name;
+        if (phone) supplier.phone = phone;
+        if (email !== undefined) supplier.email = email;
+        if (address !== undefined) supplier.address = address;
+        if (contactPerson !== undefined) supplier.contactPerson = contactPerson;
+        if (specialization !== undefined) supplier.specialization = specialization;
+        if (status) supplier.status = status;
+        if (rating !== undefined) supplier.rating = rating;
+        await supplier.save();
+        res.status(200).json({ success: true, data: supplier, message: 'Supplier updated successfully' });
+    } catch (error) {
+        console.error('Error updating supplier:', error);
+        res.status(400).json({ success: false, message: error.message });
+    }
+});
+
 module.exports = router;
