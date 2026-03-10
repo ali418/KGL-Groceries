@@ -151,6 +151,7 @@ function updateStockStats(products) {
     const outOfStock = products.filter(p => (p.currentStock?.tonnage || 0) <= 0).length;
     const wellStocked = products.filter(p => (p.currentStock?.tonnage || 0) >= (p.thresholds?.minimumStock || 10)).length;
     const totalValue = products.reduce((acc, curr) => acc + ((curr.currentStock?.tonnage || 0) * (curr.pricing?.costPrice || 0)), 0);
+    const totalProducts = products.length;
 
     const safeSetText = (id, val) => {
         const el = document.getElementById(id);
@@ -161,6 +162,8 @@ function updateStockStats(products) {
     safeSetText('outOfStockCount', outOfStock);
     safeSetText('wellStockedCount', wellStocked);
     safeSetText('stockValue', formatCurrency(totalValue));
+    safeSetText('totalProductsCount', totalProducts);
+    safeSetText('totalProductsBadge', `${totalProducts} products`);
 }
 
 function renderProductsTable(productsList) {

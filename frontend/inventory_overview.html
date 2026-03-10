@@ -65,7 +65,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Total Products</h5>
-                                    <h3 class="mb-0">1,247</h3>
+                                    <h3 class="mb-0" id="totalProductsCount">0</h3>
                                     <small>Across all branches</small>
                                 </div>
                                 <i class="fas fa-boxes fa-2x opacity-75"></i>
@@ -79,7 +79,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Low Stock Items</h5>
-                                    <h3 class="mb-0">23</h3>
+                                    <h3 class="mb-0" id="lowStockCount">0</h3>
                                     <small>Require restocking</small>
                                 </div>
                                 <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
@@ -93,7 +93,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Out of Stock</h5>
-                                    <h3 class="mb-0">8</h3>
+                                    <h3 class="mb-0" id="outOfStockCount">0</h3>
                                     <small>Need immediate attention</small>
                                 </div>
                                 <i class="fas fa-times-circle fa-2x opacity-75"></i>
@@ -107,7 +107,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h5 class="card-title">Total Value</h5>
-                                    <h3 class="mb-0">UGX 45.2M</h3>
+                                    <h3 class="mb-0" id="stockValue">UGX 0</h3>
                                     <small>Inventory value</small>
                                 </div>
                                 <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
@@ -293,7 +293,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span>Inventory Details</span>
-                            <span class="badge bg-primary">1,247 products</span>
+                            <span class="badge bg-primary" id="totalProductsBadge">0 products</span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-custom table-hover align-middle mb-0">
