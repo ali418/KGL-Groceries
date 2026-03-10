@@ -22,8 +22,8 @@
     <!-- Top Navbar -->
     <div class="top-navbar">
         <div class="d-flex align-items-center">
-            <button class="btn btn-link text-dark me-3 d-md-none" id="sidebarToggle">
-                <i class="fas fa-bars fa-lg"></i>
+            <button class="btn btn-outline-secondary btn-sm me-3" id="sidebarToggle" title="Toggle sidebar">
+                <i class="fas fa-bars"></i>
             </button>
             <h5 class="m-0 fw-bold text-muted">Credit Exposure</h5>
         </div>
@@ -212,7 +212,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span>Credit Accounts Overview</span>
-                            <span class="badge bg-primary">12 active accounts</span>
+                            <span class="badge bg-primary" id="activeAccountsBadge">0 active accounts</span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-custom table-hover align-middle mb-0">
@@ -271,68 +271,85 @@
     <!-- Chart Initialization Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Credit Trend Chart
-            const ctxCredit = document.getElementById('creditTrendChart').getContext('2d');
-            new Chart(ctxCredit, {
-                type: 'line',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    datasets: [{
-                        label: 'Total Credit Exposure',
-                        data: [2800000, 3200000, 2900000, 2150000],
-                        borderColor: '#2E7D32',
-                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }, {
-                        label: 'Overdue Amount',
-                        data: [450000, 680000, 520000, 850000],
-                        borderColor: '#D32F2F',
-                        backgroundColor: 'rgba(211, 47, 47, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (value) {
-                                    return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
+            (async () => {
+                // Credit Trend Chart
+                try {
+                    const trend = await api.get('/reports/credit-trend');
+                    const labels = trend.map(d => d._id);
+                    const totalExposure = trend.map(d => d.totalExposure);
+                    const overdueExposure = trend.map(d => d.overdueExposure);
+                    const canvas = document.getElementById('creditTrendChart');
+                    if (canvas) {
+                        const existing = Chart.getChart(canvas);
+                        if (existing) existing.destroy();
+                        new Chart(canvas.getContext('2d'), {
+                            type: 'line',
+                            data: {
+                                labels,
+                                datasets: [{
+                                    label: 'Total Credit Exposure',
+                                    data: totalExposure,
+                                    borderColor: '#2E7D32',
+                                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                                    fill: true,
+                                    tension: 0.4
+                                }, {
+                                    label: 'Overdue Amount',
+                                    data: overdueExposure,
+                                    borderColor: '#D32F2F',
+                                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                    fill: true,
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'top' } },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function (value) {
+                                                return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        });
                     }
+                } catch (err) {
+                    console.error('Credit trend load error:', err);
                 }
-            });
 
-            // Risk Chart
-            const ctxRisk = document.getElementById('riskChart').getContext('2d');
-            new Chart(ctxRisk, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Low Risk', 'Medium Risk', 'High Risk'],
-                    datasets: [{
-                        data: [60, 25, 15],
-                        backgroundColor: ['#4CAF50', '#FFA000', '#D32F2F']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
+                // Risk Chart
+                try {
+                    const risk = await api.get('/reports/credit-risk');
+                    const labels = ['Low Risk', 'Medium Risk', 'High Risk'];
+                    const values = [risk.low || 0, risk.medium || 0, risk.high || 0];
+                    const canvas = document.getElementById('riskChart');
+                    if (canvas) {
+                        const existing = Chart.getChart(canvas);
+                        if (existing) existing.destroy();
+                        new Chart(canvas.getContext('2d'), {
+                            type: 'doughnut',
+                            data: {
+                                labels,
+                                datasets: [{
+                                    data: values,
+                                    backgroundColor: ['#4CAF50', '#FFA000', '#D32F2F']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'bottom' } }
+                            }
+                        });
                     }
+                } catch (err) {
+                    console.error('Credit risk load error:', err);
                 }
-            });
+            })();
         });
     </script>
 </body>

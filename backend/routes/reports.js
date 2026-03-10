@@ -3,6 +3,8 @@ const router = express.Router();
 const Sale = require('../models/Sale');
 const Produce = require('../models/Produce');
 const CreditSale = require('../models/CreditSale');
+const Procurement = require('../models/Procurement');
+const Supplier = require('../models/Supplier');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roles');
 
@@ -326,6 +328,189 @@ router.get('/by-category', protect, authorize('manager', 'director'), async (req
         res.status(200).json(result);
     } catch (error) {
         console.error('Error fetching category stats:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
+ * /reports/stock-by-category:
+ *   get:
+ *     summary: Get inventory value distribution by product category
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Inventory value by category
+ *       500:
+ *         description: Server error
+ */
+router.get('/stock-by-category', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const stats = await Produce.aggregate([
+            {
+                $group: {
+                    _id: '$type',
+                    totalTonnage: { $sum: { $ifNull: ['$currentStock.tonnage', 0] } },
+                    totalValue: { $sum: { $multiply: [{ $ifNull: ['$currentStock.tonnage', 0] }, { $ifNull: ['$pricing.costPrice', 0] }] } }
+                }
+            }
+        ]);
+        const result = {};
+        stats.forEach(s => {
+            result[s._id] = s.totalValue;
+        });
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error fetching stock by category:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
+ * /reports/procurement-trend:
+ *   get:
+ *     summary: Get procurement total amounts grouped by date (daily)
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Procurement totals per day
+ *       500:
+ *         description: Server error
+ */
+router.get('/procurement-trend', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const trend = await Procurement.aggregate([
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+                    totalAmount: { $sum: "$totalAmount" },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+        res.status(200).json(trend);
+    } catch (error) {
+        console.error('Error fetching procurement trend:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
+ * /reports/procurement-by-supplier:
+ *   get:
+ *     summary: Get procurement totals grouped by supplier
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Procurement totals per supplier
+ *       500:
+ *         description: Server error
+ */
+router.get('/procurement-by-supplier', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const stats = await Procurement.aggregate([
+            {
+                $group: {
+                    _id: '$supplier',
+                    totalAmount: { $sum: '$totalAmount' },
+                    orders: { $sum: 1 }
+                }
+            },
+            { $sort: { totalAmount: -1 } }
+        ]);
+        // Populate supplier names
+        const populated = await Supplier.populate(stats, { path: '_id', select: 'name' });
+        const result = populated.map(s => ({
+            supplier: s._id?.name || 'Unknown',
+            totalAmount: s.totalAmount,
+            orders: s.orders
+        }));
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error fetching procurement by supplier:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
+ * /reports/credit-trend:
+ *   get:
+ *     summary: Get credit exposure trend (daily)
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Credit totals and overdue per day
+ *       500:
+ *         description: Server error
+ */
+router.get('/credit-trend', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const trend = await CreditSale.aggregate([
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$saleDate" } },
+                    totalExposure: { $sum: "$pricing.totalAmount" },
+                    overdueExposure: {
+                        $sum: {
+                            $cond: [{ $eq: ["$status", "overdue"] }, "$outstandingAmount", 0]
+                        }
+                    }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+        res.status(200).json(trend);
+    } catch (error) {
+        console.error('Error fetching credit trend:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
+ * /reports/credit-risk:
+ *   get:
+ *     summary: Get credit risk distribution
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Credit risk distribution
+ *       500:
+ *         description: Server error
+ */
+router.get('/credit-risk', protect, authorize('manager', 'director'), async (req, res) => {
+    try {
+        const stats = await CreditSale.aggregate([
+            {
+                $group: {
+                    _id: '$status',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+        let low = 0, medium = 0, high = 0;
+        stats.forEach(s => {
+            if (s._id === 'paid') low += s.count;
+            else if (s._id === 'active') medium += s.count;
+            else if (s._id === 'overdue' || s._id === 'defaulted') high += s.count;
+        });
+        res.status(200).json({ low, medium, high });
+    } catch (error) {
+        console.error('Error fetching credit risk:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

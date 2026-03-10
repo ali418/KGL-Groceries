@@ -137,6 +137,7 @@ function updateCreditStats(sales) {
     safeSetText('dueThisWeekCount', `${dueThisWeekCount} accounts`);
     safeSetText('totalExposure', formatCurrency(totalExposure));
     safeSetText('activeAccountsCount', `${activeAccounts} active accounts`);
+    safeSetText('activeAccountsBadge', `${activeAccounts} active accounts`);
     safeSetText('collectedThisMonth', formatCurrency(collectedThisMonth));
 }
 

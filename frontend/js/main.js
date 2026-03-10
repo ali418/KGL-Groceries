@@ -425,14 +425,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
+    const topNavbar = document.querySelector('.top-navbar');
+    const applyCollapsed = (collapsed) => {
+        if (collapsed) {
+            sidebar.classList.add('collapsed');
+            if (mainContent) mainContent.classList.add('collapsed');
+            if (topNavbar) topNavbar.classList.add('collapsed');
+        } else {
+            sidebar.classList.remove('collapsed');
+            if (mainContent) mainContent.classList.remove('collapsed');
+            if (topNavbar) topNavbar.classList.remove('collapsed');
+        }
+    };
+    const savedCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+    applyCollapsed(savedCollapsed);
     
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            if (mainContent) {
-                // Optional: Adjust main content margin if needed, 
-                // but usually overlay on mobile is preferred via CSS
-                // mainContent.classList.toggle('shifted'); 
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('active');
+            } else {
+                const nowCollapsed = !sidebar.classList.contains('collapsed');
+                applyCollapsed(nowCollapsed);
+                localStorage.setItem('sidebar_collapsed', String(nowCollapsed));
             }
         });
 
@@ -565,10 +580,11 @@ function renderSidebar(user) {
     const linksHtml = config.items.map(item => {
         const isActive = path === item.href;
         const activeClass = isActive ? 'active' : '';
-        return `<li><a href="${item.href}" class="${activeClass}"><i class="${item.icon}"></i> ${item.label}</a></li>`;
+        return `<li><a href="${item.href}" class="${activeClass}"><i class="${item.icon}"></i><span class="label">${item.label}</span></a></li>`;
     }).join('');
     sidebar.innerHTML = `
         <div class="sidebar-brand">
+            <button class="btn btn-sm btn-light me-2 sidebar-collapse-btn" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
             <i class="fas fa-leaf me-2"></i> ${config.brand}
         </div>
         <ul class="sidebar-menu">
@@ -577,6 +593,29 @@ function renderSidebar(user) {
         </ul>
     `;
     attachLogoutListeners();
+    const collapseBtn = sidebar.querySelector('.sidebar-collapse-btn');
+    const mainContent = document.querySelector('.main-content');
+    const topNavbar = document.querySelector('.top-navbar');
+    const applyCollapsed = (collapsed) => {
+        if (collapsed) {
+            sidebar.classList.add('collapsed');
+            if (mainContent) mainContent.classList.add('collapsed');
+            if (topNavbar) topNavbar.classList.add('collapsed');
+        } else {
+            sidebar.classList.remove('collapsed');
+            if (mainContent) mainContent.classList.remove('collapsed');
+            if (topNavbar) topNavbar.classList.remove('collapsed');
+        }
+    };
+    const saved = localStorage.getItem('sidebar_collapsed') === 'true';
+    applyCollapsed(saved);
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', () => {
+            const nowCollapsed = !sidebar.classList.contains('collapsed');
+            applyCollapsed(nowCollapsed);
+            localStorage.setItem('sidebar_collapsed', String(nowCollapsed));
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

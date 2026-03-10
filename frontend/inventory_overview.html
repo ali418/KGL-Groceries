@@ -22,8 +22,8 @@
     <!-- Top Navbar -->
     <div class="top-navbar">
         <div class="d-flex align-items-center">
-            <button class="btn btn-link text-dark me-3 d-md-none" id="sidebarToggle">
-                <i class="fas fa-bars fa-lg"></i>
+            <button class="btn btn-outline-secondary btn-sm me-3" id="sidebarToggle" title="Toggle sidebar">
+                <i class="fas fa-bars"></i>
             </button>
             <h5 class="m-0 fw-bold text-muted">Inventory Overview</h5>
         </div>
@@ -352,75 +352,77 @@
     <!-- Chart Initialization Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Stock Trend Chart
-            const ctxStock = document.getElementById('stockTrendChart').getContext('2d');
-            new Chart(ctxStock, {
-                type: 'line',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    datasets: [{
-                        label: 'Fresh Produce',
-                        data: [850, 920, 780, 950],
-                        borderColor: '#4CAF50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }, {
-                        label: 'Dry Goods',
-                        data: [650, 720, 680, 750],
-                        borderColor: '#FFA000',
-                        backgroundColor: 'rgba(255, 160, 0, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }, {
-                        label: 'Beverages',
-                        data: [450, 480, 420, 520],
-                        borderColor: '#2196F3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (value) {
-                                    return value + ' units';
+            (async () => {
+                // Stock Trend Chart (using sales trend as proxy for movement)
+                try {
+                    const trendData = await api.get('/reports/sales-trend');
+                    const labels = trendData.map(d => d._id);
+                    const data = trendData.map(d => d.totalAmount);
+                    const canvas = document.getElementById('stockTrendChart');
+                    if (canvas) {
+                        const existing = Chart.getChart(canvas);
+                        if (existing) existing.destroy();
+                        new Chart(canvas.getContext('2d'), {
+                            type: 'line',
+                            data: {
+                                labels,
+                                datasets: [{
+                                    label: 'Daily Sales (UGX)',
+                                    data,
+                                    borderColor: '#4CAF50',
+                                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                    fill: true,
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'top' } },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function (value) {
+                                                return 'UGX ' + (value / 1000).toFixed(0) + 'k';
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        });
                     }
+                } catch (err) {
+                    console.error('Stock trend load error:', err);
                 }
-            });
 
-            // Category Distribution Chart
-            const ctxCategory = document.getElementById('categoryChart').getContext('2d');
-            new Chart(ctxCategory, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Fresh Produce', 'Dry Goods', 'Beverages', 'Household', 'Personal Care'],
-                    datasets: [{
-                        data: [35, 25, 20, 12, 8],
-                        backgroundColor: ['#4CAF50', '#FFA000', '#2196F3', '#9C27B0', '#00BCD4']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
+                // Category Distribution Chart (inventory value by category)
+                try {
+                    const categoryData = await api.get('/reports/stock-by-category');
+                    const labels = Object.keys(categoryData);
+                    const values = Object.values(categoryData);
+                    const canvas = document.getElementById('categoryChart');
+                    if (canvas) {
+                        const existing = Chart.getChart(canvas);
+                        if (existing) existing.destroy();
+                        new Chart(canvas.getContext('2d'), {
+                            type: 'doughnut',
+                            data: {
+                                labels,
+                                datasets: [{
+                                    data: values,
+                                    backgroundColor: ['#4CAF50', '#FFA000', '#2196F3', '#9C27B0', '#00BCD4']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'bottom' } }
+                            }
+                        });
                     }
+                } catch (err) {
+                    console.error('Category chart load error:', err);
                 }
-            });
+            })();
         });
     </script>
 </body>

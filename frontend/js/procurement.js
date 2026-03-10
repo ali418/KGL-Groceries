@@ -32,6 +32,8 @@ async function loadSuppliers() {
             
             const activeCountEl = document.getElementById('activeSuppliersCount');
             if (activeCountEl) activeCountEl.textContent = suppliers.length;
+            const suppliersBadge = document.getElementById('suppliersBadge');
+            if (suppliersBadge) suppliersBadge.textContent = `${suppliers.length} suppliers`;
         }
     } catch (error) {
         console.error('Error loading suppliers:', error);
@@ -45,6 +47,7 @@ async function loadOrders() {
         if (response.success) {
             renderOrdersTable(response.data);
             updateOrderStats(response.data);
+            renderRecentOrders(response.data);
             
             const orders = response.data;
             const pendingCount = orders.filter(o => o.status === 'pending').length;
@@ -69,6 +72,50 @@ async function loadOrders() {
         console.error('Error loading orders:', error);
         showAlert('Failed to load orders', 'danger');
     }
+}
+
+function renderRecentOrders(orders) {
+    const tbody = document.getElementById('recentOrdersTableBody');
+    if (!tbody) return;
+    if (!orders || orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No recent orders</td></tr>';
+        return;
+    }
+    const now = new Date();
+    const last30 = new Date(now);
+    last30.setDate(now.getDate() - 30);
+    const recent = orders
+        .filter(o => new Date(o.orderDate || o.createdAt) >= last30)
+        .sort((a, b) => new Date(b.orderDate || b.createdAt) - new Date(a.orderDate || a.createdAt))
+        .slice(0, 20);
+    tbody.innerHTML = recent.map(order => {
+        const supplierName = order.supplier && order.supplier.name ? order.supplier.name : 'Unknown';
+        const itemsCount = order.items ? order.items.length : 0;
+        const amount = formatCurrency(order.totalAmount || 0);
+        const orderDate = formatDate(order.orderDate || order.createdAt);
+        const statusBadge = `<span class="badge bg-${order.status === 'received' ? 'success' : (order.status === 'pending' ? 'warning' : 'secondary')}">${order.status || 'pending'}</span>`;
+        const receivedBy = order.receivedBy && order.receivedBy.name ? order.receivedBy.name : (order.receivedBy || '-');
+        const orderId = order.orderNumber || (order._id ? `PO-${order._id.slice(-6).toUpperCase()}` : '-');
+        return `
+            <tr>
+                <td><strong>${orderId}</strong></td>
+                <td>${supplierName}</td>
+                <td>${itemsCount} items</td>
+                <td><span class="fw-bold">${amount}</span></td>
+                <td>${orderDate}</td>
+                <td>${statusBadge}</td>
+                <td>${receivedBy || '-'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" title="View Details">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" title="Print">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
 async function loadProductsForDropdown() {
@@ -451,79 +498,72 @@ function showAlert(message, type) {
 
 // --- Charts ---
 function initializeCharts() {
-    const ctxProcurement = document.getElementById('procurementChart');
-    if (ctxProcurement) {
-        // Destroy existing chart if it exists
-        const existingChart = Chart.getChart(ctxProcurement);
-        if (existingChart) existingChart.destroy();
-
-        new Chart(ctxProcurement.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Fresh Produce',
-                    data: [8500000, 9200000, 7800000, 10500000, 9800000, 11200000],
-                    borderColor: '#4CAF50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Dry Goods',
-                    data: [4500000, 5200000, 4800000, 6500000, 5800000, 6200000],
-                    borderColor: '#FFA000',
-                    backgroundColor: 'rgba(255, 160, 0, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Packaging',
-                    data: [2500000, 2800000, 2200000, 3500000, 3200000, 3800000],
-                    borderColor: '#2196F3',
-                    backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function (value) {
-                                return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
+    (async () => {
+        const ctxProcurement = document.getElementById('procurementChart');
+        if (ctxProcurement) {
+            const existingChart = Chart.getChart(ctxProcurement);
+            if (existingChart) existingChart.destroy();
+            try {
+                const trend = await api.get('/reports/procurement-trend');
+                const labels = trend.map(d => d._id);
+                const values = trend.map(d => d.totalAmount);
+                new Chart(ctxProcurement.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Daily Procurement (UGX)',
+                            data: values,
+                            borderColor: '#4CAF50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                });
+            } catch (err) {
+                console.error('Procurement trend error:', err);
             }
-        });
-    }
-
-    const ctxSupplier = document.getElementById('supplierChart');
-    if (ctxSupplier) {
-        // Destroy existing chart if it exists
-        const existingChart = Chart.getChart(ctxSupplier);
-        if (existingChart) existingChart.destroy();
-
-        new Chart(ctxSupplier.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Excellent', 'Good', 'Average', 'Poor'],
-                datasets: [{
-                    data: [45, 30, 20, 5],
-                    backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#F44336']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
+        }
+        const ctxSupplier = document.getElementById('supplierChart');
+        if (ctxSupplier) {
+            const existingChart = Chart.getChart(ctxSupplier);
+            if (existingChart) existingChart.destroy();
+            try {
+                const stats = await api.get('/reports/procurement-by-supplier');
+                const labels = stats.map(s => s.supplier);
+                const values = stats.map(s => s.totalAmount);
+                new Chart(ctxSupplier.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#F44336', '#2196F3', '#9C27B0']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            } catch (err) {
+                console.error('Procurement supplier chart error:', err);
             }
-        });
-    }
+        }
+    })();
 }
