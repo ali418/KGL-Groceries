@@ -79,6 +79,60 @@ function formatCurrency(amount) {
 }
 
 window.editPrice = function(id) {
-    // Implement edit logic if needed, or redirect to edit modal
-    alert('Edit price for product: ' + id);
+    const product = allProducts.find(p => p._id === id);
+    if (!product) return;
+    document.getElementById('editProductId').value = product._id;
+    document.getElementById('editProductName').value = product.name || '';
+    const cost = product.pricing?.costPrice || 0;
+    const sell = product.pricing?.sellingPrice || 0;
+    document.getElementById('editCostPrice').value = cost;
+    document.getElementById('editSellingPrice').value = sell;
+    const margin = sell > 0 ? (((sell - cost) / sell) * 100).toFixed(1) + '%' : '0%';
+    document.getElementById('editMargin').value = margin;
+    const modal = new bootstrap.Modal(document.getElementById('editPriceModal'));
+    modal.show();
 };
+
+// Attach update logic
+document.addEventListener('DOMContentLoaded', () => {
+    const costInput = document.getElementById('editCostPrice');
+    const sellInput = document.getElementById('editSellingPrice');
+    function recalcMargin() {
+        const cost = parseFloat(costInput.value) || 0;
+        const sell = parseFloat(sellInput.value) || 0;
+        const margin = sell > 0 ? (((sell - cost) / sell) * 100).toFixed(1) + '%' : '0%';
+        document.getElementById('editMargin').value = margin;
+    }
+    if (costInput) costInput.addEventListener('input', recalcMargin);
+    if (sellInput) sellInput.addEventListener('input', recalcMargin);
+    
+    const updateBtn = document.getElementById('updatePriceBtn');
+    if (updateBtn) {
+        updateBtn.addEventListener('click', async () => {
+            const id = document.getElementById('editProductId').value;
+            const costPrice = parseFloat(document.getElementById('editCostPrice').value) || 0;
+            const salePrice = parseFloat(document.getElementById('editSellingPrice').value) || 0;
+            if (salePrice <= 0) {
+                alert('Selling price must be greater than 0');
+                return;
+            }
+            try {
+                const res = await api.put(`/produce/${id}`, { costPrice, salePrice });
+                // Update local cache
+                const idx = allProducts.findIndex(p => p._id === id);
+                if (idx >= 0) {
+                    allProducts[idx].pricing = allProducts[idx].pricing || {};
+                    allProducts[idx].pricing.costPrice = costPrice;
+                    allProducts[idx].pricing.sellingPrice = salePrice;
+                    allProducts[idx].updatedAt = new Date().toISOString();
+                }
+                renderPricingTable(allProducts);
+                updatePricingStats(allProducts);
+                bootstrap.Modal.getInstance(document.getElementById('editPriceModal')).hide();
+            } catch (error) {
+                console.error('Update price error:', error);
+                alert(error.message || 'Failed to update price');
+            }
+        });
+    }
+});
