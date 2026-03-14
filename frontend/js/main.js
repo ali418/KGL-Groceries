@@ -173,6 +173,19 @@ function showToast(message, type = 'info') {
     });
 }
 
+// Global error handlers for professional alerts
+window.addEventListener('error', (e) => {
+    if (e?.message && typeof showToast === 'function') {
+        showToast(e.message, 'error');
+    }
+});
+window.addEventListener('unhandledrejection', (e) => {
+    const msg = e?.reason?.message || 'An unexpected error occurred';
+    if (typeof showToast === 'function') {
+        showToast(msg, 'error');
+    }
+});
+
 // --- User Management Logic ---
 
 let allUsers = [];

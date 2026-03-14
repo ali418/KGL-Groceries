@@ -46,6 +46,11 @@ window.api = {
             return data;
         } catch (error) {
             console.error('API Request Error:', error);
+            try {
+                if (window.showToast) {
+                    window.showToast(error.message || 'Request failed', 'error');
+                }
+            } catch (e) {}
             throw error;
         }
     },
