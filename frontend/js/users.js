@@ -289,14 +289,14 @@ async function saveUser() {
         if (response.user || response.message === 'User created successfully' || response.message === 'User updated successfully') {
             const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
             modal.hide();
-            alert(editingUserId ? 'User updated successfully!' : 'User created successfully!');
+            if (window.showToast) showToast(editingUserId ? 'User updated successfully' : 'User created successfully', 'success');
             loadUsers();
         } else {
-            alert('Operation failed: ' + (response.error || 'Unknown error'));
+            if (window.showToast) showToast('Operation failed: ' + (response.error || 'Unknown error'), 'error');
         }
     } catch (error) {
         console.error('Error saving user:', error);
-        alert('Error saving user: ' + error.message);
+        if (window.showToast) showToast(error.message || 'Failed to save user', 'error');
     } finally {
         btn.disabled = false;
         btn.textContent = originalText;
@@ -308,11 +308,11 @@ async function deleteUser(userId) {
 
     try {
         await api.delete(`/users/${userId}`);
-        alert('User deactivated successfully');
+        if (window.showToast) showToast('User deactivated successfully', 'success');
         loadUsers();
     } catch (error) {
         console.error('Error deleting user:', error);
-        alert('Failed to deactivate user');
+        if (window.showToast) showToast(error.message || 'Failed to deactivate user', 'error');
     }
 }
 

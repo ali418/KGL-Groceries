@@ -353,10 +353,10 @@ window.deleteProduct = async function(id) {
     try {
         await api.delete(`/produce/${id}`);
         loadProducts();
-        alert('Product deleted successfully');
+        if (window.showToast) showToast('Product deleted successfully', 'success');
     } catch (error) {
         console.error('Error deleting product:', error);
-        alert(error.message);
+        if (window.showToast) showToast(error.message || 'Failed to delete product', 'error');
     }
 };
 
@@ -364,12 +364,15 @@ window.deleteProduct = async function(id) {
 const modalEl = document.getElementById('addProductModal');
 if (modalEl) {
     modalEl.addEventListener('hidden.bs.modal', () => {
-        document.getElementById('addProductForm').reset();
-        document.getElementById('productId').value = '';
-        document.getElementById('productModalTitle').textContent = 'Add New Product';
+        const form = document.getElementById('addProductForm');
+        if (form) form.reset();
+        const idEl = document.getElementById('productId');
+        if (idEl) idEl.value = '';
+        const titleEl = document.getElementById('productModalTitle');
+        if (titleEl) titleEl.textContent = 'Add New Product';
         
         // Reset select to first option if exists
         const branchSelect = document.getElementById('productBranch');
-        if (branchSelect.options.length > 1) branchSelect.selectedIndex = 1;
+        if (branchSelect && branchSelect.options && branchSelect.options.length > 1) branchSelect.selectedIndex = 1;
     });
 }

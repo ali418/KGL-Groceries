@@ -175,11 +175,17 @@ function showToast(message, type = 'info') {
 
 // Global error handlers for professional alerts
 window.addEventListener('error', (e) => {
+    const src = e?.filename || '';
+    // Ignore errors from browser extensions or autofill overlays
+    if (/autofill|overlay|chrome-extension:|moz-extension:/i.test(src)) return;
     if (e?.message && typeof showToast === 'function') {
         showToast(e.message, 'error');
     }
 });
 window.addEventListener('unhandledrejection', (e) => {
+    const stack = e?.reason?.stack || '';
+    // Ignore errors from browser extensions or autofill overlays
+    if (/autofill|overlay|chrome-extension:|moz-extension:/i.test(stack)) return;
     const msg = e?.reason?.message || 'An unexpected error occurred';
     if (typeof showToast === 'function') {
         showToast(msg, 'error');
